@@ -1,10 +1,10 @@
 import json
 import re
+import unicodedata
+from copy import deepcopy
 
 import requests
-import unicodedata
 
-from copy import deepcopy
 from statics import DATA_TYPES, CURRENT_GEN
 from mergers import merge
 
@@ -435,7 +435,7 @@ def protogen():
 
             proto_str += PROTOGEN_DICT[dt](data)
 
-    with open(f"protos/dexdata.proto", "w", encoding="utf8") as f:
+    with open("protos/dexdata.proto", "w", encoding="utf8") as f:
         f.write(proto_str)
 
 
@@ -483,6 +483,7 @@ def fetch_latest(verbose: bool = True):
                 print(f"Successfully back-merged gen {gen} {dt}!")
 
         print(f"Completed all {dt} generation parses!")
+        print()
 
         for gen, data in data_by_gen.items():
             if data is None:
@@ -492,6 +493,6 @@ def fetch_latest(verbose: bool = True):
 
 
 if __name__ == "__main__":
-    # fetch_latest()
+    fetch_latest()
 
     protogen()
