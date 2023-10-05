@@ -2,9 +2,11 @@
 name = "poketypes"
 version = "0.1.0"
 description = "Automated classes with full typehinting support for pokemon, abilities, items, and so much more"
-authors = ["Trevor Wieland"]
+authors = ["Trevor Wieland <trevor_wieland@mac.com>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/trevorWieland/poketypes"
+
 
 [tool.poetry.dependencies]
 python = "^3.9"

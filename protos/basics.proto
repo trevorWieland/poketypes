@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+//Hard-Coded Enum for all Stats relevant to a pokemon
+enum DexStat {
+    option allow_alias = true;
+    STAT_UNASSIGNED = 0;
+    STAT_ATTACK = 1;
+    STAT_ATT = 1;
+    STAT_DEFENCE = 2;
+    STAT_DEF = 2;
+    STAT_SPECIAL_ATTACK = 3;
+    STAT_SPA = 3;
+    STAT_SPECIAL_DEFENCE = 4;
+    STAT_SPD = 4;
+    STAT_SPEED = 5;
+    STAT_SPE = 5;
+    STAT_HEALTH = 6;
+    STAT_HP = 6;
+    STAT_EVASION = 7;
+    STAT_EVA = 7;
+    STAT_ACCURACY = 8;
+    STAT_ACC = 8;
+}
+
+//Hard-Coded Enum for all generations
+enum DexGen {
+    GEN_UNASSIGNED = 0;
+    GEN_1 = 1;
+    GEN_2 = 2;
+    GEN_3 = 3;
+    GEN_4 = 4;
+    GEN_5 = 5;
+    GEN_6 = 6;
+    GEN_7 = 7;
+    GEN_8 = 8;
+    GEN_9 = 9;
+}
+
+//Hard-Coded Move Categories
+enum DexMoveCategory {
+    MOVECATEGORY_UNASSIGNED = 0;
+    MOVECATEGORY_PHYSICAL = 1;
+    MOVECATEGORY_SPECIAL = 2;
+    MOVECATEGORY_STATUS = 3;
+}
+
+//Hard-Coded Move Tags
+enum DexMoveTag {
+    MOVETAG_UNASSIGNED = 0;
+    MOVETAG_ZMOVE = 1;
+    MOVETAG_MAXMOVE = 2;
+    MOVETAG_CONTACT = 3;
+    MOVETAG_SOUND = 4;
+    MOVETAG_POWDER = 5;
+    MOVETAG_FIST = 6;
+    MOVETAG_PULSE = 7;
+    MOVETAG_BITE = 8;
+    MOVETAG_BALLISTIC = 9;
+    MOVETAG_BYPASSPROTECT = 10;
+    MOVETAG_NONREFLECTABLE = 11;
+    MOVETAG_NONMIRROR = 12;
+    MOVETAG_NONSNATCHABLE = 13;
+    MOVETAG_BYPASSSUBSTITUTE = 14;
+    MOVETAG_GMAXMOVE = 15;
+}
