@@ -139,7 +139,7 @@ def merge_natures(gen, this_gen_data, next_gen_data):
         if n not in this_gen_data:
             this_gen_data[n] = n_data
         elif this_gen_data[n].get("inherit", False):
-            this_gen_data[n] = {**n_data, **this_gen_data[t]}
+            this_gen_data[n] = {**n_data, **this_gen_data[n]}
             this_gen_data[n].pop("inherit")
 
     return this_gen_data
