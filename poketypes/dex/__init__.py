@@ -5,7 +5,7 @@ from .dexdata_pb2 import (
     DexItem,
     DexMove,
     DexMoveCategory,
-    DexMoveTag,
+    DexMoveTarget,
     DexNature,
     DexPokemon,
     DexStat,
@@ -15,3 +15,5 @@ from .dexdata_pb2 import (
 )
 
 from .dexdata import cast2dex, clean_name
+
+from .pokedex import PokedexMove, PokedexItem, PokedexPokemon

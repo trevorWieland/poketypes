@@ -113,49 +113,49 @@ MOVECATEGORY_SPECIAL: DexMoveCategory.ValueType  # 2
 MOVECATEGORY_STATUS: DexMoveCategory.ValueType  # 3
 global___DexMoveCategory = DexMoveCategory
 
-class _DexMoveTag:
+class _DexMoveTarget:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexMoveTagEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexMoveTag.ValueType], builtins.type):
+class _DexMoveTargetEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexMoveTarget.ValueType], builtins.type):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
-    MOVETAG_UNASSIGNED: _DexMoveTag.ValueType  # 0
-    MOVETAG_ZMOVE: _DexMoveTag.ValueType  # 1
-    MOVETAG_MAXMOVE: _DexMoveTag.ValueType  # 2
-    MOVETAG_CONTACT: _DexMoveTag.ValueType  # 3
-    MOVETAG_SOUND: _DexMoveTag.ValueType  # 4
-    MOVETAG_POWDER: _DexMoveTag.ValueType  # 5
-    MOVETAG_FIST: _DexMoveTag.ValueType  # 6
-    MOVETAG_PULSE: _DexMoveTag.ValueType  # 7
-    MOVETAG_BITE: _DexMoveTag.ValueType  # 8
-    MOVETAG_BALLISTIC: _DexMoveTag.ValueType  # 9
-    MOVETAG_BYPASSPROTECT: _DexMoveTag.ValueType  # 10
-    MOVETAG_NONREFLECTABLE: _DexMoveTag.ValueType  # 11
-    MOVETAG_NONMIRROR: _DexMoveTag.ValueType  # 12
-    MOVETAG_NONSNATCHABLE: _DexMoveTag.ValueType  # 13
-    MOVETAG_BYPASSSUBSTITUTE: _DexMoveTag.ValueType  # 14
-    MOVETAG_GMAXMOVE: _DexMoveTag.ValueType  # 15
+    MOVETARGET_UNASSIGNED: _DexMoveTarget.ValueType  # 0
+    MOVETARGET_SELF: _DexMoveTarget.ValueType  # 1
+    MOVETARGET_ADJACENTALLY: _DexMoveTarget.ValueType  # 2
+    MOVETARGET_ADJACENTALLYORSELF: _DexMoveTarget.ValueType  # 3
+    MOVETARGET_ALL: _DexMoveTarget.ValueType  # 4
+    MOVETARGET_ALLADJACENT: _DexMoveTarget.ValueType  # 5
+    MOVETARGET_ALLADJACENTFOES: _DexMoveTarget.ValueType  # 6
+    MOVETARGET_ALLIES: _DexMoveTarget.ValueType  # 7
+    MOVETARGET_ALLYSIDE: _DexMoveTarget.ValueType  # 8
+    MOVETARGET_ALLYTEAM: _DexMoveTarget.ValueType  # 9
+    MOVETARGET_ANY: _DexMoveTarget.ValueType  # 10
+    MOVETARGET_FOESIDE: _DexMoveTarget.ValueType  # 11
+    MOVETARGET_NORMAL: _DexMoveTarget.ValueType  # 12
+    MOVETARGET_RANDOMNORMAL: _DexMoveTarget.ValueType  # 13
+    MOVETARGET_SCRIPTED: _DexMoveTarget.ValueType  # 14
+    MOVETARGET_ADJACENTFOE: _DexMoveTarget.ValueType  # 15
 
-class DexMoveTag(_DexMoveTag, metaclass=_DexMoveTagEnumTypeWrapper):
-    """Hard-Coded Move Tags"""
+class DexMoveTarget(_DexMoveTarget, metaclass=_DexMoveTargetEnumTypeWrapper):
+    """Hard-Coded Move Categories"""
 
-MOVETAG_UNASSIGNED: DexMoveTag.ValueType  # 0
-MOVETAG_ZMOVE: DexMoveTag.ValueType  # 1
-MOVETAG_MAXMOVE: DexMoveTag.ValueType  # 2
-MOVETAG_CONTACT: DexMoveTag.ValueType  # 3
-MOVETAG_SOUND: DexMoveTag.ValueType  # 4
-MOVETAG_POWDER: DexMoveTag.ValueType  # 5
-MOVETAG_FIST: DexMoveTag.ValueType  # 6
-MOVETAG_PULSE: DexMoveTag.ValueType  # 7
-MOVETAG_BITE: DexMoveTag.ValueType  # 8
-MOVETAG_BALLISTIC: DexMoveTag.ValueType  # 9
-MOVETAG_BYPASSPROTECT: DexMoveTag.ValueType  # 10
-MOVETAG_NONREFLECTABLE: DexMoveTag.ValueType  # 11
-MOVETAG_NONMIRROR: DexMoveTag.ValueType  # 12
-MOVETAG_NONSNATCHABLE: DexMoveTag.ValueType  # 13
-MOVETAG_BYPASSSUBSTITUTE: DexMoveTag.ValueType  # 14
-MOVETAG_GMAXMOVE: DexMoveTag.ValueType  # 15
-global___DexMoveTag = DexMoveTag
+MOVETARGET_UNASSIGNED: DexMoveTarget.ValueType  # 0
+MOVETARGET_SELF: DexMoveTarget.ValueType  # 1
+MOVETARGET_ADJACENTALLY: DexMoveTarget.ValueType  # 2
+MOVETARGET_ADJACENTALLYORSELF: DexMoveTarget.ValueType  # 3
+MOVETARGET_ALL: DexMoveTarget.ValueType  # 4
+MOVETARGET_ALLADJACENT: DexMoveTarget.ValueType  # 5
+MOVETARGET_ALLADJACENTFOES: DexMoveTarget.ValueType  # 6
+MOVETARGET_ALLIES: DexMoveTarget.ValueType  # 7
+MOVETARGET_ALLYSIDE: DexMoveTarget.ValueType  # 8
+MOVETARGET_ALLYTEAM: DexMoveTarget.ValueType  # 9
+MOVETARGET_ANY: DexMoveTarget.ValueType  # 10
+MOVETARGET_FOESIDE: DexMoveTarget.ValueType  # 11
+MOVETARGET_NORMAL: DexMoveTarget.ValueType  # 12
+MOVETARGET_RANDOMNORMAL: DexMoveTarget.ValueType  # 13
+MOVETARGET_SCRIPTED: DexMoveTarget.ValueType  # 14
+MOVETARGET_ADJACENTFOE: DexMoveTarget.ValueType  # 15
+global___DexMoveTarget = DexMoveTarget
 
 class _DexType:
     ValueType = typing.NewType("ValueType", builtins.int)

@@ -17,6 +17,7 @@ protobuf = "^4.24.4"
 mypy-protobuf = "^3.5.0"
 pytest = "^7.4.2"
 requests = "^2.31.0"
+notebook = "^7.0.4"
 
 [build-system]
 requires = ["poetry-core"]
