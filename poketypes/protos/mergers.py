@@ -86,6 +86,9 @@ def merge_abilities(gen, this_gen_data, next_gen_data):
     Specifically merges abilities data, dropping abilities not in this gen/earlier, and overwriting as needed
     """
     for ability, value in next_gen_data.items():
+        if value.get("num") is None:
+            continue
+
         if value["num"] > MAX_ABILITY_IDX_PER_GEN[gen] or value["num"] < 0:
             continue
 

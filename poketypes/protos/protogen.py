@@ -419,7 +419,7 @@ def protogen():
     """
 
     # Import basics (Stat names, any other easy hard-code things)
-    with open("protos/basics.proto", "r", encoding="utf8") as f:
+    with open("poketypes/protos/basics.proto", "r", encoding="utf8") as f:
         proto_str = f.read()
 
     proto_str += "\n\n"
@@ -430,12 +430,12 @@ def protogen():
 
     for dt in DATA_TYPES:
         if dt in PROTOGEN_DICT.keys():
-            with open(f"protos/json/gen{CURRENT_GEN}_{dt}.json", "r", encoding="utf8") as f:
+            with open(f"poketypes/protos/json/gen{CURRENT_GEN}_{dt}.json", "r", encoding="utf8") as f:
                 data = json.load(f)
 
             proto_str += PROTOGEN_DICT[dt](data)
 
-    with open("protos/dexdata.proto", "w", encoding="utf8") as f:
+    with open("poketypes/protos/dexdata.proto", "w", encoding="utf8") as f:
         f.write(proto_str)
 
 
@@ -488,7 +488,7 @@ def fetch_latest(verbose: bool = True):
         for gen, data in data_by_gen.items():
             if data is None:
                 continue
-            with open(f"protos/json/gen{gen}_{dt.replace('-', '')}.json", "w", encoding="utf8") as f:
+            with open(f"poketypes/protos/json/gen{gen}_{dt.replace('-', '')}.json", "w", encoding="utf8") as f:
                 json.dump(data, f)
 
 

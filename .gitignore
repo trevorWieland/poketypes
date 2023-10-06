@@ -152,4 +152,4 @@ cython_debug/
 #.idea/
 
 # Raw Proto-building JSON Data
-protos/json/*.json
+poketypes/protos/json/*.json
