@@ -45,6 +45,28 @@ def clean_name(name: Optional[str]) -> Optional[str]:
     return clean_id
 
 
+def clean_forme(species: DexPokemon.ValueType) -> DexPokemon.ValueType:
+    """
+    Cleans a pokemon species (DexPokemon) into the string name of it's base forme.
+
+    Makes use of the fact that DexPokemon are of the form {dex_number}{3-digit forme number},
+    and that the base forme is always forme-number `000`.
+
+    If this changes, this function will no longer work.
+
+    If using this for pokemon identification, note that it will not work for teams with duplicate
+    base-forme pokemon. So a team that has both UNOWN-A and UNOWN-B will cause problems since both
+    are formes of the same base pokemon (UNOWN)
+
+    EX:
+    DexPokemon.POKEMON_BEEDRILLMEGA -> DexPokemon.POKEMON_BEEDRILL
+    DexPokemon.POKEMON_UNOWNF -> DexPokemon.POKEMON_UNOWN
+    """
+
+    clean_species = (species // 1000) * 1000
+    return clean_species
+
+
 def cast2dex(name: str, dex_class) -> int:
     """
     Given a string name, cleans it and casts it to the corresponding entry in the given dex_class

@@ -14,6 +14,6 @@ from .dexdata_pb2 import (
     DexWeather,
 )
 
-from .dexdata import cast2dex, clean_name
+from .dexdata import cast2dex, clean_name, clean_forme
 
 from .pokedex import PokedexMove, PokedexItem, PokedexPokemon
