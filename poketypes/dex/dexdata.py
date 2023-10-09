@@ -37,7 +37,9 @@ def clean_name(name: Optional[str]) -> Optional[str]:
             .replace("*", "")
             .replace(":", "")
             .replace("%", "")
-            .replace(".", ""),
+            .replace(".", "")
+            .replace(")", "")
+            .replace("(", ""),
         )
         .encode("ASCII", "ignore")
         .decode("ASCII")
