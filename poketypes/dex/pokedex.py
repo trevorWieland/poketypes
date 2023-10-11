@@ -15,7 +15,7 @@ from .dexdata_pb2 import (
 )
 
 from pydantic import BaseModel, Field
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, List
 
 
 class PokedexMove(BaseModel):
@@ -147,11 +147,11 @@ class PokedexItem(BaseModel):
     Contains basic information about items
     """
 
-    # TODO: Add more item categories like intended users
-
     # Identification fields
     name: str = Field(..., description="Friendly string name of this item")
     id: DexItem.ValueType = Field(..., description="The DexItem ID of this item")
+
+    is_gem: bool = Field(False, description="Whether the item is a gem or not")
 
     # Berry stuff
     is_berry: bool = Field(False, description="Whether the item is a berry")
@@ -162,8 +162,11 @@ class PokedexItem(BaseModel):
         None, description="If this item is usable with Natural Gift, what is the type"
     )
 
+    item_users: List[DexPokemon.ValueType] = Field([], description="A list of intended holders of this item")
+
     # ZMove stuff
     zmove_to: Optional[DexMove.ValueType] = Field(None, description="What move this zmove transforms the move *into*")
+    zmove_from: Optional[DexMove.ValueType] = Field(None, description="What special move this zmove transforms")
 
     # Mega stuff
     mega_evolves: Optional[DexPokemon.ValueType] = Field(
@@ -172,6 +175,25 @@ class PokedexItem(BaseModel):
     mega_forme: Optional[DexPokemon.ValueType] = Field(
         None, description="Which mega-forme pokemon this megastone evolves into. Optional"
     )
+
+    ignore_klutz: bool = Field(False, description="Whether the item ignores klutz")
+
+    fling_basepower: Optional[int] = Field(
+        None, description="The basepower of fling when flinging this item. None if n/a"
+    )
+
+
+class StatBlock(BaseModel):
+    """
+    Helper object for containing base stats
+    """
+
+    hp_stat: int - Field(..., description="The base hp of the pokemon")
+    atk_stat: int - Field(..., description="The base attack of the pokemon")
+    def_stat: int - Field(..., description="The base defence of the pokemon")
+    spa_stat: int - Field(..., description="The base special attack of the pokemon")
+    spd_stat: int - Field(..., description="The base special defence of the pokemon")
+    spe_stat: int - Field(..., description="The base speed of the pokemon")
 
 
 class PokedexPokemon(BaseModel):
@@ -189,3 +211,5 @@ class PokedexPokemon(BaseModel):
 
     base_name: str = Field(..., description="Friendly string name of this pokemon's base forme")
     base_id: DexPokemon.ValueType = Field(..., description="The DexItem ID of this pokemon's base forme")
+
+    types: List[DexType.ValueType] = Field(..., description="The types of this pokemon")
