@@ -1,3 +1,4 @@
+from .dexdata import cast2dex, clean_forme, clean_name
 from .dexdata_pb2 import (
     DexAbility,
     DexCondition,
@@ -13,7 +14,4 @@ from .dexdata_pb2 import (
     DexType,
     DexWeather,
 )
-
-from .dexdata import cast2dex, clean_name, clean_forme
-
-from .pokedex import PokedexMove, PokedexItem, PokedexPokemon
+from .pokedex import PokedexItem, PokedexMove, PokedexPokemon

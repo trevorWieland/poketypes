@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
-from enum import Enum, unique
-from typing import Optional, List, Dict, Type, Union
 import json
+from enum import Enum, unique
+from typing import Dict, List, Optional, Type, Union
+
+from pydantic import BaseModel, Field
 
 
 @unique

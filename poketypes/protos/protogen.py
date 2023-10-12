@@ -4,9 +4,8 @@ import unicodedata
 from copy import deepcopy
 
 import requests
-
-from statics import DATA_TYPES, CURRENT_GEN
 from mergers import merge
+from statics import CURRENT_GEN, DATA_TYPES
 
 
 def fetch_and_clean_ps_data(url: str):

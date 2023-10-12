@@ -1,4 +1,4 @@
-from statics import MAX_MON_IDX_PER_GEN, MAX_MOVE_IDX_PER_GEN, MAX_ABILITY_IDX_PER_GEN
+from statics import MAX_ABILITY_IDX_PER_GEN, MAX_MON_IDX_PER_GEN, MAX_MOVE_IDX_PER_GEN
 
 
 def merge_pokedex(gen, this_gen_data, next_gen_data):

@@ -19,7 +19,9 @@ class _DexStat:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexStatEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexStat.ValueType], builtins.type):
+class _DexStatEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexStat.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     STAT_UNASSIGNED: _DexStat.ValueType  # 0
     STAT_ATTACK: _DexStat.ValueType  # 1
@@ -65,7 +67,9 @@ class _DexGen:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexGenEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexGen.ValueType], builtins.type):
+class _DexGenEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexGen.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     GEN_UNASSIGNED: _DexGen.ValueType  # 0
     GEN_1: _DexGen.ValueType  # 1
@@ -97,7 +101,9 @@ class _DexMoveCategory:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexMoveCategoryEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexMoveCategory.ValueType], builtins.type):
+class _DexMoveCategoryEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexMoveCategory.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     MOVECATEGORY_UNASSIGNED: _DexMoveCategory.ValueType  # 0
     MOVECATEGORY_PHYSICAL: _DexMoveCategory.ValueType  # 1
@@ -117,7 +123,9 @@ class _DexMoveTarget:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexMoveTargetEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexMoveTarget.ValueType], builtins.type):
+class _DexMoveTargetEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexMoveTarget.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     MOVETARGET_UNASSIGNED: _DexMoveTarget.ValueType  # 0
     MOVETARGET_SELF: _DexMoveTarget.ValueType  # 1
@@ -161,7 +169,9 @@ class _DexType:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexType.ValueType], builtins.type):
+class _DexTypeEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexType.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     TYPE_UNASSIGNED: _DexType.ValueType  # 0
     TYPE_BUG: _DexType.ValueType  # 1
@@ -215,7 +225,9 @@ class _DexNature:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexNatureEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexNature.ValueType], builtins.type):
+class _DexNatureEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexNature.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     NATURE_UNASSIGNED: _DexNature.ValueType  # 0
     NATURE_ADAMANT: _DexNature.ValueType  # 1
@@ -279,7 +291,9 @@ class _DexPokemon:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexPokemonEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexPokemon.ValueType], builtins.type):
+class _DexPokemonEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexPokemon.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     POKEMON_UNASSIGNED: _DexPokemon.ValueType  # 0
     POKEMON_BULBASAUR: _DexPokemon.ValueType  # 1000
@@ -3111,7 +3125,9 @@ class _DexMove:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexMoveEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexMove.ValueType], builtins.type):
+class _DexMoveEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexMove.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     MOVE_UNASSIGNED: _DexMove.ValueType  # 0
     MOVE_RECHARGE: _DexMove.ValueType  # 1
@@ -5033,7 +5049,9 @@ class _DexItem:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexItemEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexItem.ValueType], builtins.type):
+class _DexItemEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexItem.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     ITEM_UNASSIGNED: _DexItem.ValueType  # 0
     ITEM_ABILITYSHIELD: _DexItem.ValueType  # 1882
@@ -6113,7 +6131,9 @@ class _DexStatus:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexStatusEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexStatus.ValueType], builtins.type):
+class _DexStatusEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexStatus.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     STATUS_UNASSIGNED: _DexStatus.ValueType  # 0
     STATUS_FNT: _DexStatus.ValueType  # 1
@@ -6141,7 +6161,9 @@ class _DexWeather:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexWeatherEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexWeather.ValueType], builtins.type):
+class _DexWeatherEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexWeather.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     WEATHER_UNASSIGNED: _DexWeather.ValueType  # 0
     WEATHER_NONE: _DexWeather.ValueType  # 1
@@ -6173,7 +6195,9 @@ class _DexCondition:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexConditionEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexCondition.ValueType], builtins.type):
+class _DexConditionEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexCondition.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     CONDITION_UNASSIGNED: _DexCondition.ValueType  # 0
     CONDITION_CONFUSION: _DexCondition.ValueType  # 1
@@ -6225,7 +6249,9 @@ class _DexAbility:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
 
-class _DexAbilityEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexAbility.ValueType], builtins.type):
+class _DexAbilityEnumTypeWrapper(
+    google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DexAbility.ValueType], builtins.type
+):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     ABILITY_UNASSIGNED: _DexAbility.ValueType  # 0
     ABILITY_NOABILITY: _DexAbility.ValueType  # 1

@@ -1,3 +1,7 @@
+from typing import Dict, List, Optional, Tuple
+
+from pydantic import BaseModel, Field
+
 from .dexdata_pb2 import (
     DexAbility,
     DexCondition,
@@ -13,9 +17,6 @@ from .dexdata_pb2 import (
     DexType,
     DexWeather,
 )
-
-from pydantic import BaseModel, Field
-from typing import Optional, Tuple, Dict, List
 
 
 class PokedexMove(BaseModel):
@@ -213,3 +214,7 @@ class PokedexPokemon(BaseModel):
     base_id: DexPokemon.ValueType = Field(..., description="The DexItem ID of this pokemon's base forme")
 
     types: List[DexType.ValueType] = Field(..., description="The types of this pokemon")
+
+    base_stats: StatBlock = Field(..., description="The base stat block of this pokemon")
+
+    abilities: List[DexAbility.ValueType] = Field(..., description="The list of abilities this pokemon can have")

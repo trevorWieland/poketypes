@@ -1,3 +1,6 @@
+import unicodedata
+from typing import Optional
+
 from .dexdata_pb2 import (
     DexAbility,
     DexCondition,
@@ -13,9 +16,6 @@ from .dexdata_pb2 import (
     DexType,
     DexWeather,
 )
-
-from typing import Optional
-import unicodedata
 
 
 def clean_name(name: Optional[str]) -> Optional[str]:
