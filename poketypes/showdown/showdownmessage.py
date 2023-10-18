@@ -10,6 +10,8 @@ from pydantic import BaseModel, Field
 @unique
 class MType(str, Enum):
     """
+    String-Enum for holding all unique categories of Showdown Generic Messages
+
     See https://github.com/smogon/pokemon-showdown/blob/master/PROTOCOL.md for the (partial) list of message types
     """
 

@@ -86,28 +86,28 @@ def cast2dex(name: str, dex_class) -> int:
         return clean_id
 
     if dex_class == DexAbility:
-        return DexAbility.Value(f"ABILITY_" + clean_id)
+        return DexAbility.Value(f"ABILITY_{clean_id}")
     elif dex_class == DexCondition:
-        return DexCondition.Value(f"CONDITION_" + clean_id)
+        return DexCondition.Value(f"CONDITION_{clean_id}")
     elif dex_class == DexGen:
-        return DexGen.Value(f"GEN_" + clean_id)
+        return DexGen.Value(f"GEN_{clean_id}")
     elif dex_class == DexItem:
-        return DexItem.Value(f"ITEM_" + clean_id)
+        return DexItem.Value(f"ITEM_{clean_id}")
     elif dex_class == DexMove:
-        return DexMove.Value(f"MOVE_" + clean_id)
+        return DexMove.Value(f"MOVE_{clean_id}")
     elif dex_class == DexMoveCategory:
-        return DexMoveCategory.Value(f"MOVECATEGORY_" + clean_id)
+        return DexMoveCategory.Value(f"MOVECATEGORY_{clean_id}")
     elif dex_class == DexMoveTarget:
-        return DexMoveTarget.Value(f"MOVETARGET_" + clean_id)
+        return DexMoveTarget.Value(f"MOVETARGET_{clean_id}")
     elif dex_class == DexNature:
-        return DexNature.Value(f"NATURE_" + clean_id)
+        return DexNature.Value(f"NATURE_{clean_id}")
     elif dex_class == DexPokemon:
-        return DexPokemon.Value(f"POKEMON_" + clean_id)
+        return DexPokemon.Value(f"POKEMON_{clean_id}")
     elif dex_class == DexStat:
-        return DexStat.Value(f"STAT_" + clean_id)
+        return DexStat.Value(f"STAT_{clean_id}")
     elif dex_class == DexStatus:
-        return DexStatus.Value(f"STATUS_" + clean_id)
+        return DexStatus.Value(f"STATUS_{clean_id}")
     elif dex_class == DexType:
-        return DexType.Value(f"TYPE_" + clean_id)
+        return DexType.Value(f"TYPE_{clean_id}")
     elif dex_class == DexWeather:
-        return DexWeather.Value(f"WEATHER_" + clean_id)
+        return DexWeather.Value(f"WEATHER_{clean_id}")

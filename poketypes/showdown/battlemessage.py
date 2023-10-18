@@ -25,6 +25,8 @@ from ..dex import (
 @unique
 class BMType(str, Enum):
     """
+    String-Enum for holding all unique categories of Showdown Battle Messages
+
     See https://github.com/smogon/pokemon-showdown/blob/master/sim/SIM-PROTOCOL.md for the full list of battle message types
     """
 

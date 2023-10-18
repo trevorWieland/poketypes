@@ -189,12 +189,12 @@ class StatBlock(BaseModel):
     Helper object for containing base stats
     """
 
-    hp_stat: int - Field(..., description="The base hp of the pokemon")
-    atk_stat: int - Field(..., description="The base attack of the pokemon")
-    def_stat: int - Field(..., description="The base defence of the pokemon")
-    spa_stat: int - Field(..., description="The base special attack of the pokemon")
-    spd_stat: int - Field(..., description="The base special defence of the pokemon")
-    spe_stat: int - Field(..., description="The base speed of the pokemon")
+    hp_stat: int = Field(..., description="The base hp of the pokemon")
+    atk_stat: int = Field(..., description="The base attack of the pokemon")
+    def_stat: int = Field(..., description="The base defence of the pokemon")
+    spa_stat: int = Field(..., description="The base special attack of the pokemon")
+    spd_stat: int = Field(..., description="The base special defence of the pokemon")
+    spe_stat: int = Field(..., description="The base speed of the pokemon")
 
 
 class PokedexPokemon(BaseModel):
@@ -208,10 +208,10 @@ class PokedexPokemon(BaseModel):
 
     # Identification fields
     name: str = Field(..., description="Friendly string name of this pokemon")
-    id: DexPokemon.ValueType = Field(..., description="The DexItem ID of this pokemon")
+    id: DexPokemon.ValueType = Field(..., description="The DexPokemon ID of this pokemon")
 
     base_name: str = Field(..., description="Friendly string name of this pokemon's base forme")
-    base_id: DexPokemon.ValueType = Field(..., description="The DexItem ID of this pokemon's base forme")
+    base_id: DexPokemon.ValueType = Field(..., description="The DexPokemon ID of this pokemon's base forme")
 
     types: List[DexType.ValueType] = Field(..., description="The types of this pokemon")
 
