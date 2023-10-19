@@ -288,7 +288,7 @@ def protogen_conditions(condition_data):
     proto_str += "enum DexStatus {\n"
     proto_str += "\tSTATUS_UNASSIGNED = 0;\n"
 
-    proto_str += f"\tSTATUS_FNT = 1;\n"
+    proto_str += "\tSTATUS_FNT = 1;\n"
 
     filtered_data = {k: v for k, v in condition_data.items() if v.get("effectType") == "Status"}
 
@@ -442,12 +442,14 @@ def fetch_latest(verbose: bool = True):
     """
     Fetches and processes the latest Pokemon Showdown typescript data files into more usable json files.
 
-    This will also back-merge the files to previous generations, since this will be used for generating the PokedexClass dictionaries
+    This will also merge the files to previous generations, since this will be used for generating the PokedexClass
+    dictionaries
 
     In short, we have two different goals:
         - Type hinting through auto-generating enums
         - Detailed instantiated dataclasses for each pokemon/move/item/etc that can be read at runtime
-    The data in these json files will serve as both the ground-truth for our enum labels (DexClass), then later the details themselves (PokedexClass)
+    The data in these json files will serve as both the ground-truth for our enum labels (DexClass),
+    then later the details themselves (PokedexClass)
     """
     base_url = "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data"
 

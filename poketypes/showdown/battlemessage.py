@@ -9,12 +9,10 @@ from pydantic import BaseModel, Field
 
 from ..dex import (
     DexAbility,
-    DexCondition,
     DexGen,
     DexItem,
     DexMove,
     DexPokemon,
-    DexStat,
     DexStatus,
     DexType,
     DexWeather,
@@ -27,7 +25,7 @@ class BMType(str, Enum):
     """
     String-Enum for holding all unique categories of Showdown Battle Messages
 
-    See https://github.com/smogon/pokemon-showdown/blob/master/sim/SIM-PROTOCOL.md for the full list of battle message types
+    See https://github.com/smogon/pokemon-showdown/blob/master/sim/SIM-PROTOCOL.md for the full list of battle messages
     """
 
     # Initialization message types
@@ -134,7 +132,7 @@ class BMType(str, Enum):
     j = "j"
     J = "J"
     join = "join"
-    l = "l"
+    l = "l"  # noqa: E741
     L = "L"
     leave = "leave"
     raw = "raw"
@@ -171,22 +169,44 @@ class PokemonIdentifier(BaseModel):
 
     @staticmethod
     def from_ident_string(ident: str) -> "PokemonIdentifier":
-        return PokemonIdentifier(IDENTITY=ident.split(":")[1].strip().upper(), PLAYER=ident.split(":")[0])
+        """Creates a new PokemonIdentifier from an identifier string without slot information
+
+        Args:
+            ident (str): An input string to extract field information from. Looks like "p1: Arcanine"
+
+        Returns:
+            PokemonIdentifier: A newly created PokemonIdentifier object from this string
+        """
+        return PokemonIdentifier(IDENTITY=ident.split(":")[1].strip().upper(), PLAYER=ident.split(":")[0], SLOT=None)
 
     @staticmethod
     def from_slot_string(slot: str) -> "PokemonIdentifier":
+        """Creates a new PokemonIdentifier from an identifier string with slot information
+
+        Args:
+            slot (str): An input string to extract field information from. Looks like "p1a: Arcanine"
+
+        Returns:
+            PokemonIdentifier: A newly created PokemonIdentifier object from this string
+        """
         return PokemonIdentifier(
             IDENTITY=slot.split(":")[1].strip().upper(), PLAYER=slot[:2].split(":")[0], SLOT=slot[2]
         )
 
     @staticmethod
     def from_string(string: str) -> "PokemonIdentifier":
+        """Automatically creates a new PokemonIdentifier based on which type of identity string is given
+
+        Args:
+            string (str): An input string to extract field information from. Looks like "p1a: Arcanine"
+
+        Returns:
+            PokemonIdentifier: A newly created PokemonIdentifier object from this string
+        """
         if len(string.split(":")[0]) == 3:
-            return PokemonIdentifier(
-                IDENTITY=string.split(":")[1].strip().upper(), PLAYER=string[:2].split(":")[0], SLOT=string[2]
-            )
+            return PokemonIdentifier.from_slot_string(string)
         else:
-            return PokemonIdentifier(IDENTITY=string.split(":")[1].strip().upper(), PLAYER=string.split(":")[0])
+            return PokemonIdentifier.from_ident_string(string)
 
 
 class EffectType(str, Enum):
@@ -214,7 +234,7 @@ class Effect(BaseModel):
     # TODO: Add a validator for secondary effect name
     SEC_EFFECT_NAME: Optional[str] = Field(
         None,
-        description="Any extra ability/item/move/status/weather/condition/volatile that is being impacted by this effect. Recommended to use something else if you can",
+        description="Secondary effect that is being impacted by this primary effect.",
     )
 
     EFFECT_SOURCE: Optional[PokemonIdentifier] = Field(
@@ -241,9 +261,11 @@ class BattleMessage(BaseModel):
         """
         Creates a specific BattleMessage object from a raw message.
 
-        For example, given a message '|faint|p2a: Umbreon', this will create a new BattleMessage_faint with fields extracted from the text properly
+        For example, given a message '|faint|p2a: Umbreon', this will create a new BattleMessage_faint with fields
+        extracted from the text properly
 
-        You should use the base class `BattleMessage.from_message` directly, as this will auto-identify which kind of battle message is being sent and create that
+        You should use the base class `BattleMessage.from_message` directly, as this will auto-identify which kind of
+        battle message is being sent and create the corresponding BattleMessage subclass
         """
 
         if battle_message.strip() == "" or (
@@ -254,16 +276,16 @@ class BattleMessage(BaseModel):
         try:
             bmtype = BMType(battle_message.split("|")[1])
             bm_class = bmtype_to_bmclass[bmtype]
-        except ValueError as e:
+        except ValueError:
             print(
-                f"Failed to identify which BMType we should use for battle message key {battle_message.split('|')[1]}. This is probably an error!"
+                f"Failed to identify which BMType we should use for battle message key {battle_message.split('|')[1]}."
             )
             print()
 
             bm = BattleMessage(BMTYPE="unknown", BATTLE_MESSAGE=battle_message, ERR_STATE="UNKNOWN_BMTYPE")
 
             return bm
-        except KeyError as e:
+        except KeyError:
             print(f"BMType {bmtype} does not have a class in the dictionary! This is probably an error!")
             print()
 
@@ -279,8 +301,8 @@ class BattleMessage(BaseModel):
             print()
 
             bm = BattleMessage(BMTYPE="unknown", BATTLE_MESSAGE=battle_message, ERR_STATE="IMPLEMENTATION_NOT_READY")
-        except Exception as e:
-            print(f"BMType {bmtype} failed to build from message {battle_message} due to a(n) {type(e)}: {e}")
+        except Exception as ex:
+            print(f"BMType {bmtype} failed to build from message {battle_message} due to a(n) {type(ex)}: {ex}")
             print()
 
             bm = BattleMessage(BMTYPE="unknown", BATTLE_MESSAGE=battle_message, ERR_STATE="PARSE_ERROR")
@@ -894,14 +916,14 @@ class BattleMessage_move(BattleMessage):
     |move|POKEMON|MOVE|TARGET|[from]
     """
 
-    # TODO: Add an animation target field based on the [still]/[spread] information. Not needed for AI but needed for animations
+    # TODO: Add an animation target field based on the [still]/[spread] information.
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon using the move")
     MOVE: str = Field(..., description="The name of the move used")
 
     TARGET: Optional[PokemonIdentifier] = Field(
         ...,
-        description="The primary target of this move. If notarget, this will be slotless with the original target listed, or even None",
+        description="The primary target of this move. This can be None when applicable",
     )
 
     EFFECT: Optional[Effect] = Field(
@@ -1318,7 +1340,7 @@ class BattleMessage_fail(BattleMessage):
 
     EFFECT: Optional[Effect] = Field(
         ...,
-        description="The effect causing/explaining the failure. Is Optional since sometimes it fails with no explanation",
+        description="The effect causing/explaining the fail. Is Optional since sometimes it fails with no explanation",
     )
 
     def from_message(battle_message: str) -> "BattleMessage_fail":
@@ -1329,7 +1351,8 @@ class BattleMessage_fail(BattleMessage):
         if len(bm_split) > 3:
             # In this case there is more details than just a Pokemon, so we can build and return an Effect
             if "[from]" in battle_message:
-                # In this case, our main effect is whatever is detailed in the [from] string, while anything in bm_split[3] is a secondary effect
+                # In this case, our main effect is whatever is detailed in the [from] string,
+                # while anything in bm_split[3] is a secondary effect
                 sec_effect = bm_split[3]
 
                 for from_str in bm_split:
@@ -1366,7 +1389,8 @@ class BattleMessage_fail(BattleMessage):
                 sec_effect = None
 
             else:
-                # In this case, our primary effect is bm_split[3] with potentially any details that come later (like [weak] for substitute) added as secondary
+                # In this case, our primary effect is bm_split[3] with potentially any details that come later
+                # (like [weak] for substitute) added as secondary
                 eff_type = "move"
                 eff_source = None
 
@@ -1397,7 +1421,7 @@ class BattleMessage_block(BattleMessage):
 
     POKEMON: PokemonIdentifier = Field(
         ...,
-        description="The pokemon that was targeted but blocked something (Doesn't have to be the reason it was blocked)",
+        description="The pokemon that was targeted but blocked something",
     )
 
     EFFECT: Effect = Field(..., description="The reason this was able to be blocked")
@@ -1812,8 +1836,6 @@ class BattleMessage_swapboost(BattleMessage):
     def from_message(battle_message: str) -> "BattleMessage_swapboost":
         raise NotImplementedError
 
-        bm_split = battle_message.split("|")
-
         return BattleMessage_swapboost(
             BMTYPE=BMType.swapboost,
             BATTLE_MESSAGE=battle_message,
@@ -1917,8 +1939,6 @@ class BattleMessage_copyboost(BattleMessage):
 
     def from_message(battle_message: str) -> "BattleMessage_copyboost":
         raise NotImplementedError
-
-        bm_split = battle_message.split("|")
 
         return BattleMessage_copyboost(
             BMTYPE=BMType.copyboost,
@@ -2204,16 +2224,12 @@ class BattleMessage_volstart(BattleMessage):
                 eff_source = None
         else:
             # Theres a couple of options from here. It could either be:
-            ## A - |-start|POKEMON|MOVE
-            ## B - |-start|POKEMON|MOVE|MOVE
-            ## C - |-start|POKEMON|MOVE|[from] OR |-start|POKEMON|MOVE|[from]|[of]
-            ## D - |-start|POKEMON|MOVE|MOVE|[from] OR |-start|POKEMON|MOVE|MOVE|[from]|[of]
+            #   A - |-start|POKEMON|MOVE
+            #   B - |-start|POKEMON|MOVE|MOVE
+            #   C - |-start|POKEMON|MOVE|[from] OR |-start|POKEMON|MOVE|[from]|[of]
+            #   D - |-start|POKEMON|MOVE|MOVE|[from] OR |-start|POKEMON|MOVE|MOVE|[from]|[of]
             # Double moves are for things like disable or mimic. In these cases, the first move is the disable/mimic/etc
             # while the second move is the thing `being` disabled/mimic'd/etc
-            # If we get 2 moves but no from then effect name will be the first move (disable/mimic/etc) and secondary will be the other (the disabled move)
-            # If we get 1 move and a from, then the secondary effect will be the move, while the effect name and type will come from the from message
-            # If we get 2 moves and a from, then we will drop the disable/mimic move, since the from takes precedence
-            # This is a candidate to change in the future if we find we need both the [from] details and both moves listed
             move1 = bm_split[3]
 
             if len(bm_split) < 5:
@@ -2338,11 +2354,11 @@ class BattleMessage_volend(BattleMessage):
                 eff_source = None
         else:
             # Theres a couple of options from here. It could either be:
-            ## A - |-end|POKEMON|MOVE
-            ## B - |-end|POKEMON|MOVE|[DETAIL]
-            ## C - |-end|POKEMON|MOVE|[from] OR |-end|POKEMON|MOVE|[from]|[of]
-            # We will assign MOVE to EFFECT_NAME unless there is a from, in which case it will become the secondary effect to the from Effect
-            # If there is not a [from] but instead a [DETAIL], MOVE will be the EFFECT_NAME while DETAIL will be the secondary effect
+            # A - |-end|POKEMON|MOVE
+            # B - |-end|POKEMON|MOVE|[DETAIL]
+            # C - |-end|POKEMON|MOVE|[from] OR |-end|POKEMON|MOVE|[from]|[of]
+            # We will assign MOVE to EFFECT_NAME unless there is a from, in which case it will become the secondary
+            # If there is not a [from] but instead a [DETAIL], MOVE will be the EFFECT_NAME instead
             move = bm_split[3]
 
             if len(bm_split) < 5:
@@ -2503,7 +2519,7 @@ class BattleMessage_enditem(BattleMessage):
 
     EFFECT: Optional[Effect] = Field(
         None,
-        description="The effect that destroyed the item, if applicable. Not used when obvious (White Herb, Berries, gems)",
+        description="The effect that destroyed the item, if applicable.",
     )
 
     def from_message(battle_message: str) -> "BattleMessage_enditem":
@@ -2517,7 +2533,7 @@ class BattleMessage_enditem(BattleMessage):
 
         if len(bm_split) > 4:
             # This means there is at least a [from] clause and possibly also a [of] clause
-            # However, enditem uses weird |[from] ATTRIBUTE|[move] MOVE or |[from] ATTRIBUTE syntax sometimes, so we need to parse that
+            # However, enditem uses weird |[from] ATTRIBUTE|[move] MOVE or |[from] ATTRIBUTE syntax sometimes
 
             if ":" in bm_split[4] and "[from]" in bm_split[4]:
                 # this implies that bm_split[4] is a standard syntax from statement, which we can process as normal
@@ -2535,7 +2551,8 @@ class BattleMessage_enditem(BattleMessage):
             elif "[from]" in bm_split[4] and len(bm_split) > 5:
                 # This implies the weird split formatting syntax mentioned above
                 # EX: |-enditem|p2a: Ditto|Sitrus Berry|[from] stealeat|[move] Bug Bite|[of] p1a: Ariados
-                # For our purposes, we will set stealeat as the sec_effect, Bug Bit as eff_name, move as eff_type, and p1a: Ariados as eff_source
+                # For our purposes, we will set stealeat as the sec_effect, Bug Bite as eff_name, move as eff_type, and
+                # p1a: Ariados as eff_source
 
                 sec_effect = " ".join(bm_split[4].split(" ")[1:])
                 eff_type = bm_split[5].split(" ")[0][1:-1]
@@ -2579,7 +2596,8 @@ class BattleMessage_ability(BattleMessage):
         ability = bm_split[3]
 
         if len(bm_split) >= 5 and "[from]" in bm_split[4]:
-            # Parse this message assuming the form |-ability|p1a: Gardevoir|Swarm|[from] ability: Trace|[of] p2a: Leavanny
+            # Parse this message assuming the form:
+            #  |-ability|p1a: Gardevoir|Swarm|[from] ability: Trace|[of] p2a: Leavanny
             from_split = bm_split[4].split(" ")
 
             if len(from_split) == 2:
@@ -2669,8 +2687,6 @@ class BattleMessage_mega(BattleMessage):
     def from_message(battle_message: str) -> "BattleMessage_mega":
         raise NotImplementedError
 
-        bm_split = battle_message.split("|")
-
         return BattleMessage_mega(
             BMTYPE=BMType.mega,
             BATTLE_MESSAGE=battle_message,
@@ -2703,8 +2719,6 @@ class BattleMessage_burst(BattleMessage):
 
     def from_message(battle_message: str) -> "BattleMessage_burst":
         raise NotImplementedError
-
-        bm_split = battle_message.split("|")
 
         return BattleMessage_burst(
             BMTYPE=BMType.burst,
@@ -2755,8 +2769,6 @@ class BattleMessage_activate(BattleMessage):
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon the effect is about")
 
-    # ACTIVE_TYPE: Literal["VOLATILE", "MOVE", "ABILITY", "ITEM"] = Field(..., description="What kind of activation this is signifying")
-
     EFFECT: Effect = Field(..., description="The effect detailed in this activation")
 
     def from_message(battle_message: str) -> "BattleMessage_activate":
@@ -2787,11 +2799,13 @@ class BattleMessage_activate(BattleMessage):
                 sec_effect_name = None
                 eff_source = None
             elif len(bm_split) > 4:
-                # This means theres a secondary part to the effect, such as a move being mimic'd or an ability being overwritten with Mummy
-                # In general, EFFECT_NAME should be the `more` relevant thing. So if you're activating the ability Mummy and losing Battle Armor
-                ## then we would have Mummy be the EFFECT_NAME and SEC_EFFECT_NAME is Battle Armor. This is because we know for sure what category the
-                ## primary EFFECT_NAME belongs to as it is told to us directly, but theoretically the secondary could be any type and we are not informed
-                ## Lastly, if you're reading this, you have my deepest apologies, we're in this mess together at least!
+                # This means theres a secondary part to the effect, such as a move being mimic'd or an ability being
+                # overwritten with Mummy
+                # In general, EFFECT_NAME should be the `more` relevant thing. So if you're activating the ability Mummy
+                # and losing Battle Armorthen we would have Mummy be the EFFECT_NAME and SEC_EFFECT_NAME is
+                # Battle Armor. This is because we know for sure what category the primary EFFECT_NAME belongs to as
+                # it is told to us directly, but theoretically the secondary could be any type and we are not informed
+                # Lastly, if you're reading this, you have my deepest apologies, we're in this mess together at least!
                 sec_effect_name = bm_split[4]
 
                 if "[of]" in battle_message:
@@ -2872,8 +2886,6 @@ class BattleMessage_waiting(BattleMessage):
 
     def from_message(battle_message: str) -> "BattleMessage_waiting":
         raise NotImplementedError
-
-        bm_split = battle_message.split("|")
 
         return BattleMessage_waiting(
             BMTYPE=BMType.waiting,
@@ -3300,16 +3312,3 @@ bmtype_to_bmclass: Dict[BMType, Type["BattleMessage"]] = {
     BMType.raw: BattleMessage_raw,
     BMType.anim: BattleMessage_anim,
 }
-
-if __name__ == "__main__":
-    # message = '|request|{"forceSwitch":[true],"side":{"name":"colress-gpt","id":"p2","pokemon":[{"ident":"p2: Espeon","details":"Espeon, L81, M","condition":"0 fnt","active":true,"stats":{"atk":111,"def":144,"spa":256,"spd":201,"spe":224},"moves":["hiddenpowerfire","signalbeam","psychic","calmmind"],"baseAbility":"magicbounce","item":"lifeorb","pokeball":"pokeball"},{"ident":"p2: Blaziken","details":"Blaziken, L76, F","condition":"247/247","active":false,"stats":{"atk":226,"def":150,"spa":211,"spd":150,"spe":166},"moves":["highjumpkick","stoneedge","swordsdance","flareblitz"],"baseAbility":"speedboost","item":"lifeorb","pokeball":"pokeball"},{"ident":"p2: Dustox","details":"Dustox, L90, M","condition":"254/254","active":false,"stats":{"atk":95,"def":177,"spa":141,"spd":213,"spe":168},"moves":["sludgebomb","bugbuzz","quiverdance","roost"],"baseAbility":"shielddust","item":"blacksludge","pokeball":"pokeball"},{"ident":"p2: Scizor","details":"Scizor, L80, F","condition":"243/243","active":false,"stats":{"atk":254,"def":206,"spa":134,"spd":174,"spe":150},"moves":["roost","bugbite","pursuit","bulletpunch"],"baseAbility":"technician","item":"lifeorb","pokeball":"pokeball"},{"ident":"p2: Registeel","details":"Registeel, L82","condition":"265/265","active":false,"stats":{"atk":170,"def":293,"spa":170,"spd":293,"spe":129},"moves":["ironhead","sleeptalk","rest","toxic"],"baseAbility":"clearbody","item":"leftovers","pokeball":"pokeball"},{"ident":"p2: Skuntank","details":"Skuntank, L86, M","condition":"317/317","active":false,"stats":{"atk":209,"def":164,"spa":171,"spd":154,"spe":194},"moves":["crunch","taunt","suckerpunch","poisonjab"],"baseAbility":"aftermath","item":"blacksludge","pokeball":"pokeball"}]},"noCancel":true,"rqid":7}'
-
-    # bm = BattleMessage_request.from_message(message)
-
-    # print(bm)
-
-    message = """|request|{"active":[{"moves":[{"move":"Thunderbolt","id":"thunderbolt","pp":23,"maxpp":24,"target":"normal","disabled":false},{"move":"Confuse Ray","id":"confuseray","pp":16,"maxpp":16,"target":"normal","disabled":false},{"move":"Psychic","id":"psychic","pp":15,"maxpp":16,"target":"normal","disabled":false},{"move":"Explosion","id":"explosion","pp":8,"maxpp":8,"target":"normal","disabled":false}]}],"side":{"name":"colress-gpt","id":"p1","pokemon":[{"ident":"p1: Haunter","details":"Haunter, L71","condition":"210/210 slp","active":true,"stats":{"atk":142,"def":134,"spa":234,"spd":234,"spe":205},"moves":["thunderbolt","confuseray","psychic","explosion"],"baseAbility":"noability","item":"","pokeball":"pokeball"},{"ident":"p1: Kangaskhan","details":"Kangaskhan, L73","condition":"27/304","active":false,"stats":{"atk":211,"def":189,"spa":131,"spd":131,"spe":204},"moves":["earthquake","surf","bodyslam","hyperbeam"],"baseAbility":"noability","item":"","pokeball":"pokeball"},{"ident":"p1: Dugtrio","details":"Dugtrio, L73","condition":"201/201","active":false,"stats":{"atk":189,"def":145,"spa":175,"spd":175,"spe":248},"moves":["bodyslam","earthquake","slash","rockslide"],"baseAbility":"noability","item":"","pokeball":"pokeball"},{"ident":"p1: Raticate","details":"Raticate, L76","condition":"0 fnt","active":false,"stats":{"atk":198,"def":166,"spa":151,"spd":151,"spe":223},"moves":["blizzard","hyperbeam","bodyslam","superfang"],"baseAbility":"noability","item":"","pokeball":"pokeball"},{"ident":"p1: Nidoran-F","details":"Nidoran-F, L93","condition":"0 fnt","active":false,"stats":{"atk":178,"def":188,"spa":165,"spd":165,"spe":167},"moves":["doublekick","bodyslam","blizzard","thunderbolt"],"baseAbility":"noability","item":"","pokeball":"pokeball"},{"ident":"p1: Articuno","details":"Articuno, L70","condition":"0 fnt","active":false,"stats":{"atk":125,"def":210,"spa":245,"spd":245,"spe":189},"moves":["icebeam","reflect","rest","blizzard"],"baseAbility":"noability","item":"","pokeball":"pokeball"}]},"rqid":62}"""
-
-    bm = BattleMessage_request.from_message(message)
-
-    print(bm.model_dump_json(indent=4))

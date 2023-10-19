@@ -28,7 +28,7 @@ class MType(str, Enum):
     j = "j"
     J = "J"
     leave = "leave"
-    l = "l"
+    l = "l"  # noqa: E741
     L = "L"
     name = "name"
     n = "n"
@@ -72,26 +72,22 @@ class Message(BaseModel):
     @staticmethod
     def from_message(message: str) -> "Message":
         """
-        Creates a specific BattleMessage object from a raw message.
+        Creates a specific Message object from a raw string message.
 
-        For example, given a message '|faint|p2a: Umbreon', this will create a new BattleMessage_faint with fields extracted from the text properly
-
-        You should use the base class `BattleMessage.from_message` directly, as this will auto-identify which kind of battle message is being sent and create that
+        This is used for general Showdown Messages, compared to the BattleMessage class meant for battle details.
         """
 
         try:
             mtype = MType(message.split("|")[1])
             m_class = mtype_to_mclass[mtype]
-        except ValueError as e:
-            print(
-                f"Failed to identify which MType we should use for general message key {message.split('|')[1]}. This is probably an error!"
-            )
+        except ValueError:
+            print(f"Failed to identify which MType we should use for general message key {message.split('|')[1]}.")
 
             m = Message(MTYPE="unknown", MESSAGE=message)
 
             return m
-        except KeyError as e:
-            print(f"MType {mtype} does not have a class in the dictionary! This is probably an error!")
+        except KeyError:
+            print(f"MType {mtype} does not have a class in the dictionary!")
 
             m = Message(MTYPE="unknown", MESSAGE=message)
 
@@ -103,8 +99,8 @@ class Message(BaseModel):
             print(f"MType {mtype}'s extraction implementation isn't ready yet!")
 
             m = Message(MTYPE="unknown", MESSAGE=message)
-        except Exception as e:
-            print(f"MType {mtype} failed to build from message {message} due to a(n) {type(e)}: {e}")
+        except Exception as ex:
+            print(f"MType {mtype} failed to build from message {message} due to a(n) {type(ex)}: {ex}")
 
             m = Message(MTYPE="unknown", MESSAGE=message)
 

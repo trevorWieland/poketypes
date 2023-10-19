@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "poketypes"
-version = "0.1.6"
+version = "0.1.7"
 description = "Automated classes with full typehinting support for pokemon, abilities, items, and so much more"
 authors = ["Trevor Wieland <trevor_wieland@mac.com>"]
 license = "MIT"
@@ -23,9 +23,27 @@ requests = "^2.31.0"
 notebook = "^7.0.4"
 isort = "^5.12.0"
 black = "^23.9.1"
+flake8 = "^6.1.0"
+flake8-pyproject = "^1.2.3"
+pydoclint = {extras = ["flake8"], version = "^0.3.6"}
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry_bumpversion.file."poketypes/__init__.py"]
+
+[tool.flake8]
+max-line-length = 120
+count = true
+exclude = ['dexdata_pb2.py']
+per-file-ignores = [
+    '__init__.py:F401',
+]
+style = 'google'
+require-return-section-when-returning-nothing = true
+
+[tool.pydoclint]
+style = 'google'
+exclude = ['dexdata_pb2.py']
+require-return-section-when-returning-nothing = true

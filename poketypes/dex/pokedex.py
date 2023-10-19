@@ -4,16 +4,12 @@ from pydantic import BaseModel, Field
 
 from .dexdata_pb2 import (
     DexAbility,
-    DexCondition,
-    DexGen,
     DexItem,
     DexMove,
     DexMoveCategory,
     DexMoveTarget,
-    DexNature,
     DexPokemon,
     DexStat,
-    DexStatus,
     DexType,
     DexWeather,
 )
