@@ -1,3 +1,12 @@
+# poketypes/showdown/battlemessage.py
+
+"""Contains BaseModels for BattleMessage parsing and processing.
+
+Remember to use BattleMessage.from_message directly, unless you are building test cases where you want to assert that
+a given message leads to a certain subclass of BattleMessage. `from_message` will auto-detect which BMType the given
+message corresponds to, and return the associated subclass (or an error detailing what went wrong) for you.
+"""
+
 from __future__ import annotations
 
 import json
@@ -7,23 +16,12 @@ from typing import Dict, List, Literal, Optional, Type, Union
 
 from pydantic import BaseModel, Field
 
-from ..dex import (
-    DexAbility,
-    DexGen,
-    DexItem,
-    DexMove,
-    DexPokemon,
-    DexStatus,
-    DexType,
-    DexWeather,
-    cast2dex,
-)
+from ..dex import DexAbility, DexGen, DexItem, DexMove, DexPokemon, DexStatus, DexType, DexWeather, cast2dex
 
 
 @unique
 class BMType(str, Enum):
-    """
-    String-Enum for holding all unique categories of Showdown Battle Messages
+    """String-Enum for holding all unique categories of Showdown Battle Messages.
 
     See https://github.com/smogon/pokemon-showdown/blob/master/sim/SIM-PROTOCOL.md for the full list of battle messages
     """
@@ -143,6 +141,8 @@ class BMType(str, Enum):
 
 
 class PokeStat(str, Enum):
+    """Helper enum for identifying valid stats."""
+
     attack = "atk"
     defence = "def"
     special_attack = "spa"
@@ -156,6 +156,8 @@ class PokeStat(str, Enum):
 
 
 class PokemonIdentifier(BaseModel):
+    """A BaseModel giving details about which Pokemon is being talked about."""
+
     IDENTITY: str = Field(
         ...,
         description="The unique identifier for a pokemon. Looks like `ARCANINE` if the input is `p1: Arcanine`",
@@ -169,7 +171,7 @@ class PokemonIdentifier(BaseModel):
 
     @staticmethod
     def from_ident_string(ident: str) -> "PokemonIdentifier":
-        """Creates a new PokemonIdentifier from an identifier string without slot information
+        """Create a new PokemonIdentifier from an identifier string *without* slot information.
 
         Args:
             ident (str): An input string to extract field information from. Looks like "p1: Arcanine"
@@ -181,7 +183,7 @@ class PokemonIdentifier(BaseModel):
 
     @staticmethod
     def from_slot_string(slot: str) -> "PokemonIdentifier":
-        """Creates a new PokemonIdentifier from an identifier string with slot information
+        """Create a new PokemonIdentifier from an identifier string *with* slot information.
 
         Args:
             slot (str): An input string to extract field information from. Looks like "p1a: Arcanine"
@@ -195,7 +197,7 @@ class PokemonIdentifier(BaseModel):
 
     @staticmethod
     def from_string(string: str) -> "PokemonIdentifier":
-        """Automatically creates a new PokemonIdentifier based on which type of identity string is given
+        """Auto-Create a new PokemonIdentifier based on which type of identity string is given.
 
         Args:
             string (str): An input string to extract field information from. Looks like "p1a: Arcanine"
@@ -210,6 +212,8 @@ class PokemonIdentifier(BaseModel):
 
 
 class EffectType(str, Enum):
+    """Helper class to identify which category of effect is being activated."""
+
     ability = "ability"
     item = "item"
     move = "move"
@@ -221,10 +225,7 @@ class EffectType(str, Enum):
 
 
 class Effect(BaseModel):
-    """
-    A helper class for many Battle Message types that rely on something happening due to an
-    ability / item / weather / status / etc
-    """
+    """A helper class for many Battle Message types that rely on *something* happening to cause the message effect."""
 
     EFFECT_TYPE: Optional[EffectType] = Field(None, description="The category of effect causing this.")
 
@@ -243,6 +244,15 @@ class Effect(BaseModel):
 
 
 class BattleMessage(BaseModel):
+    """The base class for all specific BattleMessage subclasses to be built from.
+
+    When parsing a string battle message, you should directly use this class's `from_message` function, which will
+    auto-identify which subclass (if any) the given string belongs to.
+
+    Across all BattleMessages, you will be able to access both BMTYPE and BATTLE_MESSAGE, though you shouldn't need
+    to access BATTLE_MESSAGE directly. (If you do, then we must be missing some data that exists in the raw string)
+    """
+
     BMTYPE: BMType = Field(
         ...,
         description="The message type of this battle message. Must be a vaild showdown battle message.",
@@ -258,16 +268,11 @@ class BattleMessage(BaseModel):
 
     @staticmethod
     def from_message(battle_message: str) -> "BattleMessage":
-        """
-        Creates a specific BattleMessage object from a raw message.
+        """Create a specific BattleMessage object from a raw message.
 
         For example, given a message '|faint|p2a: Umbreon', this will create a new BattleMessage_faint with fields
-        extracted from the text properly
-
-        You should use the base class `BattleMessage.from_message` directly, as this will auto-identify which kind of
-        battle message is being sent and create the corresponding BattleMessage subclass
+        extracted from the text properly.
         """
-
         if battle_message.strip() == "" or (
             battle_message.split("|")[1] == "request" and battle_message.split("|")[2] == ""
         ):
@@ -311,8 +316,15 @@ class BattleMessage(BaseModel):
 
 
 class BattleMessage_player(BattleMessage):
-    """
-    |player|PLAYER|USERNAME|AVATAR|RATING
+    """Message containing player information.
+
+    Use Case(s):
+        - To communicate player username/avatar/rating information.
+    Format(s):
+        - |player|PLAYER|USERNAME|AVATAR|RATING
+    Example(s):
+        - |player|p1|colress-gpt-test1|colress|1520
+        - |player|p2|colress-gpt-test2|265|1229
     """
 
     PLAYER: str = Field(..., description="The player id of this player", pattern=r"p[1-4]")
@@ -322,6 +334,7 @@ class BattleMessage_player(BattleMessage):
 
     @staticmethod
     def from_message(battle_message: str) -> "BattleMessage_player":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_player(
@@ -335,8 +348,14 @@ class BattleMessage_player(BattleMessage):
 
 
 class BattleMessage_teamsize(BattleMessage):
-    """
-    |teamsize|PLAYER|NUMBER
+    """Message containing teamsize information.
+
+    Use Case(s):
+        - To communicate player team size.
+    Format(s):
+        - |teamsize|PLAYER|NUMBER
+    Example(s):
+        - |teamsize|p1|6
     """
 
     PLAYER: str = Field(..., description="The player id of this player", pattern=r"p[1-4]")
@@ -344,6 +363,7 @@ class BattleMessage_teamsize(BattleMessage):
 
     @staticmethod
     def from_message(battle_message: str) -> "BattleMessage_teamsize":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_teamsize(
@@ -355,8 +375,14 @@ class BattleMessage_teamsize(BattleMessage):
 
 
 class BattleMessage_gametype(BattleMessage):
-    """
-    |gametype|GAMETYPE
+    """Message containing gametype information.
+
+    Use Case(s):
+        - To communicate the game type (singles, doubles, triples, etc.)
+    Format(s):
+        - |gametype|GAMETYPE
+    Example(s):
+        - |gametype|singles
     """
 
     GAMETYPE: Literal["singles", "doubles", "triples", "multi", "freeforall"] = Field(
@@ -365,6 +391,7 @@ class BattleMessage_gametype(BattleMessage):
 
     @staticmethod
     def from_message(battle_message: str) -> "BattleMessage_gametype":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_gametype(
@@ -375,13 +402,20 @@ class BattleMessage_gametype(BattleMessage):
 
 
 class BattleMessage_gen(BattleMessage):
-    """
-    |gen|GENNUM
+    """Message containing gen information.
+
+    Use Case(s):
+        - To communicate the generation number.
+    Format(s):
+        - |gen|GENNUM
+    Example(s):
+        - |gen|5
     """
 
     GENNUM: DexGen.ValueType = Field(..., description="The integer generation number of this format")
 
     def from_message(battle_message: str) -> "BattleMessage_gen":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_gen(
@@ -392,13 +426,20 @@ class BattleMessage_gen(BattleMessage):
 
 
 class BattleMessage_tier(BattleMessage):
-    """
-    |tier|FORMATNAME
+    """Message containing format information.
+
+    Use Case(s):
+        - To communicate the format of this battle.
+    Format(s):
+        - |tier|FORMATNAME
+    Example(s):
+        - |tier|[Gen 5] Random Battle
     """
 
     FORMATNAME: str = Field(..., description="The game format of this match")
 
     def from_message(battle_message: str) -> "BattleMessage_tier":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_tier(
@@ -409,13 +450,20 @@ class BattleMessage_tier(BattleMessage):
 
 
 class BattleMessage_rated(BattleMessage):
-    """
-    |rated|MESSAGE
+    """Message containing ratied-match information.
+
+    Use Case(s):
+        - To communicate whether this is a rated battle, with any optional extra message.
+    Format(s):
+        - |rated|MESSAGE
+    Example(s):
+        - |rated|
     """
 
     MESSAGE: Optional[str] = Field(None, description="An optional message used in tournaments")
 
     def from_message(battle_message: str) -> "BattleMessage_rated":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_rated(
@@ -426,14 +474,21 @@ class BattleMessage_rated(BattleMessage):
 
 
 class BattleMessage_rule(BattleMessage):
-    """
-    |rule|RULE: DESCRIPTION
+    """Message containing extra rule information.
+
+    Use Case(s):
+        - To communicate any extra rules/clauses for this format.
+    Format(s):
+        - |rule|RULE: DESCRIPTION
+    Example(s):
+        - |rule|HP Percentage Mod: HP is shown in percentages
     """
 
     RULE: str = Field(..., description="The name of the rule")
     DESCRIPTION: str = Field(..., description="A description of this rule")
 
     def from_message(battle_message: str) -> "BattleMessage_rule":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_rule(
@@ -445,11 +500,18 @@ class BattleMessage_rule(BattleMessage):
 
 
 class BattleMessage_clearpoke(BattleMessage):
-    """
-    |clearpoke
+    """Message containing a clearpoke notification.
+
+    Use Case(s):
+        - To signal that teampreview is starting.
+    Format(s):
+        - |clearpoke
+    Example(s):
+        - |clearpoke
     """
 
     def from_message(battle_message: str) -> "BattleMessage_clearpoke":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_clearpoke(
             BMTYPE=BMType.clearpoke,
             BATTLE_MESSAGE=battle_message,
@@ -457,8 +519,14 @@ class BattleMessage_clearpoke(BattleMessage):
 
 
 class BattleMessage_poke(BattleMessage):
-    """
-    |poke|PLAYER|DETAILS|ITEM
+    """Message containing base-forme-only information about a pokemon, presented in teampreview.
+
+    Use Case(s):
+        - To communicate base-forme, simple pokemon information for teampreview
+    Format(s):
+        - |poke|PLAYER|DETAILS|ITEM
+    Example(s):
+        - |poke|p1|Metagross, L80|item
     """
 
     PLAYER: str = Field(..., description="The player id of this player", pattern=r"p[1-4]")
@@ -475,6 +543,7 @@ class BattleMessage_poke(BattleMessage):
     HAS_ITEM: bool = Field(False, description="Whether or not the pokemon is holding an item")
 
     def from_message(battle_message: str) -> "BattleMessage_poke":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         details = bm_split[3].split(",")
@@ -515,11 +584,18 @@ class BattleMessage_poke(BattleMessage):
 
 
 class BattleMessage_start(BattleMessage):
-    """
-    |start
+    """Message signaling a battle started.
+
+    Use Case(s):
+        - To communicate that the battle has started (teampreview is over)
+    Format(s):
+        - |start
+    Example(s):
+        - |start
     """
 
     def from_message(battle_message: str) -> "BattleMessage_start":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_start(
             BMTYPE=BMType.start,
             BATTLE_MESSAGE=battle_message,
@@ -527,11 +603,18 @@ class BattleMessage_start(BattleMessage):
 
 
 class BattleMessage_teampreview(BattleMessage):
-    """
-    |teampreview
+    """Message signaling to make a teampreview team-order decision.
+
+    Use Case(s):
+        - To communicate that the user needs to select a team-order.
+    Format(s):
+        - |teampreview
+    Example(s):
+        - |teampreview
     """
 
     def from_message(battle_message: str) -> "BattleMessage_teampreview":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_teampreview(
             BMTYPE=BMType.teampreview,
             BATTLE_MESSAGE=battle_message,
@@ -539,11 +622,18 @@ class BattleMessage_teampreview(BattleMessage):
 
 
 class BattleMessage_empty(BattleMessage):
-    """
-    |
+    """Completely blank message.
+
+    Use Case(s):
+        - To separate sections in a battle log
+    Format(s):
+        - |
+    Example(s):
+        - |
     """
 
     def from_message(battle_message: str) -> "BattleMessage_empty":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_empty(
             BMTYPE=BMType.empty,
             BATTLE_MESSAGE=battle_message,
@@ -551,9 +641,7 @@ class BattleMessage_empty(BattleMessage):
 
 
 class RequestPoke(BaseModel):
-    """
-    A helper class to contain details about a pokemon held in the `side` data of a request.
-    """
+    """A helper class to contain details about a pokemon held in the `side` data of a request."""
 
     IDENT: PokemonIdentifier = Field(..., description="The string pokemon identifier (without slot information)")
 
@@ -612,9 +700,7 @@ class RequestPoke(BaseModel):
 
 
 class MoveData(BaseModel):
-    """
-    A helper class to contain details about a move held in the active data for a request
-    """
+    """A helper class to contain details about a move held in the active data for a request."""
 
     NAME: str = Field(..., description="The friendly name of the move")
     ID: DexMove.ValueType = Field(..., description="The id of the move")
@@ -631,9 +717,7 @@ class MoveData(BaseModel):
 
 
 class ActiveOption(BaseModel):
-    """
-    A helper class to contain details about all moves available for an active pokemon in a request
-    """
+    """A helper class to contain details about all moves available for an active pokemon in a request."""
 
     MOVES: List[MoveData] = Field(..., description="A list of available moves for this slot")
 
@@ -646,8 +730,21 @@ class ActiveOption(BaseModel):
 
 
 class BattleMessage_request(BattleMessage):
-    """
-    |request|REQUEST
+    """Message communicating options the user has in an upcoming choice.
+
+    Note: This does not necessarily mean it is time for the user to *respond* to a choice, as teampreview and move
+    requests are sent *before* the details of the previous turn are sent, and thus you should wait until it is the
+    correct time to send your decision. For FORCESWITCH requests, however, a decision should be sent once you receive
+    this message.
+    Use Case(s):
+        - To inform the user about their team so that a team-order decision can be made.
+        - To inform the user about their available moves/switches so that a standard decision can be made.
+        - To request the user to switch out a Pokemon due to a forced operation (fainted/forced out).
+        - To inform the user that their opponent is making a decision and that the user has to wait for them.
+    Format(s):
+        - |request|REQUEST_JSON
+    Example(s):
+        - See logs for examples, there are a lot of variations.
     """
 
     REQUEST_TYPE: Literal["TEAMPREVIEW", "ACTIVE", "FORCESWITCH", "WAIT"] = Field(
@@ -673,6 +770,7 @@ class BattleMessage_request(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_request":
+        """Create a specific BattleMessage object from a raw message."""
         request = json.loads(battle_message.split("|")[2])
 
         if request.get("teamPreview", False):
@@ -795,13 +893,20 @@ class BattleMessage_request(BattleMessage):
 
 
 class BattleMessage_inactive(BattleMessage):
-    """
-    |inactive|MESSAGE
+    """Message communicating that the inactivity timer has been set.
+
+    Use Case(s):
+        - To signal that there is a time-limit for descisions to be made.
+    Format(s):
+        - |inactive|MESSAGE
+    Example(s):
+        - TODO
     """
 
     MESSAGE: str = Field(..., description="A message related to the battle timer notification")
 
     def from_message(battle_message: str) -> "BattleMessage_inactive":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_inactive(
@@ -812,13 +917,20 @@ class BattleMessage_inactive(BattleMessage):
 
 
 class BattleMessage_inactiveoff(BattleMessage):
-    """
-    |inactiveoff|MESSAGE
+    """Message communicating that the inactivity timer has been turned off.
+
+    Use Case(s):
+        - To signal that there is no longer a time-limit for descisions to be made.
+    Format(s):
+        - |inactiveoff|MESSAGE
+    Example(s):
+        - TODO
     """
 
     MESSAGE: str = Field(..., description="A message related to the battle timer notification")
 
     def from_message(battle_message: str) -> "BattleMessage_inactiveoff":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_inactiveoff(
@@ -829,11 +941,18 @@ class BattleMessage_inactiveoff(BattleMessage):
 
 
 class BattleMessage_upkeep(BattleMessage):
-    """
-    |upkeep
+    """Message communicating upkeep notice.
+
+    Use Case(s):
+        - To signal that the upkeep stage has happened
+    Format(s):
+        - |upkeep
+    Example(s):
+        - |upkeep
     """
 
     def from_message(battle_message: str) -> "BattleMessage_upkeep":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_upkeep(
             BMTYPE=BMType.upkeep,
             BATTLE_MESSAGE=battle_message,
@@ -841,13 +960,20 @@ class BattleMessage_upkeep(BattleMessage):
 
 
 class BattleMessage_turn(BattleMessage):
-    """
-    |turn|NUMBER
+    """Message communicating that a turn has begun, and that move choices should be made.
+
+    Use Case(s):
+        - To signal to the players to make a move.
+    Format(s):
+        - |turn|NUMBER
+    Example(s):
+        - |turn|2
     """
 
     NUMBER: int = Field(..., description="The current turn number")
 
     def from_message(battle_message: str) -> "BattleMessage_turn":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_turn(
@@ -858,13 +984,20 @@ class BattleMessage_turn(BattleMessage):
 
 
 class BattleMessage_win(BattleMessage):
-    """
-    |win|USER
+    """Message communicating that a player has won the battle.
+
+    Use Case(s):
+        - To signal which player has won.
+    Format(s):
+        - |win|USER
+    Example(s):
+        - |win|colress-gpt-test2
     """
 
     USERNAME: str = Field(..., description="The username of the winning player")
 
     def from_message(battle_message: str) -> "BattleMessage_win":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_win(
@@ -875,11 +1008,18 @@ class BattleMessage_win(BattleMessage):
 
 
 class BattleMessage_tie(BattleMessage):
-    """
-    |tie
+    """Message communicating that *neither* player has won the battle.
+
+    Use Case(s):
+        - To signal the battle has ended in a tie
+    Format(s):
+        - |tie
+    Example(s):
+        - |tie
     """
 
     def from_message(battle_message: str) -> "BattleMessage_tie":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_tie(
             BMTYPE=BMType.tie,
             BATTLE_MESSAGE=battle_message,
@@ -887,11 +1027,18 @@ class BattleMessage_tie(BattleMessage):
 
 
 class BattleMessage_expire(BattleMessage):
-    """
-    |expire|
+    """Message communicating that the battle has ended due to mutual inactivity.
+
+    Use Case(s):
+        - To signal the battle has ended due to mutual inactivity
+    Format(s):
+        - |expire|
+    Example(s):
+        - |expire|
     """
 
     def from_message(battle_message: str) -> "BattleMessage_expire":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_expire(
             BMTYPE=BMType.expire,
             BATTLE_MESSAGE=battle_message,
@@ -899,21 +1046,38 @@ class BattleMessage_expire(BattleMessage):
 
 
 class BattleMessage_t(BattleMessage):
-    """
-    |t:|TIMESTAMP
+    """Message communicating the current timestamp.
+
+    Use Case(s):
+        - Gives current timestamp of this set of messages
+    Format(s):
+        - |t:|TIMESTAMP
+    Example(s):
+        - |t:|1696832299
     """
 
     TIMESTAMP: datetime = Field(..., description="The time of this turn as a datetime (conv from unix seconds)")
 
     def from_message(battle_message: str) -> "BattleMessage_t":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_t(BMTYPE=BMType.t, BATTLE_MESSAGE=battle_message, TIMESTAMP=int(bm_split[2]))
 
 
 class BattleMessage_move(BattleMessage):
-    """
-    |move|POKEMON|MOVE|TARGET|[from]
+    """Message communicating that a pokemon successfully used a move.
+
+    Use Case(s):
+        - Communicating which move was used, including source/target information.
+    Format(s):
+        - |move|POKEMON|MOVE|TARGET
+        - |move|POKEMON|MOVE|TARGET|[from]
+        - TODO: Add more
+    Example(s):
+        - |move|p1a: Sceptile|Acrobatics|p2a: Espeon
+        - |move|p1a: Kangaskhan|Fake Out||[still]
+        - TODO: Add more
     """
 
     # TODO: Add an animation target field based on the [still]/[spread] information.
@@ -931,6 +1095,7 @@ class BattleMessage_move(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_move":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         user = PokemonIdentifier.from_string(bm_split[2])
@@ -966,8 +1131,14 @@ class BattleMessage_move(BattleMessage):
 
 
 class BattleMessage_switch(BattleMessage):
-    """
-    |switch|POKEMON|DETAILS|HP STATUS
+    """Message communicating that a pokemon has switched in.
+
+    Use Case(s):
+        - Communicating which pokemon switched in, as well as info about the pokemon.
+    Format(s):
+        - |switch|POKEMON|DETAILS|HP STATUS
+    Example(s):
+        - |switch|p2a: Toxicroak|Toxicroak, L81, F|100/100
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon swapping in, potentially replacing the slot")
@@ -988,6 +1159,7 @@ class BattleMessage_switch(BattleMessage):
     STATUS: Optional[str] = Field(None, description="The status of the pokemon. Can be None if there is no status")
 
     def from_message(battle_message: str) -> "BattleMessage_switch":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1068,6 +1240,7 @@ class BattleMessage_drag(BattleMessage):
     STATUS: Optional[str] = Field(None, description="The status of the pokemon. Can be None if there is no status")
 
     def from_message(battle_message: str) -> "BattleMessage_drag":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1143,6 +1316,7 @@ class BattleMessage_detailschange(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_detailschange":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1199,6 +1373,7 @@ class BattleMessage_replace(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_replace":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1255,6 +1430,7 @@ class BattleMessage_swap(BattleMessage):
     EFFECT: Optional[Effect] = Field(None, description="An optional effect explaining what caused the swapping")
 
     def from_message(battle_message: str) -> "BattleMessage_swap":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1297,6 +1473,7 @@ class BattleMessage_cant(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_cant":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1320,6 +1497,7 @@ class BattleMessage_faint(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon fainting")
 
     def from_message(battle_message: str) -> "BattleMessage_faint":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1344,6 +1522,7 @@ class BattleMessage_fail(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_fail":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1427,6 +1606,7 @@ class BattleMessage_block(BattleMessage):
     EFFECT: Effect = Field(..., description="The reason this was able to be blocked")
 
     def from_message(battle_message: str) -> "BattleMessage_block":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1452,6 +1632,7 @@ class BattleMessage_notarget(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon that has no target")
 
     def from_message(battle_message: str) -> "BattleMessage_notarget":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_notarget(
@@ -1473,6 +1654,7 @@ class BattleMessage_miss(BattleMessage):
     TARGET: Optional[PokemonIdentifier] = Field(None, description="The pokemon evading (If applicable, can be None)")
 
     def from_message(battle_message: str) -> "BattleMessage_miss":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         source = PokemonIdentifier.from_string(bm_split[2])
@@ -1500,6 +1682,7 @@ class BattleMessage_damage(BattleMessage):
     EFFECT: Optional[Effect] = Field(None, description="The reason this damage was dealt, if not from a move")
 
     def from_message(battle_message: str) -> "BattleMessage_damage":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1568,6 +1751,7 @@ class BattleMessage_heal(BattleMessage):
     EFFECT: Optional[Effect] = Field(None, description="The reason this health was healed, if not from a move")
 
     def from_message(battle_message: str) -> "BattleMessage_heal":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1633,6 +1817,7 @@ class BattleMessage_sethp(BattleMessage):
     EFFECT: Optional[Effect] = Field(None, description="The reason this health was healed, if not from a move")
 
     def from_message(battle_message: str) -> "BattleMessage_sethp":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1694,6 +1879,7 @@ class BattleMessage_status(BattleMessage):
     STATUS: DexStatus.ValueType = Field(..., description="The status being gained")
 
     def from_message(battle_message: str) -> "BattleMessage_status":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1715,6 +1901,7 @@ class BattleMessage_curestatus(BattleMessage):
     STATUS: DexStatus.ValueType = Field(..., description="The status being lost")
 
     def from_message(battle_message: str) -> "BattleMessage_curestatus":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1734,6 +1921,7 @@ class BattleMessage_cureteam(BattleMessage):
     EFFECT: Effect = Field(..., description="The effect causing the team to be healed")
 
     def from_message(battle_message: str) -> "BattleMessage_cureteam":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         eff_source = PokemonIdentifier.from_string(bm_split[2])
@@ -1758,6 +1946,7 @@ class BattleMessage_boost(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_boost":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1786,6 +1975,7 @@ class BattleMessage_unboost(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_unboost":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1811,6 +2001,7 @@ class BattleMessage_setboost(BattleMessage):
     AMOUNT: int = Field(..., description="The new value being assigned for this stat boost")
 
     def from_message(battle_message: str) -> "BattleMessage_setboost":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1834,6 +2025,7 @@ class BattleMessage_swapboost(BattleMessage):
     POKEMON: str = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_swapboost":
+        """Create a specific BattleMessage object from a raw message."""
         raise NotImplementedError
 
         return BattleMessage_swapboost(
@@ -1850,6 +2042,7 @@ class BattleMessage_invertboost(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon to invert the boosts of")
 
     def from_message(battle_message: str) -> "BattleMessage_invertboost":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_invertboost(
@@ -1867,6 +2060,7 @@ class BattleMessage_clearboost(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon to clear the boosts of")
 
     def from_message(battle_message: str) -> "BattleMessage_clearboost":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_clearboost(
@@ -1882,6 +2076,7 @@ class BattleMessage_clearallboost(BattleMessage):
     """
 
     def from_message(battle_message: str) -> "BattleMessage_clearallboost":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_clearallboost(
             BMTYPE=BMType.clearallboost,
             BATTLE_MESSAGE=battle_message,
@@ -1898,6 +2093,7 @@ class BattleMessage_clearpositiveboost(BattleMessage):
     EFFECT: Effect = Field(..., description="Details about the effect that is causing this positive boost clearance")
 
     def from_message(battle_message: str) -> "BattleMessage_clearpositiveboost":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -1921,6 +2117,7 @@ class BattleMessage_clearnegativeboost(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon to clear the negative boosts of")
 
     def from_message(battle_message: str) -> "BattleMessage_clearnegativeboost":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_clearnegativeboost(
@@ -1938,6 +2135,7 @@ class BattleMessage_copyboost(BattleMessage):
     POKEMON: str = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_copyboost":
+        """Create a specific BattleMessage object from a raw message."""
         raise NotImplementedError
 
         return BattleMessage_copyboost(
@@ -1957,6 +2155,7 @@ class BattleMessage_weather(BattleMessage):
     EFFECT: Optional[Effect] = Field(None, description="Optionally, the effect that caused this weather")
 
     def from_message(battle_message: str) -> "BattleMessage_weather":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         weather = bm_split[2]
@@ -1999,6 +2198,7 @@ class BattleMessage_fieldstart(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_fieldstart":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         eff_type = bm_split[2].split(" ")[0][:-1]
@@ -2039,6 +2239,7 @@ class BattleMessage_fieldend(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_fieldend":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         if ":" in bm_split[2]:
@@ -2064,6 +2265,7 @@ class BattleMessage_sidestart(BattleMessage):
     CONDITION: str = Field(..., description="The field condition starting")
 
     def from_message(battle_message: str) -> "BattleMessage_sidestart":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         player = bm_split[2].split(":")[0]
@@ -2095,6 +2297,7 @@ class BattleMessage_sideend(BattleMessage):
     EFFECT: Optional[Effect] = Field(None, description="The effect that is causing the conditon to end")
 
     def from_message(battle_message: str) -> "BattleMessage_sideend":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         player = bm_split[2].split(":")[0]
@@ -2135,6 +2338,7 @@ class BattleMessage_swapsideconditions(BattleMessage):
     """
 
     def from_message(battle_message: str) -> "BattleMessage_swapsideconditions":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_swapsideconditions(
             BMTYPE=BMType.swapsideconditions,
             BATTLE_MESSAGE=battle_message,
@@ -2157,6 +2361,7 @@ class BattleMessage_volstart(BattleMessage):
     EFFECT: Optional[Effect] = Field(None, description="Optionally, the effect that caused this volatile status")
 
     def from_message(battle_message: str) -> "BattleMessage_volstart":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2305,6 +2510,7 @@ class BattleMessage_volend(BattleMessage):
     SILENT: bool = Field(..., description="Whether this message is silent or not")
 
     def from_message(battle_message: str) -> "BattleMessage_volend":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2407,6 +2613,7 @@ class BattleMessage_crit(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_crit":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_crit(
@@ -2424,6 +2631,7 @@ class BattleMessage_supereffective(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_supereffective":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_supereffective(
@@ -2441,6 +2649,7 @@ class BattleMessage_resisted(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_resisted":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_resisted(
@@ -2458,6 +2667,7 @@ class BattleMessage_immune(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_immune":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_immune(
@@ -2481,6 +2691,7 @@ class BattleMessage_item(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_item":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2523,6 +2734,7 @@ class BattleMessage_enditem(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_enditem":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2590,6 +2802,7 @@ class BattleMessage_ability(BattleMessage):
     )
 
     def from_message(battle_message: str) -> "BattleMessage_ability":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2633,6 +2846,7 @@ class BattleMessage_endability(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon whose ability is being suppressed")
 
     def from_message(battle_message: str) -> "BattleMessage_endability":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2653,6 +2867,7 @@ class BattleMessage_transform(BattleMessage):
     EFFECT: Optional[Effect] = Field(..., description="The optional effect explaining the transformation")
 
     def from_message(battle_message: str) -> "BattleMessage_transform":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         source = PokemonIdentifier.from_string(bm_split[2])
@@ -2685,6 +2900,7 @@ class BattleMessage_mega(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_mega":
+        """Create a specific BattleMessage object from a raw message."""
         raise NotImplementedError
 
         return BattleMessage_mega(
@@ -2702,6 +2918,7 @@ class BattleMessage_primal(BattleMessage):
     ITEM: str = Field(..., description="The held item that is being used")
 
     def from_message(battle_message: str) -> "BattleMessage_primal":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2718,6 +2935,7 @@ class BattleMessage_burst(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_burst":
+        """Create a specific BattleMessage object from a raw message."""
         raise NotImplementedError
 
         return BattleMessage_burst(
@@ -2734,6 +2952,7 @@ class BattleMessage_zpower(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon using the Z Move")
 
     def from_message(battle_message: str) -> "BattleMessage_zpower":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2749,6 +2968,7 @@ class BattleMessage_zbroken(BattleMessage):
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon whose Z move is over")
 
     def from_message(battle_message: str) -> "BattleMessage_zbroken":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2772,6 +2992,7 @@ class BattleMessage_activate(BattleMessage):
     EFFECT: Effect = Field(..., description="The effect detailed in this activation")
 
     def from_message(battle_message: str) -> "BattleMessage_activate":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2835,6 +3056,7 @@ class BattleMessage_hint(BattleMessage):
     MESSAGE: str = Field(..., description="The message sent to you as a hint")
 
     def from_message(battle_message: str) -> "BattleMessage_hint":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_hint(BMTYPE=BMType.hint, BATTLE_MESSAGE=battle_message, MESSAGE=bm_split[2])
@@ -2846,6 +3068,7 @@ class BattleMessage_center(BattleMessage):
     """
 
     def from_message(battle_message: str) -> "BattleMessage_center":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_center(
             BMTYPE=BMType.center,
             BATTLE_MESSAGE=battle_message,
@@ -2860,6 +3083,7 @@ class BattleMessage_message(BattleMessage):
     MESSAGE: str = Field(..., description="The message sent as part of this notification")
 
     def from_message(battle_message: str) -> "BattleMessage_message":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_message(BMTYPE=BMType.message, BATTLE_MESSAGE=battle_message, MESSAGE=bm_split[2])
@@ -2871,6 +3095,7 @@ class BattleMessage_combine(BattleMessage):
     """
 
     def from_message(battle_message: str) -> "BattleMessage_combine":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_combine(
             BMTYPE=BMType.combine,
             BATTLE_MESSAGE=battle_message,
@@ -2885,6 +3110,7 @@ class BattleMessage_waiting(BattleMessage):
     POKEMON: str = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_waiting":
+        """Create a specific BattleMessage object from a raw message."""
         raise NotImplementedError
 
         return BattleMessage_waiting(
@@ -2903,6 +3129,7 @@ class BattleMessage_prepare(BattleMessage):
     MOVE: str = Field(..., description="The move being prepared")
 
     def from_message(battle_message: str) -> "BattleMessage_prepare":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2919,6 +3146,7 @@ class BattleMessage_mustrecharge(BattleMessage):
     POKEMON: str = Field(..., description="The main pokemon identifier relevant")
 
     def from_message(battle_message: str) -> "BattleMessage_mustrecharge":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_mustrecharge(
@@ -2934,6 +3162,7 @@ class BattleMessage_nothing(BattleMessage):
     """
 
     def from_message(battle_message: str) -> "BattleMessage_nothing":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_nothing(
             BMTYPE=BMType.nothing,
             BATTLE_MESSAGE=battle_message,
@@ -2949,6 +3178,7 @@ class BattleMessage_hitcount(BattleMessage):
     NUM: int = Field(..., description="The number of hits as an integer")
 
     def from_message(battle_message: str) -> "BattleMessage_hitcount":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2967,6 +3197,7 @@ class BattleMessage_singlemove(BattleMessage):
     MOVE: DexMove.ValueType = Field(..., description="The move being used")
 
     def from_message(battle_message: str) -> "BattleMessage_singlemove":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -2987,6 +3218,7 @@ class BattleMessage_singleturn(BattleMessage):
     MOVE: DexMove.ValueType = Field(..., description="The move being used")
 
     def from_message(battle_message: str) -> "BattleMessage_singleturn":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -3012,6 +3244,7 @@ class BattleMessage_formechange(BattleMessage):
     EFFECT: Optional[Effect] = Field(None, description="Optionally, what caused the formechange")
 
     def from_message(battle_message: str) -> "BattleMessage_formechange":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -3047,6 +3280,7 @@ class BattleMessage_terastallize(BattleMessage):
     TYPE: DexType.ValueType = Field()
 
     def from_message(battle_message: str) -> "BattleMessage_terastallize":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
@@ -3066,6 +3300,7 @@ class BattleMessage_fieldactivate(BattleMessage):
     EFFECT: Effect = Field(..., description="The effect causing the field activation")
 
     def from_message(battle_message: str) -> "BattleMessage_fieldactivate":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         eff_type = bm_split[2].split(" ")[0][:-1]
@@ -3084,6 +3319,7 @@ class BattleMessage_error(BattleMessage):
     MESSAGE: str = Field(..., description="The error message sent by showdown")
 
     def from_message(battle_message: str) -> "BattleMessage_error":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_error(BMTYPE=BMType.error, BATTLE_MESSAGE=battle_message, MESSAGE=bm_split[2])
@@ -3097,6 +3333,7 @@ class BattleMessage_bigerror(BattleMessage):
     MESSAGE: str = Field(..., description="The error message sent by showdown")
 
     def from_message(battle_message: str) -> "BattleMessage_bigerror":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_bigerror(BMTYPE=BMType.bigerror, BATTLE_MESSAGE=battle_message, MESSAGE=bm_split[2])
@@ -3108,6 +3345,7 @@ class BattleMessage_init(BattleMessage):
     """
 
     def from_message(battle_message: str) -> "BattleMessage_init":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_init(BMTYPE=BMType.init, BATTLE_MESSAGE=battle_message)
 
 
@@ -3117,6 +3355,7 @@ class BattleMessage_deinit(BattleMessage):
     """
 
     def from_message(battle_message: str) -> "BattleMessage_deinit":
+        """Create a specific BattleMessage object from a raw message."""
         return BattleMessage_deinit(BMTYPE=BMType.deinit, BATTLE_MESSAGE=battle_message)
 
 
@@ -3128,6 +3367,7 @@ class BattleMessage_title(BattleMessage):
     TITLE: str = Field(..., description="The title of this match as shown on pokemon showdown")
 
     def from_message(battle_message: str) -> "BattleMessage_title":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_title(BMTYPE=BMType.title, BATTLE_MESSAGE=battle_message, TITLE=bm_split[2])
@@ -3141,6 +3381,7 @@ class BattleMessage_join(BattleMessage):
     USERNAME: str = Field(..., description="The username of the joining player")
 
     def from_message(battle_message: str) -> "BattleMessage_join":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_join(BMTYPE=BMType.join, BATTLE_MESSAGE=battle_message, USERNAME=bm_split[2])
@@ -3154,6 +3395,7 @@ class BattleMessage_leave(BattleMessage):
     USERNAME: str = Field(..., description="The username of the leaving player")
 
     def from_message(battle_message: str) -> "BattleMessage_leave":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_leave(BMTYPE=BMType.leave, BATTLE_MESSAGE=battle_message, USERNAME=bm_split[2])
@@ -3167,6 +3409,7 @@ class BattleMessage_raw(BattleMessage):
     MESSAGE: str = Field(..., description="The raw message from Showdown. Typically used for rating changes.")
 
     def from_message(battle_message: str) -> "BattleMessage_raw":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         return BattleMessage_raw(BMTYPE=BMType.raw, BATTLE_MESSAGE=battle_message, MESSAGE=bm_split[2])
@@ -3188,6 +3431,7 @@ class BattleMessage_anim(BattleMessage):
     NO_TARGET: bool = Field(False, description="Whether the move is labeled as notarget or not")
 
     def from_message(battle_message: str) -> "BattleMessage_anim":
+        """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         source = PokemonIdentifier.from_string(bm_split[2])

@@ -1,20 +1,34 @@
+# poketypes/protos/protogen.py
+
+"""Provides tools for generating consistent protobuf Enums from pokemon data fields.
+
+The primary goal of this module is for every Enum created to be consistent across generations from a label-number
+perspective. Meaning that while future generations of pokemon will certainly have new keys assigned for new pokemon,
+any pokemon introduced previously will have the same label-number in every generation then on.
+"""
+
 import json
 import re
 import unicodedata
 from copy import deepcopy
+from typing import Dict
 
 import requests
 from mergers import merge
 from statics import CURRENT_GEN, DATA_TYPES
 
 
-def fetch_and_clean_ps_data(url: str):
-    """
-    Parse the raw typescript file from pokemon showdown into a python dict
+def fetch_and_clean_ps_data(url: str) -> Dict[str, Dict]:
+    """Fetch, clean, and parse a typescript file with pokemon info into a dictionary.
 
     Modified a bit to work on all relevant typescript files.
+    Credit: https://github.com/hsahovic/poke-env/ for the original version.
 
-    Credit: https://github.com/hsahovic/poke-env/
+    Args:
+        url (str): The path to the typescript file to parse.
+
+    Returns:
+        Dict[str, Dict]: A mapping of keys to some arbirtrary data structure based on the typescript file.
     """
     data = requests.get(url).text
 
@@ -81,28 +95,30 @@ def fetch_and_clean_ps_data(url: str):
 
     # Correct non-quoted number keys
     data = re.sub(r"(\d+):", r'"\1":', data)
-    # Correct non-quoted H keys
 
+    # Correct non-quoted H keys
     data = re.sub(r"H: ", r'"H": ', data)
     data = re.sub(r", moves:", r', "moves":', data)
     data = re.sub(r", nature:", r', "nature":', data)
 
     data = re.sub(r";", "", data)
 
-    try:
-        data = json.loads(data)
-    except Exception as e:
-        print(data)
-        raise e
+    data_dict: Dict[str, Dict] = json.loads(data)
 
-    return data
+    return data_dict
 
 
-def protogen_natures(nature_data):
-    """
-    Create protobuf data for the available natures
+def protogen_natures(nature_data: Dict[str, Dict]) -> str:
+    """Generate a protobuf formatted string with Enum info for natures.
 
-    Uses natures.ts data
+    Built expecting parsed data from natures.ts showdown information.
+    Does not use any value information, only the keys from the dictionary.
+
+    Args:
+        nature_data (Dict[str, Dict]): A dict mapping nature keys to some arbitrary unused data structure.
+
+    Returns:
+        str: A multi-line string containing a properly formatted Enum.
     """
     # Section comments
     proto_str = "//Contains data for Pokemon Natures\n"
@@ -121,12 +137,21 @@ def protogen_natures(nature_data):
     return proto_str
 
 
-def protogen_pokedex(pokedex_data):
-    """
-    Creates protobuf data for available pokemon
+def protogen_pokedex(pokedex_data: Dict[str, Dict]) -> str:
+    """Generate a protobuf formatted string with Enum info for pokemon species / formes.
 
-    Uses pokedex.ts data
-    Note: skips fakemon
+    Built expecting parsed data from pokedex.ts showdown information.
+    Fields used in the arbirtrary structure:
+        - `num`: The pokedex number of the pokemon. Different formes share this. Required.
+        - `cosmeticFormes`: A list of other species that are purely-cosmetic versions of this. Optional.
+    The Enum value uses the format {POKEDEX_NUM}{3-DIGIT FORME NUMBER}, where both cosmetic and true formes get their
+    own unique incremental forme number. This supports up to 1000 versions of Charizard, so we should be fine :').
+
+    Args:
+        pokedex_data (Dict[str, Dict]): A dict mapping pokemon species keys to some (mostly) arbitrary data structure.
+
+    Returns:
+        str: A multi-line string containing a properly formatted Enum.
     """
     # Section comments
     proto_str = "//Contains data for Pokemon\n"
@@ -191,11 +216,20 @@ def protogen_pokedex(pokedex_data):
     return proto_str
 
 
-def protogen_moves(move_data):
-    """
-    Creates protobuf data for available moves
+def protogen_moves(move_data: Dict[str, Dict]) -> str:
+    """Generate a protobuf formatted string with Enum info for moves.
 
-    Uses moves.ts
+    Built expecting parsed data from moves.ts showdown information.
+    Fields used in the arbirtrary structure:
+        - `num`: The id number of the pokemon. Different formes of the same move share this. Required.
+    The Enum value uses the format {MOVE_NUM}{2-DIGIT FORME NUMBER}, with any moves that share the same id number
+    getting assigned their own unique forme number.
+
+    Args:
+        move_data (Dict[str, Dict]): A dict mapping pokemon move keys to some (mostly) arbitrary data structure.
+
+    Returns:
+        str: A multi-line string containing a properly formatted Enum.
     """
     # Section comments
     proto_str = "//Contains data for Pokemon Moves\n"
@@ -248,13 +282,18 @@ def protogen_moves(move_data):
     return proto_str
 
 
-def protogen_typechart(typechart_data):
-    """
-    Creates protobuf data for available types
+def protogen_typechart(typechart_data: (Dict[str, Dict])) -> str:
+    """Generate a protobuf formatted string with Enum info for typechart information.
 
-    Uses typechart.ts
-    """
+    Built expecting parsed data from typechart.ts showdown information.
+    The data structure passed in can be arbitrary, as for this step we only care about the keys.
 
+    Args:
+        typechart_data (Dict[str, Dict]): A dict mapping pokemon type keys to some (mostly) arbitrary data structure.
+
+    Returns:
+        str: A multi-line string containing a properly formatted Enum.
+    """
     # Section comments
     proto_str = "//Contains data for Pokemon Types\n"
 
@@ -272,13 +311,19 @@ def protogen_typechart(typechart_data):
     return proto_str
 
 
-def protogen_conditions(condition_data):
-    """
-    Creates protobuf data for available statuses, weathers, and volatile statuses
+def protogen_conditions(condition_data: Dict[str, Dict]) -> str:
+    """Generate a protobuf formatted string with Enum info for conditions information.
 
-    Uses conditions.ts
-    """
+    Built expecting parsed data from conditions.ts showdown information.
+    This function is highly likely to need to be changed, as better definitions of volatile keys are worked on.
+    Weather, Status, and Conditions can be pulled from here, though it might not contain all volatile statuses :/
 
+    Args:
+        condition_data (Dict[str, Dict]): A dict mapping condition keys to some (mostly) arbitrary data structure.
+
+    Returns:
+        str: A multi-line string containing a properly formatted Enum.
+    """
     # Section comments
     proto_str = ""
 
@@ -333,13 +378,19 @@ def protogen_conditions(condition_data):
     return proto_str
 
 
-def protogen_items(item_data):
-    """
-    Creates protobuf data for available items
+def protogen_items(item_data: Dict[str, Dict]) -> str:
+    """Generate a protobuf formatted string with Enum info for item information.
 
-    Uses items.ts
-    """
+    Built expecting parsed data from items.ts showdown information.
+    Fields used in the arbirtrary structure:
+        - `num`: The id number of the item. This should already be unique. Required.
 
+    Args:
+        item_data (Dict[str, Dict]): A dict mapping item name keys to some (mostly) arbitrary data structure.
+
+    Returns:
+        str: A multi-line string containing a properly formatted Enum.
+    """
     # Section comments
     proto_str = "//Contains data for Pokemon Items\n"
 
@@ -360,13 +411,21 @@ def protogen_items(item_data):
     return proto_str
 
 
-def protogen_abilities(ability_data):
-    """
-    Creates protobuf data for available abilities
+def protogen_abilities(ability_data: Dict[str, Dict]) -> str:
+    """Generate a protobuf formatted string with Enum info for ability information.
 
-    Uses abilities.ts
-    """
+    Built expecting parsed data from abilities.ts showdown information.
+    Fields used in the arbirtrary structure:
+        - `num`: The id number of the ability. This sometimes will not be unique! Required.
+    The Enum value uses the format {ABILITY_NUM}{2-DIGIT FORME NUMBER}, with any abilities that share the same id number
+    getting assigned their own unique forme number.
 
+    Args:
+        ability_data (Dict[str, Dict]): A dict mapping ability name keys to some (mostly) arbitrary data structure.
+
+    Returns:
+        str: A multi-line string containing a properly formatted Enum.
+    """
     # Section comments
     proto_str = "//Contains data for Pokemon Abilities\n"
 
@@ -411,12 +470,15 @@ PROTOGEN_DICT = {
 
 
 def protogen():
-    """
-    Creates protobuf data from all latest generation data
+    """Generate a protobuf file 'dexdata' ready for protoc creation, using each relevant protogen builder.
 
-    Saves to dexdata.proto, which is then ready to generate enums for poketypes
+    This function will create the file "poketypes/protos/dexdata.proto", containing all the Enums that are required
+    to add fully automated type-hinting support.
+    We rely on `DATA_TYPES` from statics to tell us which json files to read, then `PROTOGEN_DICT` to point to the
+    relevant function that can handle Enum Generation from that file.
+    Once each component string is created, we will then save the completed string to the file, though the user will
+    then still need to create the python Enums using `protoc` and this new file.
     """
-
     # Import basics (Stat names, any other easy hard-code things)
     with open("poketypes/protos/basics.proto", "r", encoding="utf8") as f:
         proto_str = f.read()
@@ -439,17 +501,18 @@ def protogen():
 
 
 def fetch_latest(verbose: bool = True):
-    """
-    Fetches and processes the latest Pokemon Showdown typescript data files into more usable json files.
+    """Fetch and process the latest Pokemon Showdown typescript data files into more usable json files.
 
-    This will also merge the files to previous generations, since this will be used for generating the PokedexClass
-    dictionaries
-
+    This will also merge the files to previous generations, since these will be used for generating the PokedexClass
+    dictionaries for corresponding previous generations.
     In short, we have two different goals:
         - Type hinting through auto-generating enums
         - Detailed instantiated dataclasses for each pokemon/move/item/etc that can be read at runtime
     The data in these json files will serve as both the ground-truth for our enum labels (DexClass),
     then later the details themselves (PokedexClass)
+
+    Args:
+        verbose (bool, optional): Whether to run this function with print statements or not. Defaults to True.
     """
     base_url = "https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data"
 

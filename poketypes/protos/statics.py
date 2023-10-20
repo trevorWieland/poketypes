@@ -1,3 +1,16 @@
+# poketypes/protos/statics.py
+
+"""Provides constant values for use in identifying which data_types are supported, and various gen-specific details.
+
+Contains the following constants:
+    - DATA_TYPES: A list of string typechart file names that are supported by the parsing tool in protogen.
+    - CURRENT_GEN: The integer latest generation of pokemon.
+    - MAX_MON_IDX_PER_GEN: A mapping of gen -> idx for each gen, detailing which pokedex number to cutoff at.
+    - MAX_MOVE_IDX_PER_GEN: A mapping of gen -> idx for each gen, detailing which move number to cutoff at.
+    - MAX_ABILITY_IDX_PER_GEN: A mapping of gen -> idx for each gen, detailing which ability number to cutoff at.
+"""
+
+
 DATA_TYPES = [
     "typechart",
     "natures",
