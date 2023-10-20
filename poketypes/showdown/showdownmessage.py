@@ -1,3 +1,12 @@
+# poketypes/showdown/showdownmessage.py
+
+"""Contains BaseModels for Message parsing and processing.
+
+Remember to use Message.from_message directly, unless you are building test cases where you want to assert that
+a given message leads to a certain subclass of Message. `from_message` will auto-detect which MType the given
+message corresponds to, and return the associated subclass (or an error detailing what went wrong) for you.
+"""
+
 from __future__ import annotations
 
 import json
@@ -9,8 +18,7 @@ from pydantic import BaseModel, Field
 
 @unique
 class MType(str, Enum):
-    """
-    String-Enum for holding all unique categories of Showdown Generic Messages
+    """String-Enum for holding all unique categories of Showdown Generic Messages.
 
     See https://github.com/smogon/pokemon-showdown/blob/master/PROTOCOL.md for the (partial) list of message types
     """
@@ -60,6 +68,15 @@ class MType(str, Enum):
 
 
 class Message(BaseModel):
+    """The base class for all specific Message subclasses to be built from.
+
+    When parsing a string message, you should directly use this class's `from_message` function, which will
+    auto-identify which subclass (if any) the given string belongs to.
+
+    Across all Messages, you will be able to access both MTYPE and MESSAGE, though you shouldn't need
+    to access MESSAGE directly. (If you do, then we must be missing some data that exists in the raw string)
+    """
+
     MTYPE: MType = Field(
         ...,
         description="The message type of this message. Must be a vaild showdown general message.",
@@ -71,12 +88,10 @@ class Message(BaseModel):
 
     @staticmethod
     def from_message(message: str) -> "Message":
-        """
-        Creates a specific Message object from a raw string message.
+        """Create a specific Message object from a raw string message.
 
         This is used for general Showdown Messages, compared to the BattleMessage class meant for battle details.
         """
-
         try:
             mtype = MType(message.split("|")[1])
             m_class = mtype_to_mclass[mtype]
@@ -108,54 +123,85 @@ class Message(BaseModel):
 
 
 class Message_init(Message):
-    """
-    |init|battle
+    """Message notifying about a battle starting.
+
+    Use Case(s):
+        - To communicate battle initialization notice.
+    Format(s):
+        - |init|battle
+    Example(s):
+        - TODO
     """
 
     def from_message(message: str) -> "Message_init":
+        """Create a specific Message object from a raw message."""
         return Message_init(MTYPE=MType.init, MESSAGE=message)
 
 
 class Message_title(Message):
-    """
-    |title|TITLE
+    """Message notifying about the title of a room.
+
+    Use Case(s):
+        - To communicate room title info.
+    Format(s):
+        - |title|TITLE
+    Example(s):
+        - |title|colress-gpt-test1 vs. colress-gpt-test2
     """
 
     TITLE: str = Field(..., description="The title of this match as shown on pokemon showdown")
 
     def from_message(message: str) -> "Message_title":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         return Message_title(MTYPE=MType.title, MESSAGE=message, TITLE=m_split[2])
 
 
 class Message_join(Message):
-    """
-    |join|USERNAME
+    """Message containing info about a joining user.
+
+    Use Case(s):
+        - To communicate player room user entry.
+    Format(s):
+        - |join|USERNAME
+    Example(s):
+        - |j|☆colress-gpt-test1
     """
 
     USERNAME: str = Field(..., description="The username of the joining player")
 
     def from_message(message: str) -> "Message_join":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         return Message_join(MTYPE=MType.join, MESSAGE=message, USERNAME=m_split[2])
 
 
 class Message_leave(Message):
-    """
-    |leave|USERNAME
+    """Message containing info about a leaving user.
+
+    Use Case(s):
+        - To communicate player room user exit.
+    Format(s):
+        - |leave|USERNAME
+        - |l|USERNAME
+    Example(s):
+        - |l|☆colress-gpt-test1
     """
 
     USERNAME: str = Field(..., description="The username of the leaving player")
 
     def from_message(message: str) -> "Message_leave":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         return Message_leave(MTYPE=MType.leave, MESSAGE=message, USERNAME=m_split[2])
 
 
 class UserSettings(BaseModel):
+    """A helper class to contain information about user settings."""
+
     BLOCK_CHALLENGES: bool = Field(..., description="Whether you are currently blocking challenges")
     BLOCK_PMS: bool = Field(..., description="Whether you are currently blocking PMs")
     IGNORE_TICKETS: bool = Field(..., description="Whether you are currently ignoring tickets")
@@ -175,8 +221,14 @@ class UserSettings(BaseModel):
 
 
 class Message_updateuser(Message):
-    """
-    |updateuser|USER|NAMED|AVATAR|SETTINGS
+    """Message containing info about your user settings / login information.
+
+    Use Case(s):
+        - To communicate any changes to your login / user session.
+    Format(s):
+        - |updateuser|USER|NAMED|AVATAR|SETTINGS
+    Example(s):
+        - TODO
     """
 
     USERNAME: str = Field(..., description="The username of your current login")
@@ -187,6 +239,7 @@ class Message_updateuser(Message):
     SETTINGS: UserSettings = Field(..., description="The user settings for your current user session")
 
     def from_message(message: str) -> "Message_updateuser":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         uname = m_split[2]
@@ -216,13 +269,20 @@ class Message_updateuser(Message):
 
 
 class Message_formats(Message):
-    """
-    |formats|FORMATSLIST
+    """Message containing info about server enabled formats.
+
+    Use Case(s):
+        - To communicate all available formats the user can play
+    Format(s):
+        - |formats|FORMATSLIST
+    Example(s):
+        - TODO
     """
 
     FORMATS: List[str] = Field(..., description="The list of formats")
 
     def from_message(message: str) -> "Message_formats":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         formats = []
@@ -236,6 +296,8 @@ class Message_formats(Message):
 
 
 class CustomGroup(BaseModel):
+    """A helper class to contain information about server custom groups."""
+
     SYMBOL: str = Field(..., description="The symbol used before users of this group")
     NAME: Optional[str] = Field(..., description="The name of the group")
     # TODO: Add validator for the valid types of groups
@@ -243,13 +305,20 @@ class CustomGroup(BaseModel):
 
 
 class Message_customgroups(Message):
-    """
-    |customgroups|CUSTOMGROUPS
+    """Message containing info about server custom groups.
+
+    Use Case(s):
+        - To communicate all usergroups
+    Format(s):
+        - |customgroups|CUSTOMGROUPS
+    Example(s):
+        - TODO
     """
 
     CUSTOM_GROUPS: List[CustomGroup] = Field(..., description="The list of custom groups")
 
     def from_message(message: str) -> "Message_customgroups":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         groups = json.loads(m_split[2])
@@ -263,13 +332,20 @@ class Message_customgroups(Message):
 
 
 class Message_challstr(Message):
-    """
-    |challstr|CHALLSTR
+    """Message containing a login challenge string.
+
+    Use Case(s):
+        - Gives the user a challenge string to submit to the login server to get a token
+    Format(s):
+        - |challstr|CHALLSTR
+    Example(s):
+        - TODO
     """
 
     CHALLSTR: str = Field(..., description="The string challenge string")
 
     def from_message(message: str) -> "Message_challstr":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         chall = "|".join(m_split[2:])
@@ -278,8 +354,14 @@ class Message_challstr(Message):
 
 
 class Message_updatesearch(Message):
-    """
-    |updatesearch|JSON
+    """Message containing a current ladder searches, if any.
+
+    Use Case(s):
+        - Gives the user an update about all of their current battle search requests.
+    Format(s):
+        - |updatesearch|JSON
+    Example(s):
+        - TODO
     """
 
     SEARCHING: List[str] = Field(..., description="A list of formats currently searching for a ladder match")
@@ -288,6 +370,7 @@ class Message_updatesearch(Message):
     )
 
     def from_message(message: str) -> "Message_updatesearch":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         data = json.loads(m_split[2])
@@ -299,14 +382,21 @@ class Message_updatesearch(Message):
 
 
 class Message_updatechallenges(Message):
-    """
-    |updatechallenges|JSON
+    """Message containing a current challenge searches, if any.
+
+    Use Case(s):
+        - Gives the user an update about all of their current battle challenge requests.
+    Format(s):
+        - |updatechallenges|JSON
+    Example(s):
+        - TODO
     """
 
     OUTGOING: Dict[str, str] = Field({}, description="A dictionary of username->format for each outgoing challenge")
     INCOMING: Dict[str, str] = Field({}, description="A dictionary of username->format for each incoming challenge")
 
     def from_message(message: str) -> "Message_updatechallenges":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         data = json.loads(m_split[2])
@@ -324,8 +414,14 @@ class Message_updatechallenges(Message):
 
 
 class Message_pm(Message):
-    """
-    |pm|SOURCE|TARGET|PM
+    """Message containing a PM to/from the user.
+
+    Use Case(s):
+        - Notify the user about a PM received.
+    Format(s):
+        - |pm|SOURCE|TARGET|PM
+    Example(s):
+        - TODO
     """
 
     SOURCE: str = Field(..., description="The username of the user who sent the pm")
@@ -337,6 +433,7 @@ class Message_pm(Message):
     CHALLENGE_FORMAT: Optional[str] = Field(None, description="The format of the challenge if it is a challenge")
 
     def from_message(message: str) -> "Message_pm":
+        """Create a specific Message object from a raw message."""
         m_split = message.split("|")
 
         source = m_split[2].strip()

@@ -1,3 +1,8 @@
+"""Provides BaseModels for accessing real information about specific items/pokemon/moves/etc.
+
+All Pokedex{NAME} classes are defined in this module, though you can also import these directly from poketypes.dex.
+"""
+
 from typing import Dict, List, Optional, Tuple
 
 from pydantic import BaseModel, Field
@@ -16,11 +21,7 @@ from .dexdata_pb2 import (
 
 
 class PokedexMove(BaseModel):
-    """
-    Pokedex class for Moves.
-
-    Contains information about move type, accuracy, base power, etc.
-    """
+    """Pokedex class for Move information."""
 
     # TODO: Finish adding remaining fields (pseudoWeathers, volatile conditions, secondaries, etc)
 
@@ -138,11 +139,7 @@ class PokedexMove(BaseModel):
 
 
 class PokedexItem(BaseModel):
-    """
-    Pokedex class for Items.
-
-    Contains basic information about items
-    """
+    """Pokedex class for Item information."""
 
     # Identification fields
     name: str = Field(..., description="Friendly string name of this item")
@@ -181,9 +178,7 @@ class PokedexItem(BaseModel):
 
 
 class StatBlock(BaseModel):
-    """
-    Helper object for containing base stats
-    """
+    """Helper object for containing base stats information."""
 
     hp_stat: int = Field(..., description="The base hp of the pokemon")
     atk_stat: int = Field(..., description="The base attack of the pokemon")
@@ -194,11 +189,7 @@ class StatBlock(BaseModel):
 
 
 class PokedexPokemon(BaseModel):
-    """
-    Pokedex class for Pokemon.
-
-    Contains information about pokemon
-    """
+    """Pokedex class for Pokemon information."""
 
     # TODO: Most of the work still needs to be done
 

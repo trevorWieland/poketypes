@@ -26,6 +26,11 @@ black = "^23.9.1"
 flake8 = "^6.1.0"
 flake8-pyproject = "^1.2.3"
 pydoclint = {extras = ["flake8"], version = "^0.3.6"}
+mkdocs = "^1.5.3"
+mkdocstrings = {extras = ["python"], version = "^0.23.0"}
+mkdocs-material = "^9.4.6"
+markdown-mdantic = "^2.1.0"
+flake8-pydocstyle = "^0.2.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -36,14 +41,15 @@ build-backend = "poetry.core.masonry.api"
 [tool.flake8]
 max-line-length = 120
 count = true
-exclude = ['dexdata_pb2.py']
+exclude = ['dexdata_pb2.py', 'dexdata_pb2.pyi']
 per-file-ignores = [
     '__init__.py:F401',
+    '__init__.py:D104',
 ]
 style = 'google'
 require-return-section-when-returning-nothing = true
 
 [tool.pydoclint]
 style = 'google'
-exclude = ['dexdata_pb2.py']
+exclude = ['dexdata_pb2.py', 'dexdata_pb2.pyi']
 require-return-section-when-returning-nothing = true

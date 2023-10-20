@@ -1,0 +1,35 @@
+site_name: Poketypes Docs
+
+theme:
+  name: "material"
+
+plugins:
+  - mkdocstrings
+
+nav:
+  - Home: 'index.md'
+  - Getting Started: 'getting-started.md'
+  - Dex:
+    - Intro: 'dex/index.md'
+    - Dex vs Pokedex vs Gen: 'dex/explanations.md'
+    - Guides:
+      - Learning the Basics: 'dex/guides/basics.md'
+      - Type Checking: 'dex/guides/typechecking.md'
+    - Reference:
+      - The DexClass: 'dex/reference/dex-classes.md'
+      - The PokedexClass: 'dex/reference/pokedex-classes.md'
+      - The Gen: 'dex/reference/pokedex-instance.md'
+      - Utils: 'dex/reference/utilities.md'
+  - Showdown:
+    - Intro: 'showdown/index.md'
+    - Why Two Classes?: 'showdown/explanations.md'
+    - Guides:
+      - Building a Log Parser: 'showdown/guides/basic-parser.md'
+    - Reference:
+      - The Message: 'showdown/reference/standard-messages.md'
+      - The BattleMessage: 'showdown/reference/battle-messages.md'
+  - About:
+    - The Team: 'about/about.md'
+    - License: 'about/license.md'
+
+  

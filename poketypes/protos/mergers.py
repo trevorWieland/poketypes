@@ -1,11 +1,31 @@
+# poketypes/protos/mergers.py
+
+"""Provides tools for merging pokemon data-dicts backwards through generations.
+
+The primary goal of this module is for every data dict for a corresponding generation to contain only the relevant,
+accurate information about each entry as it was in that generation.
+A potential expansion of this module in the future would be to expand support for mod formats, rather than just
+the direct generation mods.
+"""
+
 from statics import MAX_ABILITY_IDX_PER_GEN, MAX_MON_IDX_PER_GEN, MAX_MOVE_IDX_PER_GEN
+from typing import Dict, Optional
 
 
-def merge_pokedex(gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge_pokedex(gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]) -> Dict[str, Dict]:
+    """Merge pokemon data from `next_gen_data` into `this_gen_data`, dropping irrelevant pokemon.
 
-    Specifically merges pokemon-related data, dropping pokemon not in this gen/earlier, and overwriting as needed
+    We also drop any pokemon that are fakemons, or which don't have a pokedex number.
+    This function needs to be particularly careful about cosmetic and true formes, as these can claim to be from a
+    certain gen in their data, but were really introduced in a later version.
+
+    Args:
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
+
+    Returns:
+        Dict[str, Dict]: The merged data for this generation.
     """
     for mon, value in next_gen_data.items():
         if value.get("num", 9999) > MAX_MON_IDX_PER_GEN[gen]:
@@ -60,11 +80,18 @@ def merge_pokedex(gen, this_gen_data, next_gen_data):
     return this_gen_data
 
 
-def merge_moves(gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge_moves(gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]) -> Dict[str, Dict]:
+    """Merge moves data from `next_gen_data` into `this_gen_data`, dropping irrelevant moves.
 
-    Specifically merges move-related data, dropping moves not in this gen/earlier, and overwriting as needed
+    We also drop any moves that are fake moves, or which don't have an moves number.
+
+    Args:
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
+
+    Returns:
+        Dict[str, Dict]: The merged data for this generation.
     """
     for move, value in next_gen_data.items():
         if value["num"] > MAX_MOVE_IDX_PER_GEN[gen] or value["num"] < 1:
@@ -79,11 +106,18 @@ def merge_moves(gen, this_gen_data, next_gen_data):
     return this_gen_data
 
 
-def merge_abilities(gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge_abilities(gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]) -> Dict[str, Dict]:
+    """Merge abilities data from `next_gen_data` into `this_gen_data`, dropping irrelevant abilities.
 
-    Specifically merges abilities data, dropping abilities not in this gen/earlier, and overwriting as needed
+    We also drop any abilities that are fake abilities, or which don't have an ability number.
+
+    Args:
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
+
+    Returns:
+        Dict[str, Dict]: The merged data for this generation.
     """
     for ability, value in next_gen_data.items():
         if value.get("num") is None:
@@ -101,13 +135,17 @@ def merge_abilities(gen, this_gen_data, next_gen_data):
     return this_gen_data
 
 
-def merge_typechart(gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge_typechart(gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]) -> Dict[str, Dict]:
+    """Merge typechart data from `next_gen_data` into `this_gen_data`, dropping irrelevant types.
 
-    Specifically merges typechart-related data, including type-effectiveness
-    """
+    Args:
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
 
+    Returns:
+        Dict[str, Dict]: The merged data for this generation.
+    """
     if this_gen_data is None:
         return next_gen_data
 
@@ -121,13 +159,19 @@ def merge_typechart(gen, this_gen_data, next_gen_data):
     return this_gen_data
 
 
-def merge_natures(gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge_natures(
+    gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]
+) -> Optional[Dict[str, Dict]]:
+    """Merge nature data from `next_gen_data` into `this_gen_data`, dropping irrelevant natures.
 
-    Specifically merges nature-related data
-    """
+    Args:
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
 
+    Returns:
+        Optional[Dict[str, Dict]]: The merged data for this generation. None if gen < 3.
+    """
     # natures were introduced in gen 3
     if gen < 3:
         return None
@@ -145,13 +189,19 @@ def merge_natures(gen, this_gen_data, next_gen_data):
     return this_gen_data
 
 
-def merge_items(gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge_items(gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]) -> Dict[str, Dict]:
+    """Merge item data from `next_gen_data` into `this_gen_data`, dropping irrelevant items.
 
-    Specifically merges item-related data
-    """
+    We drop any items whose introduced gen is later than `gen`.
 
+    Args:
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
+
+    Returns:
+        Dict[str, Dict]: The merged data for this generation.
+    """
     if this_gen_data is None:
         return next_gen_data
 
@@ -168,13 +218,20 @@ def merge_items(gen, this_gen_data, next_gen_data):
     return this_gen_data
 
 
-def merge_learnsets(gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge_learnsets(gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]) -> Dict[str, Dict]:
+    """Merge learnset data from `next_gen_data` into `this_gen_data`, dropping irrelevant moves.
 
-    Specifically merges learnset related data
-    """
+    We drop any moves that are only learned in generations later than `gen`, but keep moves taught earlier, since this
+    can be relevant for some formats.
 
+    Args:
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
+
+    Returns:
+        Dict[str, Dict]: The merged data for this generation.
+    """
     if this_gen_data is None:
         return next_gen_data
 
@@ -206,23 +263,35 @@ def merge_learnsets(gen, this_gen_data, next_gen_data):
     return this_gen_data
 
 
-def merge_conditions(gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge_conditions(gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]) -> Dict[str, Dict]:
+    """Merge conditions data from `next_gen_data` into `this_gen_data`, dropping irrelevant conditions.
 
-    Specifically merges conditions data, though we just keep the latest since all that changes is functional
-    """
+    We just keep the raw current gen since there is no inherit function for conditions.
 
+    Args:
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
+
+    Returns:
+        Dict[str, Dict]: The merged data for this generation.
+    """
     return next_gen_data
 
 
-def merge_formats(gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge_formats(gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]) -> Dict[str, Dict]:
+    """Merge format data from `next_gen_data` into `this_gen_data`, dropping irrelevant formats.
 
-    Specifically merges format data, though we just keep the raw current gen since there is no inherit function
-    """
+    We just keep the raw current gen since there is no inherit function for formats.
 
+    Args:
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
+
+    Returns:
+        Dict[str, Dict]: The merged data for this generation.
+    """
     return this_gen_data
 
 
@@ -239,15 +308,23 @@ MERGE_DICT = {
 }
 
 
-def merge(data_type, gen, this_gen_data, next_gen_data):
-    """
-    Merges detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data
+def merge(
+    data_type: str, gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]
+) -> Optional[Dict[str, Dict]]:
+    """Merge detailed data from `next_gen_data` into `this_gen_data`, dropping irrelevant data.
 
     Automatically identifies which merge_function to use based on data_type
-
     If no merge_function is available, will return None
-    """
 
+    Args:
+        data_type (str): The type of data contained in both gen_data objects. Should be one of DATA_TYPES.
+        gen (int): The integer gen to create data for.
+        this_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the gen file.
+        next_gen_data (Dict[str, Dict]): A dictionary containing key-value_dict pairs for the pre-merged gen+1 file.
+
+    Returns:
+        Optional[Dict[str, Dict]]: The merged data for this generation. None if no merge_function is available.
+    """
     if MERGE_DICT.get(data_type) is None:
         return None
 
