@@ -6,7 +6,7 @@ authors = ["Trevor Wieland <trevor_wieland@mac.com>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/trevorWieland/poketypes"
-
+documentation = "https://trevorwieland.github.io/poketypes/"
 
 [tool.poetry.dependencies]
 python = "^3.9"
