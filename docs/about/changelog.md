@@ -2,7 +2,7 @@
 
 Changelog will not be 100% accurate until the official 1.0.0 release. Right now each release is a mash-up of various message tweaks, documenation additions, field reworkings, etc..
 
-I'll try to keep a generally accurate log until then mostly for my own benefit, but take it with a grain of salt :)
+I'll try to keep a generally accurate log until then mostly for my own benefit, but take it with a grain of salt
 
 ## 0.2.0
 
