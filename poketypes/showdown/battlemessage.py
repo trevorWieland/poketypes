@@ -170,7 +170,7 @@ class PokemonIdentifier(BaseModel):
     )
 
     @staticmethod
-    def from_ident_string(ident: str) -> "PokemonIdentifier":
+    def from_ident_string(ident: str) -> PokemonIdentifier:
         """Create a new PokemonIdentifier from an identifier string *without* slot information.
 
         Args:
@@ -182,7 +182,7 @@ class PokemonIdentifier(BaseModel):
         return PokemonIdentifier(IDENTITY=ident.split(":")[1].strip().upper(), PLAYER=ident.split(":")[0], SLOT=None)
 
     @staticmethod
-    def from_slot_string(slot: str) -> "PokemonIdentifier":
+    def from_slot_string(slot: str) -> PokemonIdentifier:
         """Create a new PokemonIdentifier from an identifier string *with* slot information.
 
         Args:
@@ -196,7 +196,7 @@ class PokemonIdentifier(BaseModel):
         )
 
     @staticmethod
-    def from_string(string: str) -> "PokemonIdentifier":
+    def from_string(string: str) -> PokemonIdentifier:
         """Auto-Create a new PokemonIdentifier based on which type of identity string is given.
 
         Args:
@@ -251,6 +251,11 @@ class BattleMessage(BaseModel):
 
     Across all BattleMessages, you will be able to access both BMTYPE and BATTLE_MESSAGE, though you shouldn't need
     to access BATTLE_MESSAGE directly. (If you do, then we must be missing some data that exists in the raw string)
+
+    Attributes:
+        BMTYPE: The message type of this battle message. Must be a vaild showdown battle message.
+        BATTLE_MESSAGE: The raw message line as sent from showdown. Shouldn't need to be used but worth keeping.
+        ERR_STATE: The error type of this battle message if it failed to parse
     """
 
     BMTYPE: BMType = Field(
@@ -318,11 +323,19 @@ class BattleMessage(BaseModel):
 class BattleMessage_player(BattleMessage):
     """Message containing player information.
 
-    Use Case(s):
+    Attributes:
+        PLAYER: The player id of this player
+        USERNAME: The username of the player
+        AVATAR: Either a number id of the user's avatar or a custom value
+        RATING: The elo of the player in the current format, if applicable
+
+    Note: Use Case(s)
         - To communicate player username/avatar/rating information.
-    Format(s):
+
+    Info: Message Format(s)
         - |player|PLAYER|USERNAME|AVATAR|RATING
-    Example(s):
+
+    Example: Input Example(s)
         - |player|p1|colress-gpt-test1|colress|1520
         - |player|p2|colress-gpt-test2|265|1229
     """
@@ -350,11 +363,17 @@ class BattleMessage_player(BattleMessage):
 class BattleMessage_teamsize(BattleMessage):
     """Message containing teamsize information.
 
-    Use Case(s):
+    Attributes:
+        PLAYER: The player id of this player
+        NUMBER: The number of pokemon your opponent has.
+
+    Note: Use Case(s)
         - To communicate player team size.
-    Format(s):
+
+    Info: Message Format(s)
         - |teamsize|PLAYER|NUMBER
-    Example(s):
+
+    Example: Input Example(s)
         - |teamsize|p1|6
     """
 
@@ -377,11 +396,16 @@ class BattleMessage_teamsize(BattleMessage):
 class BattleMessage_gametype(BattleMessage):
     """Message containing gametype information.
 
-    Use Case(s):
+    Attributes:
+        GAMETYPE: The gametype of this format
+
+    Note: Use Case(s)
         - To communicate the game type (singles, doubles, triples, etc.)
-    Format(s):
+
+    Info: Message Format(s)
         - |gametype|GAMETYPE
-    Example(s):
+
+    Example: Input Example(s)
         - |gametype|singles
     """
 
@@ -404,11 +428,16 @@ class BattleMessage_gametype(BattleMessage):
 class BattleMessage_gen(BattleMessage):
     """Message containing gen information.
 
-    Use Case(s):
+    Attributes:
+        GENNUM: The integer generation number of this format
+
+    Note: Use Case(s)
         - To communicate the generation number.
-    Format(s):
+
+    Info: Message Format(s)
         - |gen|GENNUM
-    Example(s):
+
+    Example: Input Example(s)
         - |gen|5
     """
 
@@ -428,11 +457,16 @@ class BattleMessage_gen(BattleMessage):
 class BattleMessage_tier(BattleMessage):
     """Message containing format information.
 
-    Use Case(s):
+    Attributes:
+        FORMATNAME: The game format of this match
+
+    Note: Use Case(s)
         - To communicate the format of this battle.
-    Format(s):
+
+    Info: Message Format(s)
         - |tier|FORMATNAME
-    Example(s):
+
+    Example: Input Example(s)
         - |tier|[Gen 5] Random Battle
     """
 
@@ -450,13 +484,18 @@ class BattleMessage_tier(BattleMessage):
 
 
 class BattleMessage_rated(BattleMessage):
-    """Message containing ratied-match information.
+    """Message containing rating information.
 
-    Use Case(s):
-        - To communicate whether this is a rated battle, with any optional extra message.
-    Format(s):
+    Attributes:
+        MESSAGE: An optional message used in tournaments
+
+    Note: Use Case(s)
+        - To communicate any extra rules/clauses for this format.
+
+    Info: Message Format(s)
         - |rated|MESSAGE
-    Example(s):
+
+    Example: Input Example(s)
         - |rated|
     """
 
@@ -476,11 +515,17 @@ class BattleMessage_rated(BattleMessage):
 class BattleMessage_rule(BattleMessage):
     """Message containing extra rule information.
 
-    Use Case(s):
+    Attributes:
+        RULE: The name of the rule
+        DESCRIPTION: A description of this rule
+
+    Note: Use Case(s)
         - To communicate any extra rules/clauses for this format.
-    Format(s):
+
+    Info: Message Format(s)
         - |rule|RULE: DESCRIPTION
-    Example(s):
+
+    Example: Input Example(s)
         - |rule|HP Percentage Mod: HP is shown in percentages
     """
 
@@ -502,11 +547,13 @@ class BattleMessage_rule(BattleMessage):
 class BattleMessage_clearpoke(BattleMessage):
     """Message containing a clearpoke notification.
 
-    Use Case(s):
+    Note: Use Case(s)
         - To signal that teampreview is starting.
-    Format(s):
+
+    Info: Message Format(s)
         - |clearpoke
-    Example(s):
+
+    Example: Input Example(s)
         - |clearpoke
     """
 
@@ -521,11 +568,22 @@ class BattleMessage_clearpoke(BattleMessage):
 class BattleMessage_poke(BattleMessage):
     """Message containing base-forme-only information about a pokemon, presented in teampreview.
 
-    Use Case(s):
+    Attributes:
+        PLAYER: The player id of this player
+        SPECIES: The forme-less species for this pokemon
+        LEVEL: The level of this pokemon
+        GENDER: The gender of this pokemon
+        SHINY: Whether the pokemon is shiny or not
+        TERA: If this pokemon is teratyped, the string type of the new type. Else None.
+        HAS_ITEM: Whether or not the pokemon is holding an item
+
+    Note: Use Case(s)
         - To communicate base-forme, simple pokemon information for teampreview
-    Format(s):
+
+    Info: Message Format(s)
         - |poke|PLAYER|DETAILS|ITEM
-    Example(s):
+
+    Example: Input Example(s)
         - |poke|p1|Metagross, L80|item
     """
 
@@ -584,13 +642,15 @@ class BattleMessage_poke(BattleMessage):
 
 
 class BattleMessage_start(BattleMessage):
-    """Message signaling a battle started.
+    """Message signaling the start of a battle.
 
-    Use Case(s):
+    Note: Use Case(s)
         - To communicate that the battle has started (teampreview is over)
-    Format(s):
+
+    Info: Message Format(s)
         - |start
-    Example(s):
+
+    Example: Input Example(s)
         - |start
     """
 
@@ -605,11 +665,13 @@ class BattleMessage_start(BattleMessage):
 class BattleMessage_teampreview(BattleMessage):
     """Message signaling to make a teampreview team-order decision.
 
-    Use Case(s):
+    Note: Use Case(s)
         - To communicate that the user needs to select a team-order.
-    Format(s):
+
+    Info: Message Format(s)
         - |teampreview
-    Example(s):
+
+    Example: Input Example(s)
         - |teampreview
     """
 
@@ -624,11 +686,13 @@ class BattleMessage_teampreview(BattleMessage):
 class BattleMessage_empty(BattleMessage):
     """Completely blank message.
 
-    Use Case(s):
+    Note: Use Case(s)
         - To separate sections in a battle log
-    Format(s):
+
+    Info: Message Format(s)
         - |
-    Example(s):
+
+    Example: Input Example(s)
         - |
     """
 
@@ -641,7 +705,30 @@ class BattleMessage_empty(BattleMessage):
 
 
 class RequestPoke(BaseModel):
-    """A helper class to contain details about a pokemon held in the `side` data of a request."""
+    """A helper class to contain details about a pokemon held in the `side` data of a request.
+
+    Attributes:
+        IDENT: The string pokemon identifier (without slot information)
+        SPECIES: The species for this pokemon, including forme
+        LEVEL: The level of this pokemon
+        GENDER: The gender of this pokemon
+        SHINY: Whether the pokemon is shiny or not
+        TERA: If this pokemon is teratyped, the DexType of the new type. Else None.
+        CUR_HP: The current HP of the pokemon
+        MAX_HP: The maximum HP of the pokemon, None if the pokemon is fainted
+        STATUS: The status of the pokemon. Can be None if there is no status
+        ACTIVE: Whether the pokemon is active or not
+        STATS: A dictionary of stat->values for each stat of this pokemon (before modifiers)
+        MOVES: The list of moves this pokemon knows, without pp information
+        BASE_ABILITY: The base ability of this pokemon, ignoring any ability switching shenanigans
+        ABILITY: The current ability of this pokemon. Only used in certain gens, can be None
+        ITEM: The held item of this pokemon. None if no item is held
+        POKEBALL: Which pokeball this pokemon is contained in
+        COMMANDING: Tatsugiri commander mechanic. True if active, false if not, None if older gen
+        REVIVING: Revival Blessing flag (I think?)
+        TERATYPE: The type that this pokemon can teratype into
+        TERASTALLIZED: The type that this pokemon is teratyped into. None if not applicable
+    """
 
     IDENT: PokemonIdentifier = Field(..., description="The string pokemon identifier (without slot information)")
 
@@ -652,7 +739,7 @@ class RequestPoke(BaseModel):
     SHINY: bool = Field(False, description="Whether the pokemon is shiny or not")
     TERA: Optional[DexType.ValueType] = Field(
         None,
-        description="If this pokemon is teratyped, the string type of the new type. Else None.",
+        description="If this pokemon is teratyped, the DexType of the new type. Else None.",
     )
 
     # Condition
@@ -700,7 +787,16 @@ class RequestPoke(BaseModel):
 
 
 class MoveData(BaseModel):
-    """A helper class to contain details about a move held in the active data for a request."""
+    """A helper class to contain details about a move held in the active data for a request.
+
+    Attributes:
+        NAME: The friendly name of the move
+        ID: The id of the move
+        CUR_PP: The integer amount of times this move can still be used. None if Trapped
+        MAX_PP: The integer amount of times this move can ever be used. None if Trapped
+        TARGET: The targetting type of this move. None if Trapped
+        DISABLED: Whether this move is disabled or not. None if Trapped
+    """
 
     NAME: str = Field(..., description="The friendly name of the move")
     ID: DexMove.ValueType = Field(..., description="The id of the move")
@@ -717,7 +813,16 @@ class MoveData(BaseModel):
 
 
 class ActiveOption(BaseModel):
-    """A helper class to contain details about all moves available for an active pokemon in a request."""
+    """A helper class to contain details about all moves available for an active pokemon in a request.
+
+    Attributes:
+        MOVES: A list of available moves for this slot
+        CAN_MEGA: Whether the pokemon can mega evolve
+        CAN_ZMOVE: Whether the pokemon can zmove
+        CAN_DYNA: Whether the pokemon can dynamax
+        CAN_TERA: Whether the pokemon can teratype
+        TRAPPED: Whether the user is trapped
+    """
 
     MOVES: List[MoveData] = Field(..., description="A list of available moves for this slot")
 
@@ -732,19 +837,33 @@ class ActiveOption(BaseModel):
 class BattleMessage_request(BattleMessage):
     """Message communicating options the user has in an upcoming choice.
 
-    Note: This does not necessarily mean it is time for the user to *respond* to a choice, as teampreview and move
-    requests are sent *before* the details of the previous turn are sent, and thus you should wait until it is the
-    correct time to send your decision. For FORCESWITCH requests, however, a decision should be sent once you receive
-    this message.
-    Use Case(s):
+    Attributes:
+        REQUEST_TYPE: Which type of request this request is between TEAMPREVIEW, ACTIVE, and FORCESWITCH
+        USERNAME: The player's username
+        PLAYER: The player id of this player
+        RQID: The id number of this request, for the purpose of an undo function
+        POKEMON: The pokemon details for each pokemon in this player's side
+        ACTIVE_OPTIONS: A list of actions available for each active pokemon. Will be None if switch/teampreview
+        FORCESWITCH_SLOTS: A list of bool for each slot whether they are being forced to switch
+
+    Note: Use Case(s)
         - To inform the user about their team so that a team-order decision can be made.
         - To inform the user about their available moves/switches so that a standard decision can be made.
         - To request the user to switch out a Pokemon due to a forced operation (fainted/forced out).
         - To inform the user that their opponent is making a decision and that the user has to wait for them.
-    Format(s):
+
+    Info: Message Format(s)
         - |request|REQUEST_JSON
-    Example(s):
+
+    Example: Input Example(s)
         - See logs for examples, there are a lot of variations.
+
+    Tips:
+        This does not necessarily mean it is time for the user to *respond* to a choice, as teampreview and move
+        requests are sent *before* the details of the previous turn are sent, and thus you should wait until it is the
+        correct time to send your decision.
+
+        For FORCESWITCH requests, however, a decision should be sent once you receive this message.
     """
 
     REQUEST_TYPE: Literal["TEAMPREVIEW", "ACTIVE", "FORCESWITCH", "WAIT"] = Field(
@@ -895,11 +1014,16 @@ class BattleMessage_request(BattleMessage):
 class BattleMessage_inactive(BattleMessage):
     """Message communicating that the inactivity timer has been set.
 
-    Use Case(s):
+    Attributes:
+        MESSAGE: A message related to the battle timer notification
+
+    Note: Use Case(s)
         - To signal that there is a time-limit for descisions to be made.
-    Format(s):
+
+    Info: Message Format(s)
         - |inactive|MESSAGE
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 
@@ -919,11 +1043,16 @@ class BattleMessage_inactive(BattleMessage):
 class BattleMessage_inactiveoff(BattleMessage):
     """Message communicating that the inactivity timer has been turned off.
 
-    Use Case(s):
+    Attributes:
+        MESSAGE: A message related to the battle timer notification
+
+    Note: Use Case(s)
         - To signal that there is no longer a time-limit for descisions to be made.
-    Format(s):
+
+    Info: Message Format(s)
         - |inactiveoff|MESSAGE
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 
@@ -943,11 +1072,13 @@ class BattleMessage_inactiveoff(BattleMessage):
 class BattleMessage_upkeep(BattleMessage):
     """Message communicating upkeep notice.
 
-    Use Case(s):
+    Note: Use Case(s)
         - To signal that the upkeep stage has happened
-    Format(s):
+
+    Info: Message Format(s)
         - |upkeep
-    Example(s):
+
+    Example: Input Example(s)
         - |upkeep
     """
 
@@ -962,11 +1093,16 @@ class BattleMessage_upkeep(BattleMessage):
 class BattleMessage_turn(BattleMessage):
     """Message communicating that a turn has begun, and that move choices should be made.
 
-    Use Case(s):
+    Attributes:
+        NUMBER: The current turn number
+
+    Note: Use Case(s)
         - To signal to the players to make a move.
-    Format(s):
+
+    Info: Message Format(s)
         - |turn|NUMBER
-    Example(s):
+
+    Example: Input Example(s)
         - |turn|2
     """
 
@@ -986,11 +1122,16 @@ class BattleMessage_turn(BattleMessage):
 class BattleMessage_win(BattleMessage):
     """Message communicating that a player has won the battle.
 
-    Use Case(s):
+    Attributes:
+        USERNAME: The username of the winning player
+
+    Note: Use Case(s)
         - To signal which player has won.
-    Format(s):
+
+    Info: Message Format(s)
         - |win|USER
-    Example(s):
+
+    Example: Input Example(s)
         - |win|colress-gpt-test2
     """
 
@@ -1010,11 +1151,13 @@ class BattleMessage_win(BattleMessage):
 class BattleMessage_tie(BattleMessage):
     """Message communicating that *neither* player has won the battle.
 
-    Use Case(s):
+    Note: Use Case(s)
         - To signal the battle has ended in a tie
-    Format(s):
+
+    Info: Message Format(s)
         - |tie
-    Example(s):
+
+    Example: Input Example(s)
         - |tie
     """
 
@@ -1029,11 +1172,13 @@ class BattleMessage_tie(BattleMessage):
 class BattleMessage_expire(BattleMessage):
     """Message communicating that the battle has ended due to mutual inactivity.
 
-    Use Case(s):
+    Note: Use Case(s)
         - To signal the battle has ended due to mutual inactivity
-    Format(s):
+
+    Info: Message Format(s)
         - |expire|
-    Example(s):
+
+    Example: Input Example(s)
         - |expire|
     """
 
@@ -1048,11 +1193,16 @@ class BattleMessage_expire(BattleMessage):
 class BattleMessage_t(BattleMessage):
     """Message communicating the current timestamp.
 
-    Use Case(s):
+    Attributes:
+        TIMESTAMP: The time of this turn as a datetime (conv from unix seconds)
+
+    Note: Use Case(s)
         - Gives current timestamp of this set of messages
-    Format(s):
+
+    Info: Message Format(s)
         - |t:|TIMESTAMP
-    Example(s):
+
+    Example: Input Example(s)
         - |t:|1696832299
     """
 
@@ -1068,13 +1218,21 @@ class BattleMessage_t(BattleMessage):
 class BattleMessage_move(BattleMessage):
     """Message communicating that a pokemon successfully used a move.
 
-    Use Case(s):
+    Attributes:
+        POKEMON: The pokemon using the move
+        MOVE: The name of the move used
+        TARGET: The primary target of this move. This can be None when applicable
+        EFFECT: An optional effect that the move is taken from (Magic bounce, Sleep Talk, etc)
+
+    Note: Use Case(s)
         - Communicating which move was used, including source/target information.
-    Format(s):
+
+    Info: Message Format(s)
         - |move|POKEMON|MOVE|TARGET
         - |move|POKEMON|MOVE|TARGET|[from]
         - TODO: Add more
-    Example(s):
+
+    Example: Input Example(s)
         - |move|p1a: Sceptile|Acrobatics|p2a: Espeon
         - |move|p1a: Kangaskhan|Fake Out||[still]
         - TODO: Add more
@@ -1133,11 +1291,24 @@ class BattleMessage_move(BattleMessage):
 class BattleMessage_switch(BattleMessage):
     """Message communicating that a pokemon has switched in.
 
-    Use Case(s):
+    Attributes:
+        POKEMON: The pokemon swapping in, potentially replacing the slot
+        SPECIES: The species for this pokemon, including forme
+        LEVEL: The level of this pokemon
+        GENDER: The gender of this pokemon
+        SHINY: Whether the pokemon is shiny or not
+        TERA: If this pokemon is teratyped, the string type of the new type. Else None.
+        CUR_HP: The current HP of the pokemon
+        MAX_HP: The maximum HP of the pokemon
+        STATUS: The status of the pokemon. Can be None if there is no status
+
+    Note: Use Case(s)
         - Communicating which pokemon switched in, as well as info about the pokemon.
-    Format(s):
+
+    Info: Message Format(s)
         - |switch|POKEMON|DETAILS|HP STATUS
-    Example(s):
+
+    Example: Input Example(s)
         - |switch|p2a: Toxicroak|Toxicroak, L81, F|100/100
     """
 
@@ -1218,8 +1389,27 @@ class BattleMessage_switch(BattleMessage):
 
 
 class BattleMessage_drag(BattleMessage):
-    """
-    |drag|POKEMON|DETAILS|HP STATUS
+    """Message communicating that a pokemon has switched in.
+
+    Attributes:
+        POKEMON: The pokemon being dragged in
+        SPECIES: The species for this pokemon, including forme
+        LEVEL: The level of this pokemon
+        GENDER: The gender of this pokemon
+        SHINY: Whether the pokemon is shiny or not
+        TERA: If this pokemon is teratyped, the string type of the new type. Else None.
+        CUR_HP: The current HP of the pokemon
+        MAX_HP: The maximum HP of the pokemon
+        STATUS: The status of the pokemon. Can be None if there is no status
+
+    Note: Use Case(s)
+        - Communicating which pokemon was dragged in, as well as info about the pokemon.
+
+    Info: Message Format(s)
+        - |drag|POKEMON|DETAILS|HP STATUS
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon being dragged in")
@@ -1299,8 +1489,27 @@ class BattleMessage_drag(BattleMessage):
 
 
 class BattleMessage_detailschange(BattleMessage):
-    """
-    |detailschange|POKEMON|DETAILS
+    """Message communicating that a pokemon has changed formes in a permanent way.
+
+    Attributes:
+        POKEMON: The pokemon changing formes
+        SPECIES: The species for this pokemon, including forme
+        LEVEL: The level of this pokemon
+        GENDER: The gender of this pokemon
+        SHINY: Whether the pokemon is shiny or not
+        TERA: If this pokemon is teratyped, the string type of the new type. Else None.
+        CUR_HP: The current HP of the pokemon
+        MAX_HP: The maximum HP of the pokemon
+        STATUS: The status of the pokemon. Can be None if there is no status
+
+    Note: Use Case(s)
+        - Communicating that a certain pokemon changed forme.
+
+    Info: Message Format(s)
+        - |detailschange|POKEMON|DETAILS
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon changing formes")
@@ -1356,8 +1565,27 @@ class BattleMessage_detailschange(BattleMessage):
 
 
 class BattleMessage_replace(BattleMessage):
-    """
-    |replace|POKEMON|DETAILS
+    """Message communicating that a pokemon has been replaced (Zoroark illusion ability).
+
+    Attributes:
+        POKEMON: The pokemon being revealed (Zoroark)
+        SPECIES: The species for this pokemon, including forme
+        LEVEL: The level of this pokemon
+        GENDER: The gender of this pokemon
+        SHINY: Whether the pokemon is shiny or not
+        TERA: If this pokemon is teratyped, the string type of the new type. Else None.
+        CUR_HP: The current HP of the pokemon
+        MAX_HP: The maximum HP of the pokemon
+        STATUS: The status of the pokemon. Can be None if there is no status
+
+    Note: Use Case(s)
+        - Communicating that a certain pokemon has been replaced.
+
+    Info: Message Format(s)
+        - |replace|POKEMON|DETAILS
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon being revealed (Zoroark)")
@@ -1413,10 +1641,22 @@ class BattleMessage_replace(BattleMessage):
 
 
 class BattleMessage_swap(BattleMessage):
-    """
-    |swap|POKEMON|POSITION
+    """Message communicating that a certain active slot has had its pokemon swapped with another.
 
-    |swap|POKEMON|[from]EFFECT
+    Attributes:
+        POKEMON: The pokemon being swapped `before` swapping
+        POSITION: The slot that this Pokemon is being swapped to, as an integer
+        EFFECT: An optional effect explaining what caused the swapping
+
+    Note: Use Case(s)
+        - Communicating that two pokemon have swapped active slots.
+
+    Info: Message Format(s)
+        - |swap|POKEMON|POSITION
+        - |swap|POKEMON|POSITION|[from]
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon being swapped `before` swapping")
@@ -1457,8 +1697,21 @@ class BattleMessage_swap(BattleMessage):
 
 
 class BattleMessage_cant(BattleMessage):
-    """
-    |cant|POKEMON|REASON|MOVE
+    """Message communicating that a pokemon was unable to do something.
+
+    Attributes:
+        POKEMON: The pokemon that was unable to act
+        REASON: The reason that the pokemon was unable to do what it was trying to do
+        MOVE: The move being used that was unable to be used. None if not applicable
+
+    Note: Use Case(s)
+        - Communicating that a pokemon failed to do something, with the reason it failed.
+
+    Info: Message Format(s)
+        - |cant|POKEMON|REASON|MOVE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon that was unable to act")
@@ -1490,8 +1743,19 @@ class BattleMessage_cant(BattleMessage):
 
 
 class BattleMessage_faint(BattleMessage):
-    """
-    |faint|POKEMON
+    """Message communicating that a pokemon has fainted.
+
+    Attributes:
+        POKEMON: The pokemon that fainted
+
+    Note: Use Case(s)
+        - Communicating that a pokemon fainted.
+
+    Info: Message Format(s)
+        - |faint|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon fainting")
@@ -1506,12 +1770,24 @@ class BattleMessage_faint(BattleMessage):
 
 
 class BattleMessage_fail(BattleMessage):
-    """
-    |-fail|POKEMON
+    """Message communicating that a pokemon has failed to do something.
 
-    |-fail|POKEMON|EFFECT
+    Attributes:
+        POKEMON: The pokemon that failed to do something
+        EFFECT: The effect causing/explaining the fail. Is Optional since sometimes it fails with no explanation
 
-    |-fail|POKEMON|STATUS
+    Note: Use Case(s)
+        - Communicating that a pokemon failed to do something
+        - Communicate what effect caused the failure
+        - Communicate if a status caused the failure.
+
+    Info: Message Format(s)
+        - |-fail|POKEMON
+        - |-fail|POKEMON|EFFECT
+        - |-fail|POKEMON|STATUS
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
@@ -1594,8 +1870,20 @@ class BattleMessage_fail(BattleMessage):
 
 
 class BattleMessage_block(BattleMessage):
-    """
-    |-block|POKEMON|EFFECT
+    """Message communicating that a pokemon has blocked an opposing action.
+
+    Attributes:
+        POKEMON: The pokemon that was targeted but blocked something
+        EFFECT: The reason this was able to be blocked
+
+    Note: Use Case(s)
+        - Communicating that a pokemon was able to block some other action.
+
+    Info: Message Format(s)
+        - |-block|POKEMON|EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(
@@ -1625,8 +1913,19 @@ class BattleMessage_block(BattleMessage):
 
 
 class BattleMessage_notarget(BattleMessage):
-    """
-    |-notarget|POKEMON
+    """Message communicating that no target was available at move-use time.
+
+    Attributes:
+        POKEMON: The pokemon that had no target available
+
+    Note: Use Case(s)
+        - Communicating that a pokemon had no target available.
+
+    Info: Message Format(s)
+        - |-notarget|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon that has no target")
@@ -1643,10 +1942,22 @@ class BattleMessage_notarget(BattleMessage):
 
 
 class BattleMessage_miss(BattleMessage):
-    """
-    |-miss|SOURCE|TARGET
+    """Message communicating that a given source pokemon missed its action.
 
-    |-miss|SOURCE
+    Attributes:
+        SOURCE: The pokemon missing the attack
+        TARGET: The pokemon evading (If applicable, can be None)
+
+    Note: Use Case(s)
+        - Communicating that a pokemon missed.
+        - Communicating which pokemon was targeted but avoided the action.
+
+    Info: Message Format(s)
+        - |-miss|SOURCE
+        - |-miss|SOURCE|TARGET
+
+    Example: Input Example(s)
+        - TODO
     """
 
     SOURCE: PokemonIdentifier = Field(..., description="The pokemon missing the attack")
@@ -1668,8 +1979,23 @@ class BattleMessage_miss(BattleMessage):
 
 
 class BattleMessage_damage(BattleMessage):
-    """
-    |-damage|POKEMON|HP STATUS
+    """Message communicating that a pokemon has taken damage.
+
+    Attributes:
+        POKEMON: The pokemon being hurt
+        CUR_HP: The current HP of the pokemon
+        MAX_HP: The maximum HP of the pokemon. None if the pokemon is fainted
+        STATUS: The status of the pokemon. Can be None if there is no status
+        EFFECT: The reason this damage was dealt, if not from a move
+
+    Note: Use Case(s)
+        - Communicating that a pokemon took damage in some way.
+
+    Info: Message Format(s)
+        - |-damage|POKEMON|HP STATUS
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon being hurt")
@@ -1735,8 +2061,23 @@ class BattleMessage_damage(BattleMessage):
 
 
 class BattleMessage_heal(BattleMessage):
-    """
-    |-heal|POKEMON|HP STATUS
+    """Message communicating that a pokemon has healed some health.
+
+    Attributes:
+        POKEMON: The pokemon being healed
+        CUR_HP: The current HP of the pokemon
+        MAX_HP: The maximum HP of the pokemon
+        STATUS: The status of the pokemon. Can be None if there is no status
+        EFFECT: The reason this health was healed, if not from a move
+
+    Note: Use Case(s)
+        - Communicating that a pokemon healed in some way.
+
+    Info: Message Format(s)
+        - |-heal|POKEMON|HP STATUS
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(
@@ -1804,8 +2145,23 @@ class BattleMessage_heal(BattleMessage):
 
 
 class BattleMessage_sethp(BattleMessage):
-    """
-    |-sethp|POKEMON|HP STATUS|EFFECT
+    """Message communicating that a pokemon has an exact hp amount.
+
+    Attributes:
+        POKEMON: The pokemon getting the HP set
+        CUR_HP: The current HP of the pokemon
+        MAX_HP: The maximum HP of the pokemon
+        STATUS: The status of the pokemon. Can be None if there is no status
+        EFFECT: The reason this health was healed
+
+    Note: Use Case(s)
+        - Communicating that a pokemon had its health directly set.
+
+    Info: Message Format(s)
+        - |-sethp|POKEMON|HP STATUS|EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon getting the HP set")
@@ -1814,7 +2170,7 @@ class BattleMessage_sethp(BattleMessage):
     MAX_HP: int = Field(None, description="The maximum HP of the pokemon")
     STATUS: Optional[str] = Field(None, description="The status of the pokemon. Can be None if there is no status")
 
-    EFFECT: Optional[Effect] = Field(None, description="The reason this health was healed, if not from a move")
+    EFFECT: Optional[Effect] = Field(None, description="The reason this health was healed")
 
     def from_message(battle_message: str) -> "BattleMessage_sethp":
         """Create a specific BattleMessage object from a raw message."""
@@ -1870,8 +2226,20 @@ class BattleMessage_sethp(BattleMessage):
 
 
 class BattleMessage_status(BattleMessage):
-    """
-    |-status|POKEMON|STATUS
+    """Message communicating that a pokemon has gained a status.
+
+    Attributes:
+        POKEMON: The pokemon gaining the status
+        STATUS: The status being gained
+
+    Note: Use Case(s)
+        - Communicating that a pokemon has gained a status condition.
+
+    Info: Message Format(s)
+        - |-status|POKEMON|STATUS
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon gaining the status")
@@ -1892,8 +2260,20 @@ class BattleMessage_status(BattleMessage):
 
 
 class BattleMessage_curestatus(BattleMessage):
-    """
-    |-curestatus|POKEMON|STATUS
+    """Message communicating that a pokemon has lost a status.
+
+    Attributes:
+        POKEMON: The pokemon losing the status
+        STATUS: The status being lost
+
+    Note: Use Case(s)
+        - Communicating that a pokemon has lost a status condition.
+
+    Info: Message Format(s)
+        - |-curestatus|POKEMON|STATUS
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon losing the status")
@@ -1914,8 +2294,19 @@ class BattleMessage_curestatus(BattleMessage):
 
 
 class BattleMessage_cureteam(BattleMessage):
-    """
-    |-cureteam|POKEMON|EFFECT
+    """Message communicating that a team has been cured of all status conditions.
+
+    Attributes:
+        EFFECT: The effect causing the team to be healed
+
+    Note: Use Case(s)
+        - Communicating that all pokemon have been cured.
+
+    Info: Message Format(s)
+        - |-cureteam|POKEMON|EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     EFFECT: Effect = Field(..., description="The effect causing the team to be healed")
@@ -1934,8 +2325,21 @@ class BattleMessage_cureteam(BattleMessage):
 
 
 class BattleMessage_boost(BattleMessage):
-    """
-    |-boost|POKEMON|STAT|AMOUNT
+    """Message communicating that a pokemon has gained some stat boost.
+
+    Attributes:
+        POKEMON: The pokemon getting the boost
+        STAT: Which stat is being boosted
+        AMOUNT: By how much this stat is being boosted, as an integer. Can be 0 if at cap
+
+    Note: Use Case(s)
+        - Communicating that a pokemon received a single stat boost.
+
+    Info: Message Format(s)
+        - |-boost|POKEMON|STAT|AMOUNT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon getting the boost")
@@ -1963,15 +2367,28 @@ class BattleMessage_boost(BattleMessage):
 
 
 class BattleMessage_unboost(BattleMessage):
-    """
-    |-unboost|POKEMON|STAT|AMOUNT
+    """Message communicating that a pokemon has had some stat lowered.
+
+    Attributes:
+        POKEMON: The pokemon getting the boost
+        STAT: Which stat is being boosted
+        AMOUNT: By how much this stat is being unboosted, as an integer. Can be 0 if at cap
+
+    Note: Use Case(s)
+        - Communicating that a pokemon received a single stat unboost.
+
+    Info: Message Format(s)
+        - |-unboost|POKEMON|STAT|AMOUNT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon getting the boost")
     STAT: PokeStat = Field(..., description="Which stat is being boosted")
     AMOUNT: int = Field(
         ...,
-        description="By how much this stat is being boosted, as an integer. Can be 0 if at cap",
+        description="By how much this stat is being unboosted, as an integer. Can be 0 if at cap",
     )
 
     def from_message(battle_message: str) -> "BattleMessage_unboost":
@@ -1992,8 +2409,21 @@ class BattleMessage_unboost(BattleMessage):
 
 
 class BattleMessage_setboost(BattleMessage):
-    """
-    |-setboost|POKEMON|STAT|AMOUNT
+    """Message communicating that a pokemon has had some stat set to a certain boost value.
+
+    Attributes:
+        POKEMON: The pokemon getting the boost
+        STAT: Which stat is being boosted
+        AMOUNT: The new value being assigned for this stat boost
+
+    Note: Use Case(s)
+        - Communicating that a pokemon received a set stat boost value.
+
+    Info: Message Format(s)
+        - |-setboost|POKEMON|STAT|AMOUNT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon getting the boost")
@@ -2018,8 +2448,22 @@ class BattleMessage_setboost(BattleMessage):
 
 
 class BattleMessage_swapboost(BattleMessage):
-    """
-    |-swapboost|SOURCE|TARGET|STATS
+    """Message communicating that two specific pokemon have had their stat boosts switched.
+
+    Warning:
+        Not yet implemented!
+
+    Attributes:
+        POKEMON: The pokemon getting the boost
+
+    Note: Use Case(s)
+        - Communicating that two pokemon have had their respective stat boosts swapped.
+
+    Info: Message Format(s)
+        - |-swapboost|SOURCE|TARGET|STATS
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: str = Field(..., description="The main pokemon identifier relevant")
@@ -2035,8 +2479,19 @@ class BattleMessage_swapboost(BattleMessage):
 
 
 class BattleMessage_invertboost(BattleMessage):
-    """
-    |-invertboost|POKEMON
+    """Message communicating that a pokemon has had its stat boosts inverted.
+
+    Attributes:
+        POKEMON: The pokemon getting the boost inverted
+
+    Note: Use Case(s)
+        - Communicating that a pokemon has had its stat boosts inverted.
+
+    Info: Message Format(s)
+        - |-invertboost|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon to invert the boosts of")
@@ -2053,8 +2508,19 @@ class BattleMessage_invertboost(BattleMessage):
 
 
 class BattleMessage_clearboost(BattleMessage):
-    """
-    |-clearboost|POKEMON
+    """Message communicating that a pokemon has had its stat boosts cleared.
+
+    Attributes:
+        POKEMON: The pokemon that had its stat boosts cleared.
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has had its stat boosts cleared.
+
+    Info: Message Format(s):
+        - |-clearboost|POKEMON
+
+    Example: Input Example(s)
+        - |-clearboost|p1a: Pikachu
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon to clear the boosts of")
@@ -2071,8 +2537,16 @@ class BattleMessage_clearboost(BattleMessage):
 
 
 class BattleMessage_clearallboost(BattleMessage):
-    """
-    |-clearallboost
+    """Message communicating that all pokemon have had their stat boosts cleared.
+
+    Note: Use Case(s):
+        - Communicating that all pokemon have had their stat boosts cleared.
+
+    Info: Message Format(s):
+        - |-clearallboost
+
+    Example: Input Example(s)
+        - |-clearallboost
     """
 
     def from_message(battle_message: str) -> "BattleMessage_clearallboost":
@@ -2084,8 +2558,20 @@ class BattleMessage_clearallboost(BattleMessage):
 
 
 class BattleMessage_clearpositiveboost(BattleMessage):
-    """
-    |-clearpositiveboost|TARGET|EFF_SOURCE|EFFECT
+    """Message communicating that a pokemon has had its positive stat boosts cleared.
+
+    Attributes:
+        POKEMON: The pokemon that had its positive stat boosts cleared.
+        EFFECT: The effect causing this positive boost clearance
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has had its positive stat boosts cleared.
+
+    Info: Message Format(s):
+        - |-clearpositiveboost|TARGET|EFF_SOURCE|EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon to clear the positive boosts of")
@@ -2110,8 +2596,19 @@ class BattleMessage_clearpositiveboost(BattleMessage):
 
 
 class BattleMessage_clearnegativeboost(BattleMessage):
-    """
-    |-clearnegativeboost|POKEMON
+    """Message communicating that a pokemon has had its negative stat boosts cleared.
+
+    Attributes:
+        POKEMON: The pokemon that had its negative stat boosts cleared.
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has had its negative stat boosts cleared.
+
+    Info: Message Format(s):
+        - |-clearnegativeboost|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon to clear the negative boosts of")
@@ -2128,8 +2625,22 @@ class BattleMessage_clearnegativeboost(BattleMessage):
 
 
 class BattleMessage_copyboost(BattleMessage):
-    """
-    |-copyboost|SOURCE|TARGET
+    """Message communicating that a pokemon has had its stat boosts copied.
+
+    Warning:
+        Not yet implemented!
+
+    Attributes:
+        POKEMON: The pokemon that had its stat boosts copied.
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has had its stat boosts copied.
+
+    Info: Message Format(s):
+        - |-copyboost|SOURCE|TARGET
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: str = Field(..., description="The main pokemon identifier relevant")
@@ -2145,12 +2656,22 @@ class BattleMessage_copyboost(BattleMessage):
 
 
 class BattleMessage_weather(BattleMessage):
-    """
-    |-weather|WEATHER|EFFECT
+    """Message communicating that the weather has changed.
+
+    Attributes:
+        WEATHER: The weather being set
+
+    Note: Use Case(s):
+        - Communicating that the weather has changed.
+
+    Info: Message Format(s):
+        - |-weather|WEATHER|EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
-    # TODO: Add a weather validator or Literal
-    WEATHER: DexWeather.ValueType = Field(..., description="The Weather")
+    WEATHER: DexWeather.ValueType = Field(..., description="The weather being set")
 
     EFFECT: Optional[Effect] = Field(None, description="Optionally, the effect that caused this weather")
 
@@ -2188,8 +2709,19 @@ class BattleMessage_weather(BattleMessage):
 
 
 class BattleMessage_fieldstart(BattleMessage):
-    """
-    |-fieldstart|CONDITION
+    """Message communicating that a field condition has started.
+
+    Attributes:
+        EFFECT: The effect starting for the field.
+
+    Note: Use Case(s):
+        - Communicating that a field condition has started.
+
+    Info: Message Format(s):
+        - |-fieldstart|CONDITION
+
+    Example: Input Example(s)
+        - TODO
     """
 
     EFFECT: Effect = Field(
@@ -2229,8 +2761,19 @@ class BattleMessage_fieldstart(BattleMessage):
 
 
 class BattleMessage_fieldend(BattleMessage):
-    """
-    |-fieldend|CONDITION
+    """Message communicating that a field condition has ended.
+
+    Attributes:
+        EFFECT: The effect ending for the field.
+
+    Note: Use Case(s):
+        - Communicating that a field condition has ended.
+
+    Info: Message Format(s):
+        - |-fieldend|CONDITION
+
+    Example: Input Example(s)
+        - TODO
     """
 
     EFFECT: Effect = Field(
@@ -2255,8 +2798,20 @@ class BattleMessage_fieldend(BattleMessage):
 
 
 class BattleMessage_sidestart(BattleMessage):
-    """
-    |-sidestart|SIDE|CONDITION
+    """Message communicating that a side condition has started.
+
+    Attributes:
+        PLAYER: The player id of the impacted player
+        CONDITION: The field condition starting
+
+    Note: Use Case(s):
+        - Communicating that a side condition has started.
+
+    Info: Message Format(s):
+        - |-sidestart|SIDE|CONDITION
+
+    Example: Input Example(s)
+        - TODO
     """
 
     PLAYER: str = Field(..., description="The player id of the impacted player", pattern=r"p[1-4]")
@@ -2281,12 +2836,23 @@ class BattleMessage_sidestart(BattleMessage):
 
 
 class BattleMessage_sideend(BattleMessage):
-    """
-    |-sideend|SIDE|CONDITION
+    """Message communicating that a side condition has ended.
 
-    |-sideend|SIDE|CONDITION|[from]
+    Attributes:
+        PLAYER: The player id of the impacted player
+        CONDITION: The field condition starting
+        EFFECT: The effect that is causing the conditon to end
 
-    |-sideend|SIDE|CONDITION|[of]
+    Note: Use Case(s):
+        - Communicating that a side condition has ended.
+
+    Info: Message Format(s):
+        - |-sideend|SIDE|CONDITION
+        - |-sideend|SIDE|CONDITION|[from]
+        - |-sideend|SIDE|CONDITION|[of]
+
+    Example: Input Example(s)
+        - TODO
     """
 
     PLAYER: str = Field(..., description="The player id of the impacted player", pattern=r"p[1-4]")
@@ -2333,8 +2899,16 @@ class BattleMessage_sideend(BattleMessage):
 
 
 class BattleMessage_swapsideconditions(BattleMessage):
-    """
-    |-swapsideconditions
+    """Message communicating that a side condition has been swapped.
+
+    Note: Use Case(s):
+        - Communicating that a side condition has been swapped.
+
+    Info: Message Format(s):
+        - |-swapsideconditions
+
+    Example: Input Example(s)
+        - TODO
     """
 
     def from_message(battle_message: str) -> "BattleMessage_swapsideconditions":
@@ -2346,14 +2920,27 @@ class BattleMessage_swapsideconditions(BattleMessage):
 
 
 class BattleMessage_volstart(BattleMessage):
-    """
-    |-start|POKEMON|MOVE
+    """Message communicating that a volatile effect has started.
 
-    |-start|POKEMON|MOVE|MOVE
+    Attributes:
+        POKEMON: The pokemon this volatile effect is started for
+        EFFECT: The effect that caused this volatile status
 
-    |-start|POKEMON|VOLATILE
+    Note: Use Case(s):
+        - Communicating that a volatile effect has started.
 
-    |-start|POKEMON|typechange|TYPE
+    Info: Message Format(s):
+        - |-start|POKEMON|VOLATILE
+        - |-start|POKEMON|MOVE
+        - |-start|POKEMON|MOVE|MOVE
+        - |-start|POKEMON|MOVE|[from]
+        - |-start|POKEMON|MOVE|[from]|[of]
+        - |-start|POKEMON|typechange|TYPE
+        - |-start|POKEMON|typechange|TYPE|[from]
+        - |-start|POKEMON|typechange|TYPE|[from]|[of]
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon this volatile effect is started for")
@@ -2497,8 +3084,21 @@ class BattleMessage_volstart(BattleMessage):
 
 
 class BattleMessage_volend(BattleMessage):
-    """
-    |-end|POKEMON|EFFECT
+    """Message communicating that a volatile effect has ended.
+
+    Attributes:
+        POKEMON: The pokemon this volatile effect is ended for
+        EFFECT: The effect that caused this volatile status
+        SILENT: Whether this message is silent or not
+
+    Note: Use Case(s):
+        - Communicating that a volatile effect has ended.
+
+    Info: Message Format(s):
+        - |-end|POKEMON|EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(
@@ -2606,11 +3206,22 @@ class BattleMessage_volend(BattleMessage):
 
 
 class BattleMessage_crit(BattleMessage):
-    """
-    |-crit|POKEMON
+    """Message communicating that a pokemon has had a critical hit.
+
+    Attributes:
+        POKEMON: The pokemon that had a critical hit
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has had a critical hit.
+
+    Info: Message Format(s):
+        - |-crit|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
-    POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
+    POKEMON: PokemonIdentifier = Field(..., description="The pokemon that was critically hit")
 
     def from_message(battle_message: str) -> "BattleMessage_crit":
         """Create a specific BattleMessage object from a raw message."""
@@ -2624,11 +3235,22 @@ class BattleMessage_crit(BattleMessage):
 
 
 class BattleMessage_supereffective(BattleMessage):
-    """
-    |-supereffective|POKEMON
+    """Message communicating that a pokemon has been hit super effectively.
+
+    Attributes:
+        POKEMON: The pokemon that was hit super effectively
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has been hit super effectively.
+
+    Info: Message Format(s):
+        - |-supereffective|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
-    POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
+    POKEMON: PokemonIdentifier = Field(..., description="The pokemon that was hit super effectively")
 
     def from_message(battle_message: str) -> "BattleMessage_supereffective":
         """Create a specific BattleMessage object from a raw message."""
@@ -2642,11 +3264,22 @@ class BattleMessage_supereffective(BattleMessage):
 
 
 class BattleMessage_resisted(BattleMessage):
-    """
-    |-resisted|POKEMON
+    """Message communicating that a pokemon has resisted an attack.
+
+    Attributes:
+        POKEMON: The pokemon that resisted the attack
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has resisted an attack.
+
+    Info: Message Format(s):
+        - |-resisted|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
-    POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
+    POKEMON: PokemonIdentifier = Field(..., description="The pokemon that resisted the attack")
 
     def from_message(battle_message: str) -> "BattleMessage_resisted":
         """Create a specific BattleMessage object from a raw message."""
@@ -2660,11 +3293,22 @@ class BattleMessage_resisted(BattleMessage):
 
 
 class BattleMessage_immune(BattleMessage):
-    """
-    |-immune|POKEMON
+    """Message communicating that a pokemon has been immune to an attack.
+
+    Attributes:
+        POKEMON: The pokemon that was immune to the attack
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has been immune to an attack.
+
+    Info: Message Format(s):
+        - |-immune|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
-    POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
+    POKEMON: PokemonIdentifier = Field(..., description="The pokemon that was immune to the attack")
 
     def from_message(battle_message: str) -> "BattleMessage_immune":
         """Create a specific BattleMessage object from a raw message."""
@@ -2678,8 +3322,22 @@ class BattleMessage_immune(BattleMessage):
 
 
 class BattleMessage_item(BattleMessage):
-    """
-    |-item|POKEMON|ITEM|[from]EFFECT
+    """Message communicating that a pokemon has had its item revealed.
+
+    Attributes:
+        POKEMON: The pokemon whose item is revealed
+        ITEM: The item being revealed
+        EFFECT: The effect that revealed the item, if applicable. Not used when auto-revealed (air balloon)
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has had its item revealed.
+
+    Info: Message Format(s):
+        - |-item|POKEMON|ITEM
+        - |-item|POKEMON|ITEM|[from]EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon whose item is revealed")
@@ -2720,8 +3378,22 @@ class BattleMessage_item(BattleMessage):
 
 
 class BattleMessage_enditem(BattleMessage):
-    """
-    |-enditem|POKEMON|ITEM|[from]EFFECT
+    """Message communicating that a pokemon has had its item destroyed.
+
+    Attributes:
+        POKEMON: The pokemon whose item is destroyed
+        ITEM: The item being destroyed
+        EFFECT: The effect that destroyed the item, if applicable.
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has had its item destroyed.
+
+    Info: Message Format(s):
+        - |-enditem|POKEMON|ITEM
+        - |-enditem|POKEMON|ITEM|[from]EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon whose item is destroyed")
@@ -2789,8 +3461,23 @@ class BattleMessage_enditem(BattleMessage):
 
 
 class BattleMessage_ability(BattleMessage):
-    """
-    |-ability|POKEMON|ABILITY|[from] EFFECT|[of] POKEMON
+    """Message communicating that a pokemon has had its ability revealed.
+
+    Attributes:
+        POKEMON: The pokemon whose ability is revealed
+        ABILITY: The ability being revealed
+        EFFECT: The effect that revealed the ability, if applicable.
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has had its ability revealed.
+
+    Info: Message Format(s):
+        - |-ability|POKEMON|ABILITY
+        - |-ability|POKEMON|ABILITY|[from] EFFECT
+        - |-ability|POKEMON|ABILITY|[from] EFFECT|[of] POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon whose ability is being shown")
@@ -2839,8 +3526,19 @@ class BattleMessage_ability(BattleMessage):
 
 
 class BattleMessage_endability(BattleMessage):
-    """
-    |-endability|POKEMON
+    """Message communicating that a pokemon has had its ability suppressed.
+
+    Attributes:
+        POKEMON: The pokemon whose ability is suppressed
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has had its ability suppressed.
+
+    Info: Message Format(s):
+        - |-endability|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon whose ability is being suppressed")
@@ -2855,10 +3553,22 @@ class BattleMessage_endability(BattleMessage):
 
 
 class BattleMessage_transform(BattleMessage):
-    """
-    |-transform|SOURCE|TARGET|
+    """Message communicating that a pokemon has transformed into another pokemon.
 
-    |-transform|SOURCE|TARGET|[from]
+    Attributes:
+        SOURCE: The pokemon transforming
+        TARGET: The pokemon it's transforming into
+        EFFECT: The optional effect explaining the transformation
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has transformed into another pokemon.
+
+    Info: Message Format(s):
+        - |-transform|SOURCE|TARGET|
+        - |-transform|SOURCE|TARGET|[from]
+
+    Example: Input Example(s)
+        - TODO
     """
 
     SOURCE: PokemonIdentifier = Field(..., description="The pokemon transforming")
@@ -2893,8 +3603,22 @@ class BattleMessage_transform(BattleMessage):
 
 
 class BattleMessage_mega(BattleMessage):
-    """
-    |-mega|POKEMON|MEGASTONE
+    """Message communicating that a pokemon has mega evolved.
+
+    Warning:
+        Not implemented yet.
+
+    Attributes:
+        POKEMON: The pokemon that mega evolved
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has mega evolved.
+
+    Info: Message Format(s):
+        - |-mega|POKEMON|MEGASTONE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
@@ -2910,8 +3634,20 @@ class BattleMessage_mega(BattleMessage):
 
 
 class BattleMessage_primal(BattleMessage):
-    """
-    |-primal|POKEMON|ITEM
+    """Message communicating that a pokemon has gone primal.
+
+    Attributes:
+        POKEMON: The pokemon going primal
+        ITEM: The held item that is being used
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has gone primal.
+
+    Info: Message Format(s):
+        - |-primal|POKEMON|ITEM
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon going primal")
@@ -2928,8 +3664,22 @@ class BattleMessage_primal(BattleMessage):
 
 
 class BattleMessage_burst(BattleMessage):
-    """
-    |-burst|POKEMON|SPECIES|ITEM
+    """Message communicating that a pokemon has burst.
+
+    Warning:
+        Not implemented yet.
+
+    Attributes:
+        POKEMON: The pokemon that burst
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has burst.
+
+    Info: Message Format(s):
+        - |-burst|POKEMON|SPECIES|ITEM
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
@@ -2945,8 +3695,19 @@ class BattleMessage_burst(BattleMessage):
 
 
 class BattleMessage_zpower(BattleMessage):
-    """
-    |-zpower|POKEMON
+    """Message communicating that a pokemon has used a Z move.
+
+    Attributes:
+        POKEMON: The pokemon using the Z move
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has used a Z move.
+
+    Info: Message Format(s):
+        - |-zpower|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon using the Z Move")
@@ -2961,8 +3722,19 @@ class BattleMessage_zpower(BattleMessage):
 
 
 class BattleMessage_zbroken(BattleMessage):
-    """
-    |-zbroken|POKEMON
+    """Message communicating that a pokemon's Z move is over.
+
+    Attributes:
+        POKEMON: The pokemon whose Z move is over
+
+    Note: Use Case(s):
+        - Communicating that a pokemon's Z move is over.
+
+    Info: Message Format(s):
+        - |-zbroken|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon whose Z move is over")
@@ -2977,14 +3749,24 @@ class BattleMessage_zbroken(BattleMessage):
 
 
 class BattleMessage_activate(BattleMessage):
-    """
-    |-activate|POKEMON|EFFECT
+    """Message communicating that a pokemon has activated an effect.
 
-    |-activate|POKEMON|VOLATILE
-    |-activate|POKEMON|MOVE|EFFECT
-    |-activate|POKEMON|ABILITY|EFFECT
-    |-activate|POKEMON|ITEM|EFFECT
+    Attributes:
+        POKEMON: The pokemon activating the effect
+        EFFECT: The effect being activated
 
+    Note: Use Case(s):
+        - Communicating that a pokemon has activated an effect.
+
+    Info: Message Format(s):
+        - |-activate|POKEMON|EFFECT
+        - |-activate|POKEMON|VOLATILE
+        - |-activate|POKEMON|MOVE|EFFECT
+        - |-activate|POKEMON|ABILITY|EFFECT
+        - |-activate|POKEMON|ITEM|EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon the effect is about")
@@ -3049,8 +3831,19 @@ class BattleMessage_activate(BattleMessage):
 
 
 class BattleMessage_hint(BattleMessage):
-    """
-    |-hint|MESSAGE
+    """Message communicating that a hint has been sent to the player.
+
+    Attributes:
+        MESSAGE: The message sent to you as a hint
+
+    Note: Use Case(s):
+        - Communicating that a hint has been sent to the player.
+
+    Info: Message Format(s):
+        - |-hint|MESSAGE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     MESSAGE: str = Field(..., description="The message sent to you as a hint")
@@ -3063,8 +3856,16 @@ class BattleMessage_hint(BattleMessage):
 
 
 class BattleMessage_center(BattleMessage):
-    """
-    |-center
+    """Message communicating that the pokemon in a triple battle have been centered.
+
+    Note: Use Case(s):
+        - Communicating that the pokemon in a triple battle have been centered.
+
+    Info: Message Format(s):
+        - |-center
+
+    Example: Input Example(s)
+        - TODO
     """
 
     def from_message(battle_message: str) -> "BattleMessage_center":
@@ -3076,8 +3877,19 @@ class BattleMessage_center(BattleMessage):
 
 
 class BattleMessage_message(BattleMessage):
-    """
-    |-message|MESSAGE
+    """Message communicating that a message has been sent.
+
+    Attributes:
+        MESSAGE: The message sent as part of this notification
+
+    Note: Use Case(s):
+        - Communicating that a message has been sent.
+
+    Info: Message Format(s):
+        - |-message|MESSAGE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     MESSAGE: str = Field(..., description="The message sent as part of this notification")
@@ -3090,8 +3902,16 @@ class BattleMessage_message(BattleMessage):
 
 
 class BattleMessage_combine(BattleMessage):
-    """
-    |-combine
+    """Message communicating that two moves have been combined.
+
+    Note: Use Case(s):
+        - Communicating that two moves have been combined.
+
+    Info: Message Format(s):
+        - |-combine
+
+    Example: Input Example(s)
+        - TODO
     """
 
     def from_message(battle_message: str) -> "BattleMessage_combine":
@@ -3103,8 +3923,22 @@ class BattleMessage_combine(BattleMessage):
 
 
 class BattleMessage_waiting(BattleMessage):
-    """
-    |-waiting|SOURCE|TARGET
+    """Message communicating that a pokemon is waiting for the target.
+
+    Warning:
+        Not implemented yet.
+
+    Attributes:
+        POKEMON: The main pokemon identifier relevant
+
+    Note: Use Case(s):
+        - Communicating that a pokemon is waiting for the target.
+
+    Info: Message Format(s):
+        - |-waiting|SOURCE|TARGET
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: str = Field(..., description="The main pokemon identifier relevant")
@@ -3120,8 +3954,20 @@ class BattleMessage_waiting(BattleMessage):
 
 
 class BattleMessage_prepare(BattleMessage):
-    """
-    |-prepare|POKEMON|MOVE
+    """Message communicating that a pokemon is preparing a move.
+
+    Attributes:
+        POKEMON: The pokemon preparing the move
+        MOVE: The move being prepared
+
+    Note: Use Case(s):
+        - Communicating that a pokemon is preparing a move.
+
+    Info: Message Format(s):
+        - |-prepare|POKEMON|MOVE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon preparing the move")
@@ -3139,11 +3985,22 @@ class BattleMessage_prepare(BattleMessage):
 
 
 class BattleMessage_mustrecharge(BattleMessage):
-    """
-    |-mustrecharge|POKEMON
+    """Message communicating that a pokemon must recharge.
+
+    Attributes:
+        POKEMON: The pokemon that must recharge
+
+    Note: Use Case(s):
+        - Communicating that a pokemon must recharge.
+
+    Info: Message Format(s):
+        - |-mustrecharge|POKEMON
+
+    Example: Input Example(s)
+        - TODO
     """
 
-    POKEMON: str = Field(..., description="The main pokemon identifier relevant")
+    POKEMON: str = Field(..., description="The pokemon that must recharge")
 
     def from_message(battle_message: str) -> "BattleMessage_mustrecharge":
         """Create a specific BattleMessage object from a raw message."""
@@ -3157,8 +4014,16 @@ class BattleMessage_mustrecharge(BattleMessage):
 
 
 class BattleMessage_nothing(BattleMessage):
-    """
-    |-nothing
+    """Message communicating that nothing happened.
+
+    Note: Use Case(s):
+        - Communicating that nothing happened.
+
+    Info: Message Format(s):
+        - |-nothing
+
+    Example: Input Example(s)
+        - |-nothing
     """
 
     def from_message(battle_message: str) -> "BattleMessage_nothing":
@@ -3170,8 +4035,20 @@ class BattleMessage_nothing(BattleMessage):
 
 
 class BattleMessage_hitcount(BattleMessage):
-    """
-    |-hitcount|POKEMON|NUM
+    """Message communicating that a pokemon has been hit multiple times.
+
+    Attributes:
+        POKEMON: The Pokemon being hit multiple times. Can be slotless
+        NUM: The number of hits as an integer
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has been hit multiple times.
+
+    Info: Message Format(s):
+        - |-hitcount|POKEMON|NUM
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon being hit multiple times. Can be slotless")
@@ -3188,8 +4065,20 @@ class BattleMessage_hitcount(BattleMessage):
 
 
 class BattleMessage_singlemove(BattleMessage):
-    """
-    |-singlemove|POKEMON|MOVE
+    """Message communicating that a pokemon has used a single move.
+
+    Attributes:
+        POKEMON: The Pokemon using this single move
+        MOVE: The move being used
+
+    Note: Use Case(s):
+        - TODO
+
+    Info: Message Format(s):
+        - |-singlemove|POKEMON|MOVE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon using this single move")
@@ -3209,8 +4098,20 @@ class BattleMessage_singlemove(BattleMessage):
 
 
 class BattleMessage_singleturn(BattleMessage):
-    """
-    |-singleturn|POKEMON|MOVE
+    """Message communicating that a pokemon has used a single turn move.
+
+    Attributes:
+        POKEMON: The Pokemon using this single move
+        MOVE: The move being used
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has used a single turn move.
+
+    Info: Message Format(s):
+        - |-singleturn|POKEMON|MOVE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon using this single move")
@@ -3233,11 +4134,24 @@ class BattleMessage_singleturn(BattleMessage):
 
 
 class BattleMessage_formechange(BattleMessage):
-    """
-    |-formechange|POKEMON|SPECIES
+    """Message communicating that a pokemon has changed formes.
+
+    Attributes:
+        POKEMON: The pokemon changing formes in some temporary way
+        SPECIES: The species for this pokemon, including forme
+        EFFECT: Optionally, what caused the formechange
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has changed formes.
+
+    Info: Message Format(s):
+        - |-formechange|POKEMON|SPECIES
+
+    Example: Input Example(s)
+        - TODO
     """
 
-    POKEMON: PokemonIdentifier = Field(..., description="The pokemon swapping in, replacing the slot")
+    POKEMON: PokemonIdentifier = Field(..., description="The pokemon changing formes in some temporary way")
 
     SPECIES: DexPokemon.ValueType = Field(..., description="The species for this pokemon, including forme")
 
@@ -3271,8 +4185,20 @@ class BattleMessage_formechange(BattleMessage):
 
 
 class BattleMessage_terastallize(BattleMessage):
-    """
-    |terastallize|POKEMON|TYPE
+    """Message communicating that a pokemon has terastallized.
+
+    Attributes:
+        POKEMON: The pokemon doing the terastallization
+        TYPE: The type being terastallized
+
+    Note: Use Case(s):
+        - Communicating that a pokemon has terastallized.
+
+    Info: Message Format(s):
+        - |terastallize|POKEMON|TYPE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon doing the terastallization")
@@ -3293,8 +4219,19 @@ class BattleMessage_terastallize(BattleMessage):
 
 
 class BattleMessage_fieldactivate(BattleMessage):
-    """
-    |-fieldactivate|EFFECT
+    """Message communicating that a field effect has been activated.
+
+    Attributes:
+        EFFECT: The effect causing the field activation
+
+    Note: Use Case(s):
+        - Communicating that a field effect has been activated.
+
+    Info: Message Format(s):
+        - |-fieldactivate|EFFECT
+
+    Example: Input Example(s)
+        - TODO
     """
 
     EFFECT: Effect = Field(..., description="The effect causing the field activation")
@@ -3312,8 +4249,19 @@ class BattleMessage_fieldactivate(BattleMessage):
 
 
 class BattleMessage_error(BattleMessage):
-    """
-    |error|MESSAGE
+    """Message communicating that an error has occurred.
+
+    Attributes:
+        MESSAGE: The error message sent by showdown
+
+    Note: Use Case(s):
+        - Communicating that an error has occurred.
+
+    Info: Message Format(s):
+        - |error|MESSAGE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     MESSAGE: str = Field(..., description="The error message sent by showdown")
@@ -3326,8 +4274,19 @@ class BattleMessage_error(BattleMessage):
 
 
 class BattleMessage_bigerror(BattleMessage):
-    """
-    |bigerror|MESSAGE
+    """Message communicating that a big error has occurred.
+
+    Attributes:
+        MESSAGE: The error message sent by showdown
+
+    Note: Use Case(s):
+        - Communicating that a big error has occurred.
+
+    Info: Message Format(s):
+        - |bigerror|MESSAGE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     MESSAGE: str = Field(..., description="The error message sent by showdown")
@@ -3340,8 +4299,16 @@ class BattleMessage_bigerror(BattleMessage):
 
 
 class BattleMessage_init(BattleMessage):
-    """
-    |init|battle
+    """Message communicating that a battle has been initialized.
+
+    Note: Use Case(s):
+        - Communicating that a battle has been initialized.
+
+    Info: Message Format(s):
+        - |init|battle
+
+    Example: Input Example(s)
+        - |init|battle
     """
 
     def from_message(battle_message: str) -> "BattleMessage_init":
@@ -3350,8 +4317,16 @@ class BattleMessage_init(BattleMessage):
 
 
 class BattleMessage_deinit(BattleMessage):
-    """
-    |deinit
+    """Message communicating that a battle has been deinitialized.
+
+    Note: Use Case(s):
+        - Communicating that a battle has been deinitialized.
+
+    Info: Message Format(s):
+        - |deinit
+
+    Example: Input Example(s)
+        - |deinit
     """
 
     def from_message(battle_message: str) -> "BattleMessage_deinit":
@@ -3360,8 +4335,19 @@ class BattleMessage_deinit(BattleMessage):
 
 
 class BattleMessage_title(BattleMessage):
-    """
-    |title|TITLE
+    """Message communicating that a title has been sent for this battle.
+
+    Attributes:
+        TITLE: The title of this match as shown on pokemon showdown
+
+    Note: Use Case(s):
+        - Communicating that a title has been sent for this battle.
+
+    Info: Message Format(s):
+        - |title|TITLE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     TITLE: str = Field(..., description="The title of this match as shown on pokemon showdown")
@@ -3374,8 +4360,19 @@ class BattleMessage_title(BattleMessage):
 
 
 class BattleMessage_join(BattleMessage):
-    """
-    |join|USERNAME
+    """Message communicating that a player has joined the battle.
+
+    Attributes:
+        USERNAME: The username of the joining player
+
+    Note: Use Case(s):
+        - Communicating that a player has joined the battle.
+
+    Info: Message Format(s):
+        - |join|USERNAME
+
+    Example: Input Example(s)
+        - TODO
     """
 
     USERNAME: str = Field(..., description="The username of the joining player")
@@ -3388,8 +4385,19 @@ class BattleMessage_join(BattleMessage):
 
 
 class BattleMessage_leave(BattleMessage):
-    """
-    |leave|USERNAME
+    """Message communicating that a player has left the battle.
+
+    Attributes:
+        USERNAME: The username of the leaving player
+
+    Note: Use Case(s):
+        - Communicating that a player has left the battle.
+
+    Info: Message Format(s):
+        - |leave|USERNAME
+
+    Example: Input Example(s)
+        - TODO
     """
 
     USERNAME: str = Field(..., description="The username of the leaving player")
@@ -3402,8 +4410,19 @@ class BattleMessage_leave(BattleMessage):
 
 
 class BattleMessage_raw(BattleMessage):
-    """
-    |raw|MESSAGE
+    """Message communicating that a raw message has been sent.
+
+    Attributes:
+        MESSAGE: The raw message from Showdown. Typically used for rating changes.
+
+    Note: Use Case(s):
+        - Communicating that a raw message has been sent.
+
+    Info: Message Format(s):
+        - |raw|MESSAGE
+
+    Example: Input Example(s)
+        - TODO
     """
 
     MESSAGE: str = Field(..., description="The raw message from Showdown. Typically used for rating changes.")
@@ -3416,8 +4435,25 @@ class BattleMessage_raw(BattleMessage):
 
 
 class BattleMessage_anim(BattleMessage):
-    """
-    |-anim|SOURCE|MOVE|TARGET|[notarget]OR[blank]
+    """Message communicating that an override animation has been sent.
+
+    Warning:
+        This has not been fully implemented / tested on large data yet.
+
+    Attributes:
+        SOURCE: The pokemon using the move
+        TARGET: The pokemon being targeted by the move. If there is no target then this will instead be slotless
+        MOVE: The move being used
+        NO_TARGET: Whether the move is labeled as notarget or not
+
+    Note: Use Case(s):
+        - Communicating that a move should use a different animation from typical.
+
+    Info: Message Format(s):
+        - |-anim|SOURCE|MOVE|TARGET|[notarget]
+
+    Example: Input Example(s)
+        - TODO
     """
 
     SOURCE: PokemonIdentifier = Field(..., description="The pokemon using the move")
