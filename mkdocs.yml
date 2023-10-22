@@ -26,7 +26,12 @@ theme:
     accent: purple
 
 plugins:
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            preload_modules:
+            - poketypes
   - search
 
 markdown_extensions:
