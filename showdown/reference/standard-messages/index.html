@@ -6,6 +6,8 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="Automated classes with full typehinting support for pokemon, abilities, items, and so much more.">
+      
       
       
       
@@ -25,6 +27,9 @@
     
     
       <link rel="stylesheet" href="../../../assets/stylesheets/main.35e1ed30.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.356b1318.min.css">
       
       
 
@@ -55,16 +60,24 @@
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple">
   
     
-    
-      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#the-standard-showdown-message" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -76,7 +89,7 @@
 
   
 
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="Poketypes Docs" class="md-header__button md-logo" aria-label="Poketypes Docs" data-md-component="logo">
       
@@ -105,18 +118,162 @@
       </div>
     </div>
     
+      
     
     
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/trevorWieland/poketypes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    trevorWieland/poketypes
+  </div>
+</a>
+      </div>
     
   </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link">
+          
+  
+    
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../dex/" class="md-tabs__link">
+          
+  
+    
+  
+  Dex
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+    
+  
+  Showdown
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../protos/" class="md-tabs__link">
+          
+  
+    
+  
+  Protos
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
   
 </header>
     
     <div class="md-container" data-md-component="container">
       
       
-        
-          
         
       
       <main class="md-main" data-md-component="main">
@@ -130,8 +287,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="Poketypes Docs" class="md-nav__button md-logo" aria-label="Poketypes Docs" data-md-component="logo">
       
@@ -142,6 +301,18 @@
     Poketypes Docs
   </label>
   
+    <div class="md-nav__source">
+      <a href="https://github.com/trevorWieland/poketypes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    trevorWieland/poketypes
+  </div>
+</a>
+    </div>
+  
   <ul class="md-nav__list" data-md-scrollfix>
     
       
@@ -149,22 +320,62 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../.." class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Home
   </span>
   
 
-      </a>
-    </li>
-  
-
-    
-      
-      
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Home
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
   
   
   
@@ -181,40 +392,54 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex="">
             
   
   <span class="md-ellipsis">
-    Dex
+    About
   </span>
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_3">
             <span class="md-nav__icon md-icon"></span>
-            Dex
+            About
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -224,11 +449,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../dex/" class="md-nav__link">
+      <a href="../../../about/about/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Intro
+    The Team
   </span>
   
 
@@ -236,6 +461,142 @@
     </li>
   
 
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/license/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    License
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../dex/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Dex
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Dex
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
               
             
               
@@ -265,18 +626,27 @@
   
     
     
+      
+        
+      
+        
+      
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -287,8 +657,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             Guides
           </label>
@@ -349,18 +719,31 @@
   
     
     
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
         
           
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -371,8 +754,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
             <span class="md-nav__icon md-icon"></span>
             Reference
           </label>
@@ -482,53 +865,58 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Showdown
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Showdown
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-                
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Intro
-  </span>
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -558,18 +946,25 @@
   
     
     
+      
+        
+      
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
         
           
-          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -580,8 +975,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
             <span class="md-nav__icon md-icon"></span>
             Guides
           </label>
@@ -624,18 +1019,27 @@
   
     
     
+      
+        
+      
+        
+      
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -646,8 +1050,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_4">
             <span class="md-nav__icon md-icon"></span>
             Reference
           </label>
@@ -665,6 +1069,19 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    The Message
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -675,6 +1092,190 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-message-object" class="md-nav__link">
+    The Message object
+  </a>
+  
+    <nav class="md-nav" aria-label="The Message object">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message" class="md-nav__link">
+    Message
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message.from_message" class="md-nav__link">
+    from_message()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-subclasses" class="md-nav__link">
+    Message Subclasses
+  </a>
+  
+    <nav class="md-nav" aria-label="Message Subclasses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage" class="md-nav__link">
+    showdownmessage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_challstr" class="md-nav__link">
+    Message_challstr
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_customgroups" class="md-nav__link">
+    Message_customgroups
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_formats" class="md-nav__link">
+    Message_formats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_init" class="md-nav__link">
+    Message_init
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_join" class="md-nav__link">
+    Message_join
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_leave" class="md-nav__link">
+    Message_leave
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_pm" class="md-nav__link">
+    Message_pm
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_title" class="md-nav__link">
+    Message_title
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_updatechallenges" class="md-nav__link">
+    Message_updatechallenges
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_updatesearch" class="md-nav__link">
+    Message_updatesearch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_updateuser" class="md-nav__link">
+    Message_updateuser
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-utility-classes" class="md-nav__link">
+    Message Utility Classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Message Utility Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage" class="md-nav__link">
+    showdownmessage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.CustomGroup" class="md-nav__link">
+    CustomGroup
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.MType" class="md-nav__link">
+    MType
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.UserSettings" class="md-nav__link">
+    UserSettings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -723,34 +1324,59 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    
+      
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../protos/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
-    About
+    Protos
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            About
+            Protos
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
             
               
                 
@@ -758,11 +1384,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../about/about/" class="md-nav__link">
+      <a href="../../../protos/why-protobuf/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    The Team
+    Why Use Protobuf
   </span>
   
 
@@ -778,11 +1404,31 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../about/license/" class="md-nav__link">
+      <a href="../../../protos/structure/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    License
+    Proto Enum Structure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../protos/reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reference
   </span>
   
 
@@ -816,6 +1462,181 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-message-object" class="md-nav__link">
+    The Message object
+  </a>
+  
+    <nav class="md-nav" aria-label="The Message object">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message" class="md-nav__link">
+    Message
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message.from_message" class="md-nav__link">
+    from_message()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-subclasses" class="md-nav__link">
+    Message Subclasses
+  </a>
+  
+    <nav class="md-nav" aria-label="Message Subclasses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage" class="md-nav__link">
+    showdownmessage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_challstr" class="md-nav__link">
+    Message_challstr
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_customgroups" class="md-nav__link">
+    Message_customgroups
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_formats" class="md-nav__link">
+    Message_formats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_init" class="md-nav__link">
+    Message_init
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_join" class="md-nav__link">
+    Message_join
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_leave" class="md-nav__link">
+    Message_leave
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_pm" class="md-nav__link">
+    Message_pm
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_title" class="md-nav__link">
+    Message_title
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_updatechallenges" class="md-nav__link">
+    Message_updatechallenges
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_updatesearch" class="md-nav__link">
+    Message_updatesearch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.Message_updateuser" class="md-nav__link">
+    Message_updateuser
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-utility-classes" class="md-nav__link">
+    Message Utility Classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Message Utility Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage" class="md-nav__link">
+    showdownmessage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.CustomGroup" class="md-nav__link">
+    CustomGroup
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.MType" class="md-nav__link">
+    MType
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.showdown.showdownmessage.UserSettings" class="md-nav__link">
+    UserSettings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -829,10 +1650,1522 @@
                 
                   
 
+  
+  
 
-  <h1>The Message</h1>
+
+<h1 id="the-standard-showdown-message">The Standard Showdown Message</h1>
+<h2 id="the-message-object">The Message object</h2>
 
 
+<div class="doc doc-object doc-class">
+
+
+
+<a id="poketypes.showdown.showdownmessage.Message"></a>
+  <div class="doc doc-contents first">
+
+  
+      <p>The base class for all specific Message subclasses to be built from.</p>
+<p>When parsing a string message, you should directly use this class's <code>from_message</code> function, which will
+auto-identify which subclass (if any) the given string belongs to.</p>
+<p>Across all Messages, you will be able to access both MTYPE and MESSAGE, though you shouldn't need
+to access MESSAGE directly. (If you do, then we must be missing some data that exists in the raw string)</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>MTYPE</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The message type of this message. Must be a vaild showdown general message.</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.showdown.showdownmessage.MType" href="#poketypes.showdown.showdownmessage.MType">MType</a></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>MESSAGE</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The raw message line as sent from showdown. Shouldn't need to be used but worth keeping.</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message.from_message" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">from_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Create a specific Message object from a raw string message.</p>
+<p>This is used for general Showdown Messages, compared to the BattleMessage class meant for battle details.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b> DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>message</code></td>
+          <td class="doc-param-details">
+            <div class="doc-md-description">
+              <p>The newline-stripped single string message as sent by the server.</p>
+            </div>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <code>Message</code>
+          </td>
+          <td class="doc-returns-details">
+            <div class="doc-md-description">
+              <p>An initialized subclass of <code>Message</code>, for the corresponding class for this message type.</p>
+            </div>
+              <p>
+                <span class="doc-returns-annotation">
+                  <b>TYPE:</b>
+                    <code>&#39;Message&#39;</code>
+                </span>
+              </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div><h2 id="message-subclasses">Message Subclasses</h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="poketypes.showdown.showdownmessage"></a>
+  <div class="doc doc-contents first">
+  
+      <p>Contains BaseModels for Message parsing and processing.</p>
+<p>Remember to use Message.from_message directly, unless you are building test cases where you want to assert that
+a given message leads to a certain subclass of Message. <code>from_message</code> will auto-detect which MType the given
+message corresponds to, and return the associated subclass (or an error detailing what went wrong) for you.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_challstr" class="doc doc-heading">
+          <code>Message_challstr</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message containing a login challenge string.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>CHALLSTR</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The string challenge string</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>Gives the user a challenge string to submit to the login server to get a token</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|challstr|CHALLSTR</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>TODO</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_customgroups" class="doc doc-heading">
+          <code>Message_customgroups</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message containing info about server custom groups.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>CUSTOM_GROUPS</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The list of custom groups</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="poketypes.showdown.showdownmessage.CustomGroup" href="#poketypes.showdown.showdownmessage.CustomGroup">CustomGroup</a>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>To communicate all usergroups</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|customgroups|CUSTOMGROUPS</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>TODO</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_formats" class="doc doc-heading">
+          <code>Message_formats</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message containing info about server enabled formats.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>FORMATS</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The list of formats</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.List">List</span>[str]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>To communicate all available formats the user can play</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|formats|FORMATSLIST</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>TODO</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_init" class="doc doc-heading">
+          <code>Message_init</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message notifying about a battle starting.</p>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>To communicate battle initialization notice.</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|init|battle</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>TODO</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_join" class="doc doc-heading">
+          <code>Message_join</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message containing info about a joining user.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>USERNAME</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The username of the joining player</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>To communicate player room user entry.</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|join|USERNAME</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>|j|☆colress-gpt-test1</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_leave" class="doc doc-heading">
+          <code>Message_leave</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message containing info about a leaving user.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>USERNAME</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The username of the leaving player</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>To communicate player room user exit.</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|leave|USERNAME</li>
+<li>|l|USERNAME</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>|l|☆colress-gpt-test1</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_pm" class="doc doc-heading">
+          <code>Message_pm</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message containing a PM to/from the user.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>SOURCE</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The username of the user who sent the pm</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>TARGET</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The username of the user who received the pm</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>PM</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The message. Newlines are denoted with |</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>IS_CHALLENGE</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether this PM is a challenge to a battle</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>CHALLENGE_FORMAT</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The format of the challenge if it is a challenge</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[str]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>Notify the user about a PM received.</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|pm|SOURCE|TARGET|PM</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>TODO</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_title" class="doc doc-heading">
+          <code>Message_title</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message notifying about the title of a room.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>TITLE</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The title of this match as shown on pokemon showdown</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>To communicate room title info.</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|title|TITLE</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>|title|colress-gpt-test1 vs. colress-gpt-test2</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_updatechallenges" class="doc doc-heading">
+          <code>Message_updatechallenges</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message containing a current challenge searches, if any.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>OUTGOING</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>A dictionary of username-&gt;format for each outgoing challenge</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Dict">Dict</span>[str, str]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>INCOMING</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>A dictionary of username-&gt;format for each incoming challenge</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Dict">Dict</span>[str, str]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>Gives the user an update about all of their current battle challenge requests.</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|updatechallenges|JSON</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>TODO</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_updatesearch" class="doc doc-heading">
+          <code>Message_updatesearch</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message containing a current ladder searches, if any.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>SEARCHING</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>A list of formats currently searching for a ladder match</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.List">List</span>[str]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>GAMES</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>A optional dictionary of game-id-&gt;format of currently ongoing games</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[str, str]]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>Gives the user an update about all of their current battle search requests.</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|updatesearch|JSON</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>TODO</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.Message_updateuser" class="doc doc-heading">
+          <code>Message_updateuser</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Message containing info about your user settings / login information.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>USERNAME</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The username of your current login</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>NAMED</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether you are currently logged in or not</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>AVATAR</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Either a number id of the user's avatar or a custom value</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Union">Union</span>[int, str]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>SETTINGS</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The user settings for your current user session</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.showdown.showdownmessage.UserSettings" href="#poketypes.showdown.showdownmessage.UserSettings">UserSettings</a></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Use Case(s)</summary>
+  <ul>
+<li>To communicate any changes to your login / user session.</li>
+</ul>
+</details>
+<details class="info" open>
+  <summary>Message Format(s)</summary>
+  <ul>
+<li>|updateuser|USER|NAMED|AVATAR|SETTINGS</li>
+</ul>
+</details>
+<details class="example" open>
+  <summary>Input Example(s)</summary>
+  <ul>
+<li>TODO</li>
+</ul>
+</details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div><h2 id="message-utility-classes">Message Utility Classes</h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="poketypes.showdown.showdownmessage"></a>
+  <div class="doc doc-contents first">
+  
+      <p>Contains BaseModels for Message parsing and processing.</p>
+<p>Remember to use Message.from_message directly, unless you are building test cases where you want to assert that
+a given message leads to a certain subclass of Message. <code>from_message</code> will auto-detect which MType the given
+message corresponds to, and return the associated subclass (or an error detailing what went wrong) for you.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.CustomGroup" class="doc doc-heading">
+          <code>CustomGroup</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A helper class to contain information about server custom groups.</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.MType" class="doc doc-heading">
+          <code>MType</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>String-Enum for holding all unique categories of Showdown Generic Messages.</p>
+<p>See https://github.com/smogon/pokemon-showdown/blob/master/PROTOCOL.md for the (partial) list of message types</p>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.showdown.showdownmessage.UserSettings" class="doc doc-heading">
+          <code>UserSettings</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A helper class to contain information about user settings.</p>
+
+
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>BLOCK_CHALLENGES</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are currently blocking challenges</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>BLOCK_PMS</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are currently blocking PMs</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>IGNORE_TICKETS</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are currently ignoring tickets</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>HIDE_BATTLES</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are currently hiding battles on your trainer card</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>BLOCK_INVITES</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are currently blocking invites</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>DO_NOT_DISTURB</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Your current do not disturb setting</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>BLOCK_FRIEND_REQUESTS</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are currently blocking friend requests</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ALLOW_FRIEND_NOTIFICATIONS</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are currently allowing friend notifications</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>DISPLAY_BATTLES</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are currently displaying battles to friends</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>HIDE_LOGINS</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are currently hiding logins</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>HIDDEN_NEXT_BATTLE</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are hiding your next battle or not</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>INVITE_ONLY_NEXT_BATTLE</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Whether you are limiting your next battle to invite only or not</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>LANGUAGE</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[str]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The language set by your user</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 
@@ -845,13 +3178,63 @@
           
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../guides/basic-parser/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Building a Log Parser">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Building a Log Parser
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../battle-messages/" class="md-footer__link md-footer__link--next" aria-label="Next: The BattleMessage">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                The BattleMessage
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 Trevor Wieland
+    </div>
   
   
     Made with
@@ -871,7 +3254,7 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["announce.dismiss", "content.code.annotate", "content.code.copy", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.aecac24b.min.js"></script>
