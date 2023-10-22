@@ -1,16 +1,49 @@
 site_name: Poketypes Docs
+site_description: "Automated classes with full typehinting support for pokemon, abilities, items, and so much more."
+repo_url: "https://github.com/trevorWieland/poketypes"
+repo_name: "trevorWieland/poketypes"
+copyright: Copyright &copy; 2023 Trevor Wieland
 
 theme:
   name: "material"
+  features:
+  - announce.dismiss
+  - content.code.annotate
+  - content.code.copy
+  - content.tooltips
+  - navigation.footer
+  - navigation.indexes
+  - navigation.sections
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.top
+  - search.highlight
+  - search.suggest
+  - toc.follow
+  palette:
+    scheme: slate
+    primary: deep purple
+    accent: purple
 
 plugins:
   - mkdocstrings
+  - search
+
+markdown_extensions:
+    mdantic:
+        columns: ["key", "type", "required", "description", "default"]
 
 nav:
-  - Home: 'index.md'
-  - Getting Started: 'getting-started.md'
+  - Home:
+    - Home: 'index.md'
+    - Getting Started: 'getting-started.md'
+    - About:
+      - The Team: 'about/about.md'
+      - License: 'about/license.md'
+      - Changelog: 'about/changelog.md'
+      - Contributing: 'about/contributing.md'
   - Dex:
-    - Intro: 'dex/index.md'
+    - Dex Intro: 'dex/index.md'
     - Dex vs Pokedex vs Gen: 'dex/explanations.md'
     - Guides:
       - Learning the Basics: 'dex/guides/basics.md'
@@ -21,15 +54,18 @@ nav:
       - The Gen: 'dex/reference/pokedex-instance.md'
       - Utils: 'dex/reference/utilities.md'
   - Showdown:
-    - Intro: 'showdown/index.md'
+    - Showdown Intro: 'showdown/index.md'
     - Why Two Classes?: 'showdown/explanations.md'
     - Guides:
       - Building a Log Parser: 'showdown/guides/basic-parser.md'
     - Reference:
       - The Message: 'showdown/reference/standard-messages.md'
       - The BattleMessage: 'showdown/reference/battle-messages.md'
-  - About:
-    - The Team: 'about/about.md'
-    - License: 'about/license.md'
+  - Protos:
+    - Protos Intro: 'protos/index.md'
+    - Why Use Protobuf: 'protos/why-protobuf.md'
+    - Proto Enum Structure: 'protos/structure.md'
+    - Reference: 'protos/reference.md'
+  
 
   

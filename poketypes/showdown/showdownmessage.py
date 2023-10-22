@@ -75,6 +75,10 @@ class Message(BaseModel):
 
     Across all Messages, you will be able to access both MTYPE and MESSAGE, though you shouldn't need
     to access MESSAGE directly. (If you do, then we must be missing some data that exists in the raw string)
+
+    Attributes:
+        MTYPE: The message type of this message. Must be a vaild showdown general message.
+        MESSAGE: The raw message line as sent from showdown. Shouldn't need to be used but worth keeping.
     """
 
     MTYPE: MType = Field(
@@ -91,6 +95,12 @@ class Message(BaseModel):
         """Create a specific Message object from a raw string message.
 
         This is used for general Showdown Messages, compared to the BattleMessage class meant for battle details.
+
+        Args:
+            message (str): The newline-stripped single string message as sent by the server.
+
+        Returns:
+            Message: An initialized subclass of `Message`, for the corresponding class for this message type.
         """
         try:
             mtype = MType(message.split("|")[1])
@@ -125,11 +135,13 @@ class Message(BaseModel):
 class Message_init(Message):
     """Message notifying about a battle starting.
 
-    Use Case(s):
+    Note: Use Case(s)
         - To communicate battle initialization notice.
-    Format(s):
+
+    Info: Message Format(s)
         - |init|battle
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 
@@ -141,11 +153,16 @@ class Message_init(Message):
 class Message_title(Message):
     """Message notifying about the title of a room.
 
-    Use Case(s):
+    Attributes:
+        TITLE: The title of this match as shown on pokemon showdown
+
+    Note: Use Case(s)
         - To communicate room title info.
-    Format(s):
+
+    Info: Message Format(s)
         - |title|TITLE
-    Example(s):
+
+    Example: Input Example(s)
         - |title|colress-gpt-test1 vs. colress-gpt-test2
     """
 
@@ -161,11 +178,16 @@ class Message_title(Message):
 class Message_join(Message):
     """Message containing info about a joining user.
 
-    Use Case(s):
+    Attributes:
+        USERNAME: The username of the joining player
+
+    Note: Use Case(s)
         - To communicate player room user entry.
-    Format(s):
+
+    Info: Message Format(s)
         - |join|USERNAME
-    Example(s):
+
+    Example: Input Example(s)
         - |j|☆colress-gpt-test1
     """
 
@@ -181,12 +203,17 @@ class Message_join(Message):
 class Message_leave(Message):
     """Message containing info about a leaving user.
 
-    Use Case(s):
+    Attributes:
+        USERNAME: The username of the leaving player
+
+    Note: Use Case(s)
         - To communicate player room user exit.
-    Format(s):
+
+    Info: Message Format(s)
         - |leave|USERNAME
         - |l|USERNAME
-    Example(s):
+
+    Example: Input Example(s)
         - |l|☆colress-gpt-test1
     """
 
@@ -200,7 +227,23 @@ class Message_leave(Message):
 
 
 class UserSettings(BaseModel):
-    """A helper class to contain information about user settings."""
+    """A helper class to contain information about user settings.
+
+    Attributes:
+        BLOCK_CHALLENGES: Whether you are currently blocking challenges
+        BLOCK_PMS: Whether you are currently blocking PMs
+        IGNORE_TICKETS: Whether you are currently ignoring tickets
+        HIDE_BATTLES: Whether you are currently hiding battles on your trainer card
+        BLOCK_INVITES: Whether you are currently blocking invites
+        DO_NOT_DISTURB: Your current do not disturb setting
+        BLOCK_FRIEND_REQUESTS: Whether you are currently blocking friend requests
+        ALLOW_FRIEND_NOTIFICATIONS: Whether you are currently allowing friend notifications
+        DISPLAY_BATTLES: Whether you are currently displaying battles to friends
+        HIDE_LOGINS: Whether you are currently hiding logins
+        HIDDEN_NEXT_BATTLE: Whether you are hiding your next battle or not
+        INVITE_ONLY_NEXT_BATTLE: Whether you are limiting your next battle to invite only or not
+        LANGUAGE: The language set by your user
+    """
 
     BLOCK_CHALLENGES: bool = Field(..., description="Whether you are currently blocking challenges")
     BLOCK_PMS: bool = Field(..., description="Whether you are currently blocking PMs")
@@ -223,11 +266,19 @@ class UserSettings(BaseModel):
 class Message_updateuser(Message):
     """Message containing info about your user settings / login information.
 
-    Use Case(s):
+    Attributes:
+        USERNAME: The username of your current login
+        NAMED: Whether you are currently logged in or not
+        AVATAR: Either a number id of the user's avatar or a custom value
+        SETTINGS: The user settings for your current user session
+
+    Note: Use Case(s)
         - To communicate any changes to your login / user session.
-    Format(s):
+
+    Info: Message Format(s)
         - |updateuser|USER|NAMED|AVATAR|SETTINGS
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 
@@ -271,11 +322,16 @@ class Message_updateuser(Message):
 class Message_formats(Message):
     """Message containing info about server enabled formats.
 
-    Use Case(s):
+    Attributes:
+        FORMATS: The list of formats
+
+    Note: Use Case(s)
         - To communicate all available formats the user can play
-    Format(s):
+
+    Info: Message Format(s)
         - |formats|FORMATSLIST
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 
@@ -307,11 +363,16 @@ class CustomGroup(BaseModel):
 class Message_customgroups(Message):
     """Message containing info about server custom groups.
 
-    Use Case(s):
+    Attributes:
+        CUSTOM_GROUPS: The list of custom groups
+
+    Note: Use Case(s)
         - To communicate all usergroups
-    Format(s):
+
+    Info: Message Format(s)
         - |customgroups|CUSTOMGROUPS
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 
@@ -334,11 +395,16 @@ class Message_customgroups(Message):
 class Message_challstr(Message):
     """Message containing a login challenge string.
 
-    Use Case(s):
+    Attributes:
+        CHALLSTR: The string challenge string
+
+    Note: Use Case(s)
         - Gives the user a challenge string to submit to the login server to get a token
-    Format(s):
+
+    Info: Message Format(s)
         - |challstr|CHALLSTR
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 
@@ -356,11 +422,17 @@ class Message_challstr(Message):
 class Message_updatesearch(Message):
     """Message containing a current ladder searches, if any.
 
-    Use Case(s):
+    Attributes:
+        SEARCHING: A list of formats currently searching for a ladder match
+        GAMES: A optional dictionary of game-id->format of currently ongoing games
+
+    Note: Use Case(s)
         - Gives the user an update about all of their current battle search requests.
-    Format(s):
+
+    Info: Message Format(s)
         - |updatesearch|JSON
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 
@@ -384,11 +456,17 @@ class Message_updatesearch(Message):
 class Message_updatechallenges(Message):
     """Message containing a current challenge searches, if any.
 
-    Use Case(s):
+    Attributes:
+        OUTGOING: A dictionary of username->format for each outgoing challenge
+        INCOMING: A dictionary of username->format for each incoming challenge
+
+    Note: Use Case(s)
         - Gives the user an update about all of their current battle challenge requests.
-    Format(s):
+
+    Info: Message Format(s)
         - |updatechallenges|JSON
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 
@@ -416,11 +494,20 @@ class Message_updatechallenges(Message):
 class Message_pm(Message):
     """Message containing a PM to/from the user.
 
-    Use Case(s):
+    Attributes:
+        SOURCE: The username of the user who sent the pm
+        TARGET: The username of the user who received the pm
+        PM: The message. Newlines are denoted with |
+        IS_CHALLENGE: Whether this PM is a challenge to a battle
+        CHALLENGE_FORMAT: The format of the challenge if it is a challenge
+
+    Note: Use Case(s)
         - Notify the user about a PM received.
-    Format(s):
+
+    Info: Message Format(s)
         - |pm|SOURCE|TARGET|PM
-    Example(s):
+
+    Example: Input Example(s)
         - TODO
     """
 

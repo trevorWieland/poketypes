@@ -1218,8 +1218,14 @@ class BattleMessage_switch(BattleMessage):
 
 
 class BattleMessage_drag(BattleMessage):
-    """
-    |drag|POKEMON|DETAILS|HP STATUS
+    """Message communicating that a pokemon has been dragged in against their will.
+
+    Use Case(s):
+        - Communicating which pokemon was dragged in, as well as info about the pokemon.
+    Format(s):
+        - |drag|POKEMON|DETAILS|HP STATUS
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon being dragged in")
@@ -1299,8 +1305,14 @@ class BattleMessage_drag(BattleMessage):
 
 
 class BattleMessage_detailschange(BattleMessage):
-    """
-    |detailschange|POKEMON|DETAILS
+    """Message communicating that a pokemon has changed formes in a permanent way.
+
+    Use Case(s):
+        - Communicating that a certain pokemon changed forme.
+    Format(s):
+        - |detailschange|POKEMON|DETAILS
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon changing formes")
@@ -1356,8 +1368,14 @@ class BattleMessage_detailschange(BattleMessage):
 
 
 class BattleMessage_replace(BattleMessage):
-    """
-    |replace|POKEMON|DETAILS
+    """Message communicating that a pokemon has been replaced (Zoroark illusion ability).
+
+    Use Case(s):
+        - Communicating that a certain pokemon has been replaced.
+    Format(s):
+        - |replace|POKEMON|DETAILS
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon being revealed (Zoroark)")
@@ -1413,10 +1431,15 @@ class BattleMessage_replace(BattleMessage):
 
 
 class BattleMessage_swap(BattleMessage):
-    """
-    |swap|POKEMON|POSITION
+    """Message communicating that a certain active slot has had its pokemon swapped with another.
 
-    |swap|POKEMON|[from]EFFECT
+    Use Case(s):
+        - Communicating that two pokemon have swapped active slots.
+    Format(s):
+        - |swap|POKEMON|POSITION
+        - |swap|POKEMON|POSITION|[from]
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon being swapped `before` swapping")
@@ -1457,8 +1480,14 @@ class BattleMessage_swap(BattleMessage):
 
 
 class BattleMessage_cant(BattleMessage):
-    """
-    |cant|POKEMON|REASON|MOVE
+    """Message communicating that a pokemon was unable to do something.
+
+    Use Case(s):
+        - Communicating that a pokemon failed to do something, with the reason it failed.
+    Format(s):
+        - |cant|POKEMON|REASON|MOVE
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon that was unable to act")
@@ -1490,8 +1519,14 @@ class BattleMessage_cant(BattleMessage):
 
 
 class BattleMessage_faint(BattleMessage):
-    """
-    |faint|POKEMON
+    """Message communicating that a pokemon has fainted.
+
+    Use Case(s):
+        - Communicating that a pokemon fainted.
+    Format(s):
+        - |faint|POKEMON
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon fainting")
@@ -1506,12 +1541,18 @@ class BattleMessage_faint(BattleMessage):
 
 
 class BattleMessage_fail(BattleMessage):
-    """
-    |-fail|POKEMON
+    """Message communicating that a pokemon has failed to do something.
 
-    |-fail|POKEMON|EFFECT
-
-    |-fail|POKEMON|STATUS
+    Use Case(s):
+        - Communicating that a pokemon failed to do something
+        - Communicate what effect caused the failure
+        - Communicate if a status caused the failure.
+    Format(s):
+        - |-fail|POKEMON
+        - |-fail|POKEMON|EFFECT
+        - |-fail|POKEMON|STATUS
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
@@ -1594,8 +1635,14 @@ class BattleMessage_fail(BattleMessage):
 
 
 class BattleMessage_block(BattleMessage):
-    """
-    |-block|POKEMON|EFFECT
+    """Message communicating that a pokemon has blocked an opposing action.
+
+    Use Case(s):
+        - Communicating that a pokemon was able to block some other action.
+    Format(s):
+        - |-block|POKEMON|EFFECT
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(
@@ -1625,8 +1672,14 @@ class BattleMessage_block(BattleMessage):
 
 
 class BattleMessage_notarget(BattleMessage):
-    """
-    |-notarget|POKEMON
+    """Message communicating that no target was available at move-use time.
+
+    Use Case(s):
+        - Communicating that a pokemon had no target available.
+    Format(s):
+        - |-notarget|POKEMON
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon that has no target")
@@ -1643,10 +1696,16 @@ class BattleMessage_notarget(BattleMessage):
 
 
 class BattleMessage_miss(BattleMessage):
-    """
-    |-miss|SOURCE|TARGET
+    """Message communicating that a given source pokemon missed its action.
 
-    |-miss|SOURCE
+    Use Case(s):
+        - Communicating that a pokemon missed.
+        - Communicating which pokemon was targeted but avoided the action.
+    Format(s):
+        - |-miss|SOURCE
+        - |-miss|SOURCE|TARGET
+    Example(s):
+        - TODO
     """
 
     SOURCE: PokemonIdentifier = Field(..., description="The pokemon missing the attack")
@@ -1668,8 +1727,14 @@ class BattleMessage_miss(BattleMessage):
 
 
 class BattleMessage_damage(BattleMessage):
-    """
-    |-damage|POKEMON|HP STATUS
+    """Message communicating that a pokemon has taken damage.
+
+    Use Case(s):
+        - Communicating that a pokemon took damage in some way.
+    Format(s):
+        - |-damage|POKEMON|HP STATUS
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon being hurt")
@@ -1735,8 +1800,14 @@ class BattleMessage_damage(BattleMessage):
 
 
 class BattleMessage_heal(BattleMessage):
-    """
-    |-heal|POKEMON|HP STATUS
+    """Message communicating that a pokemon has healed some health.
+
+    Use Case(s):
+        - Communicating that a pokemon healed in some way.
+    Format(s):
+        - |-heal|POKEMON|HP STATUS
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(
@@ -1804,8 +1875,14 @@ class BattleMessage_heal(BattleMessage):
 
 
 class BattleMessage_sethp(BattleMessage):
-    """
-    |-sethp|POKEMON|HP STATUS|EFFECT
+    """Message communicating that a pokemon has an exact hp amount.
+
+    Use Case(s):
+        - Communicating that a pokemon had its health directly set.
+    Format(s):
+        - |-sethp|POKEMON|HP STATUS|EFFECT
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon getting the HP set")
@@ -1870,8 +1947,14 @@ class BattleMessage_sethp(BattleMessage):
 
 
 class BattleMessage_status(BattleMessage):
-    """
-    |-status|POKEMON|STATUS
+    """Message communicating that a pokemon has gained a status.
+
+    Use Case(s):
+        - Communicating that a pokemon has gained a status condition.
+    Format(s):
+        - |-status|POKEMON|STATUS
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon gaining the status")
@@ -1892,8 +1975,14 @@ class BattleMessage_status(BattleMessage):
 
 
 class BattleMessage_curestatus(BattleMessage):
-    """
-    |-curestatus|POKEMON|STATUS
+    """Message communicating that a pokemon has lost a status.
+
+    Use Case(s):
+        - Communicating that a pokemon has lost a status condition.
+    Format(s):
+        - |-curestatus|POKEMON|STATUS
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon losing the status")
@@ -1914,8 +2003,14 @@ class BattleMessage_curestatus(BattleMessage):
 
 
 class BattleMessage_cureteam(BattleMessage):
-    """
-    |-cureteam|POKEMON|EFFECT
+    """Message communicating that a team has been cured of all status conditions.
+
+    Use Case(s):
+        - Communicating that all pokemon have been cured.
+    Format(s):
+        - |-cureteam|POKEMON|EFFECT
+    Example(s):
+        - TODO
     """
 
     EFFECT: Effect = Field(..., description="The effect causing the team to be healed")
@@ -1934,8 +2029,14 @@ class BattleMessage_cureteam(BattleMessage):
 
 
 class BattleMessage_boost(BattleMessage):
-    """
-    |-boost|POKEMON|STAT|AMOUNT
+    """Message communicating that a pokemon has gained some stat boost.
+
+    Use Case(s):
+        - Communicating that a pokemon received a single stat boost.
+    Format(s):
+        - |-boost|POKEMON|STAT|AMOUNT
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon getting the boost")
@@ -1963,8 +2064,14 @@ class BattleMessage_boost(BattleMessage):
 
 
 class BattleMessage_unboost(BattleMessage):
-    """
-    |-unboost|POKEMON|STAT|AMOUNT
+    """Message communicating that a pokemon has had some stat lowered.
+
+    Use Case(s):
+        - Communicating that a pokemon received a single stat unboost.
+    Format(s):
+        - |-unboost|POKEMON|STAT|AMOUNT
+    Example(s):
+        - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon getting the boost")
@@ -1992,8 +2099,19 @@ class BattleMessage_unboost(BattleMessage):
 
 
 class BattleMessage_setboost(BattleMessage):
-    """
-    |-setboost|POKEMON|STAT|AMOUNT
+    """Message communicating that a pokemon has had some stat set to a certain boost value.
+
+    Use Case(s):
+
+    - Communicating that a pokemon received a set stat boost value.
+
+    Format(s):
+
+    - |-setboost|POKEMON|STAT|AMOUNT
+
+    Example(s):
+
+    - TODO
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon getting the boost")
@@ -2018,8 +2136,16 @@ class BattleMessage_setboost(BattleMessage):
 
 
 class BattleMessage_swapboost(BattleMessage):
-    """
-    |-swapboost|SOURCE|TARGET|STATS
+    """Message communicating that two specific pokemon have had their stat boosts switched.
+
+    Not yet implemented!
+
+    Use Case(s):
+        - Communicating that two pokemon have had their respective stat boosts swapped.
+    Format(s):
+        - |-swapboost|SOURCE|TARGET|STATS
+    Example(s):
+        - TODO
     """
 
     POKEMON: str = Field(..., description="The main pokemon identifier relevant")
