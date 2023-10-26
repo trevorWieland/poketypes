@@ -21,11 +21,11 @@ from ..dex import (
     DexGen,
     DexItem,
     DexMove,
+    DexMoveTarget,
     DexPokemon,
     DexStatus,
     DexType,
     DexWeather,
-    DexMoveTarget,
     cast2dex,
 )
 

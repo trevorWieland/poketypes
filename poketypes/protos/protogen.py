@@ -15,6 +15,7 @@ from typing import Dict, List, Tuple
 import requests
 from mergers import merge
 from statics import CURRENT_GEN, DATA_TYPES
+
 from poketypes.dex.dexdata import clean_name
 
 
