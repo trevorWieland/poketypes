@@ -74,6 +74,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#the-pokedexclass" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -792,6 +797,19 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    The PokedexClass
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -802,6 +820,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basics" class="md-nav__link">
+    Basics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    Reference
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex" class="md-nav__link">
+    pokedex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex.PokedexMove" class="md-nav__link">
+    PokedexMove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex.PokedexItem" class="md-nav__link">
+    PokedexItem
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex.StatBlock" class="md-nav__link">
+    StatBlock
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex.PokedexPokemon" class="md-nav__link">
+    PokedexPokemon
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1260,6 +1352,71 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basics" class="md-nav__link">
+    Basics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    Reference
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex" class="md-nav__link">
+    pokedex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex.PokedexMove" class="md-nav__link">
+    PokedexMove
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex.PokedexItem" class="md-nav__link">
+    PokedexItem
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex.StatBlock" class="md-nav__link">
+    StatBlock
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poketypes.dex.pokedex.PokedexPokemon" class="md-nav__link">
+    PokedexPokemon
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1277,9 +1434,1730 @@
   
 
 
-  <h1>The PokedexClass</h1>
+<h1 id="the-pokedexclass">The PokedexClass</h1>
+<p><code>poketypes.dex.pokedex</code> OR directly import from <code>poketypes.dex</code></p>
+<h2 id="basics">Basics</h2>
+<p>Each PokedexClass is a pydantic BaseModel, holding every possibly-useful attribute sourced directly from pokemon showdown typescript files as the ground truth.</p>
+<h2 id="reference">Reference</h2>
 
 
+<div class="doc doc-object doc-module">
+
+
+
+<a id="poketypes.dex.pokedex"></a>
+  <div class="doc doc-contents first">
+  
+      <p>Provides BaseModels for accessing real information about specific items/pokemon/moves/etc.</p>
+<p>All Pokedex{NAME} classes are defined in this module, though you can also import these directly from poketypes.dex.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.dex.pokedex.PokedexMove" class="doc doc-heading">
+          <code>PokedexMove</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Pokedex class for Move information.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The friendly string name of this move</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>id</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The DexMove ID of this move</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexMove" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexMove">DexMove</a>.<span title="poketypes.dex.dexdata_pb2.DexMove.ValueType">ValueType</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>base_power</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The base power of the move</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>pp</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The pp of this move</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>priority</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The priority of the move</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>crit_ratio</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The crit ratio of the move (e.g. 2 = twice the chance to crit)</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>category</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The move category as a DexMoveCategory</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexMoveCategory" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexMoveCategory">DexMoveCategory</a>.<span title="poketypes.dex.dexdata_pb2.DexMoveCategory.ValueType">ValueType</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>target</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The target type of this move</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexMoveTarget" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexMoveTarget">DexMoveTarget</a>.<span title="poketypes.dex.dexdata_pb2.DexMoveTarget.ValueType">ValueType</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mtype</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The type of the move</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexType" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexType">DexType</a>.<span title="poketypes.dex.dexdata_pb2.DexType.ValueType">ValueType</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>breaks_protect</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move breaks target protect</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ignore_ability</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move ignores target ability</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ignore_defensive</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move ignores target defensive boosts</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ignore_evasion</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move ignores target evasion boosts</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ignore_immunity</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move ignores target immunity to this move type</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>multiaccuracy</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the multihit move is all or nothing</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ohko</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move is a one-hit-ko</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>stalling_move</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move is considered a stalling move</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>will_crit</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move will 100% crit if it lands</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>has_crash_damage</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move does damage to its user on failure</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>has_sheer_force</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The move is always boosted by sheer-force without losing benefit</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>selfdestruct_always</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether this move always causes the user to faint</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>selfdestruct_ifhit</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move causes the user to faint <em>if and only if</em> it hits</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>steals_boosts</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move steals the targets boosts</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>level_damage</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move does damage based on the level of the user</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>force_switch</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move forces the target to switch out</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mindblown_recoil</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move has special 'Mind Blown' style recoil</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>struggle_recoil</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move has special 'Struggle' style recoil</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>smart_target</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move uses smart targetting</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>thaws_target</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move thaws target as a special effect</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>tracks_target</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move ignores <code>draw-in</code> move/abilities.</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>selfswitch_standard</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move is a typical self-switching move. Teleport/U-Turn/etc</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>selfswitch_volatile</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move is a volatile-keeping self-switching move. Baton Pass</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>selfswitch_shedtail</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move is a substitue creating self-switching move. Shed Tail</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>sleep_usable</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move can be used when sleeping</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>no_metronome</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move can <em>NOT</em> be used as a result of metronome</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>no_sketch</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move can <em>NOT</em> be copied as a result of sketch</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>no_ppboosts</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the move can <em>NOT</em> have its pp boosted beyond default</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>accuracy</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The accuracy of this move. Optional if the move bypasses accuracy</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[int]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>multihit</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The move hits multiple times from slot0 - slot1 times inclusive. Optional</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<span title="typing.Tuple">Tuple</span>[int, int]]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>drain</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The move drains hp: (slot0 / slot1) times damage dealt. Optional</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<span title="typing.Tuple">Tuple</span>[int, int]]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>heal</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The move directly heals hp: (slot0 / slot1) times maximum health. Optional</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<span title="typing.Tuple">Tuple</span>[int, int]]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>recoil</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The move recoils back hp: (slot0 / slot1) times damage dealt. Optional</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<span title="typing.Tuple">Tuple</span>[int, int]]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>boosts</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Any boosts for the target this move provides (100%). Optional</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexStat" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexStat">DexStat</a>.<span title="poketypes.dex.dexdata_pb2.DexStat.ValueType">ValueType</span>, int]]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>direct_damage</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>An integer exact amount of damage the move does. Optional</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[int]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>weather</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The weather started by this move. Optional</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexWeather" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexWeather">DexWeather</a>.<span title="poketypes.dex.dexdata_pb2.DexWeather.ValueType">ValueType</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_allyanim</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: allyanim</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_bite</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: bite</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_bullet</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: bullet</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_bypasssub</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: bypasssub</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_cantusetwice</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: cantusetwice</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_charge</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: charge</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_contact</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: contact</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_dance</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: dance</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_defrost</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: defrost</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_distance</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: distance</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_failcopycat</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: failcopycat</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_failencore</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: failencore</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_failinstruct</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: failinstruct</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_failmefirst</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: failmefirst</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_failmimic</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: failmimic</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_futuremove</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: futuremove</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_gravity</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: gravity</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_heal</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: heal</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_mirror</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: mirror</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_mustpressure</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: mustpressure</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_noassist</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: noassist</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_nonsky</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: nonsky</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_noparentalbond</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: noparentalbond</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_nosleeptalk</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: nosleeptalk</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_pledgecombo</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: pledgecombo</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_powder</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: powder</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_protect</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: protect</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_pulse</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: pulse</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_punch</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: punch</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_recharge</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: recharge</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_reflectable</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: reflectable</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_slicing</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: slicing</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_snatch</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: snatch</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_sound</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: sound</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>flag_wind</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>MOVE FLAG: wind</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.dex.pokedex.PokedexItem" class="doc doc-heading">
+          <code>PokedexItem</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Pokedex class for Item information.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The friendly string name of this item</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>id</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The DexItem ID of this item</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexItem" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexItem">DexItem</a>.<span title="poketypes.dex.dexdata_pb2.DexItem.ValueType">ValueType</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>is_gem</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the item is a gem or not</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>is_berry</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the item is a berry</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>naturalgift_base_power</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>If this item is usable with Natural Gift, what is the base power</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[int]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>naturalgift_type</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>If this item is usable with Natural Gift, what is the type</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexType" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexType">DexType</a>.<span title="poketypes.dex.dexdata_pb2.DexType.ValueType">ValueType</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>item_users</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>A list of intended holders of this item</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexPokemon" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexPokemon">DexPokemon</a>.<span title="poketypes.dex.dexdata_pb2.DexPokemon.ValueType">ValueType</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>zmove_to</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>What move this zmove transforms the move <em>into</em></p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexMove" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexMove">DexMove</a>.<span title="poketypes.dex.dexdata_pb2.DexMove.ValueType">ValueType</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>zmove_from</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>What special move this zmove transforms</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexMove" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexMove">DexMove</a>.<span title="poketypes.dex.dexdata_pb2.DexMove.ValueType">ValueType</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mega_evolves</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Which base-forme pokemon this megastone evolves from. Optional</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexPokemon" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexPokemon">DexPokemon</a>.<span title="poketypes.dex.dexdata_pb2.DexPokemon.ValueType">ValueType</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>mega_forme</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Which mega-forme pokemon this megastone evolves into. Optional</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexPokemon" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexPokemon">DexPokemon</a>.<span title="poketypes.dex.dexdata_pb2.DexPokemon.ValueType">ValueType</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>ignore_klutz</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>Whether the item ignores klutz</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>fling_basepower</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The basepower of fling when flinging this item. None if n/a</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Optional">Optional</span>[int]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.dex.pokedex.StatBlock" class="doc doc-heading">
+          <code>StatBlock</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Helper object for containing base stats information.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>hp_stat</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The base hp of the pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>atk_stat</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The base attack of the pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>def_stat</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The base defence of the pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>spa_stat</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The base special attack of the pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>spd_stat</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The base special defence of the pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>spe_stat</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The base speed of the pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h3 id="poketypes.dex.pokedex.PokedexPokemon" class="doc doc-heading">
+          <code>PokedexPokemon</code>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Pokedex class for Pokemon information.</p>
+
+
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>ATTRIBUTE</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>name</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The friendly string name of this pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>id</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The DexPokemon ID of this pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexPokemon" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexPokemon">DexPokemon</a>.<span title="poketypes.dex.dexdata_pb2.DexPokemon.ValueType">ValueType</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>base_name</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The friendly string name of this pokemon's base forme</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>base_id</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The DexPokemon ID of this pokemon's base forme</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexPokemon" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexPokemon">DexPokemon</a>.<span title="poketypes.dex.dexdata_pb2.DexPokemon.ValueType">ValueType</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>types</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The types of this pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexType" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexType">DexType</a>.<span title="poketypes.dex.dexdata_pb2.DexType.ValueType">ValueType</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>base_stats</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The base stat block of this pokemon</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.pokedex.StatBlock" href="#poketypes.dex.pokedex.StatBlock">StatBlock</a></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>abilities</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The list of abilities this pokemon can have</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="poketypes.dex.dexdata_pb2.DexAbility" href="../dex-classes/#poketypes.dex.dexdata_pb2.DexAbility">DexAbility</a>.<span title="poketypes.dex.dexdata_pb2.DexAbility.ValueType">ValueType</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
 
 

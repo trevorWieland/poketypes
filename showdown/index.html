@@ -74,6 +74,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#showdown-intro" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -1250,6 +1255,30 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#5-minute-summary" class="md-nav__link">
+    5-Minute Summary
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-links" class="md-nav__link">
+    Reference Links
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1267,9 +1296,38 @@
   
 
 
-  <h1>Showdown Intro</h1>
-
-
+<h1 id="showdown-intro">Showdown Intro</h1>
+<h2 id="5-minute-summary">5-Minute Summary</h2>
+<p>In the <code>poketypes</code> package, we include the module <code>showdown</code>, which contains pydantic <code>BaseModel</code> subclasses for
+General and Battle Message formats. This allows for a smoother communication process with Pokemon Showdown, as rather
+than needing to build a message parser yourself, relying on relatively limited documentation from Showdown directly,
+you can instead build logic to take as input either <code>Message</code> or <code>BattleMessage</code> objects, which will come pre-parsed,
+with full type-hinting and data validation built in.</p>
+<p>To start, you can import both from the module <code>showdown</code> like so:</p>
+<pre><code>from poketypes.showdown import Message, BattleMessage
+</code></pre>
+<p>Both <code>Message</code> and <code>BattleMessage</code> are subclasses of <code>pydantic.BaseModel</code>, and both also have an additional function
+called <code>from_message</code>, which takes as input a string, and returns an initialized and parsed object from the input
+string message.</p>
+<pre><code>message = BattleMessage.from_string("|poke|p1|Metagross, L80|item")
+</code></pre>
+<p>At this point, <code>message</code> will automatically be identified as a <code>poke</code> battle message, and will be an instance of the
+class <code>poketypes.showdown.battlemessage.BattleMessage_poke</code>. Rather than checking with <code>isinstance</code>, however, we 
+recommend instead checking the <code>message.BMTYPE</code> (or <code>message.MTYPE</code> for general messages), which is of the type
+<code>poketypes.showdown.BMType</code>, an Enum of all the different battle message types you can receive. For type hinting
+purposes, such as in the signature of a function that would process a given <code>BattleMessage</code> subclass, you would do
+the following:</p>
+<pre><code>def process_bm_poke(message: poketypes.showdown.battlemessage.BattleMessage_poke):
+</code></pre>
+<p>This will ensure that your IDE will have type hinting support as you process the message, and in the specific example
+of <code>BattleMessage_poke</code>, will give support in directly accessing the data fields like <code>message.PLAYER</code> that are
+unique to this <code>BattleMessage</code> subclass.</p>
+<p>Check out the Guides in this section for some common use-cases of this module, eith step-by-step instructions on each
+part of the process. Or if you prefer to learn by reading docs, check out the Reference links below or on the sidebar
+to familiarize yourself with some of the different categories of messages.</p>
+<h2 id="reference-links">Reference Links</h2>
+<p>For details on all the different kinds of <code>Message</code> subclasses, see the reference page <a href="reference/standard-messages/">here</a></p>
+<p>For details on all the different kinds of <code>BattleMessage</code> subclasses, see the reference page <a href="reference/battle-messages/">here</a></p>
 
 
 

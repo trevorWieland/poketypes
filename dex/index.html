@@ -74,6 +74,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#dex-intro" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -1250,6 +1255,30 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#5-minute-summary" class="md-nav__link">
+    5-Minute Summary
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-links" class="md-nav__link">
+    Reference Links
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1267,9 +1296,20 @@
   
 
 
-  <h1>Dex Intro</h1>
-
-
+<h1 id="dex-intro">Dex Intro</h1>
+<h2 id="5-minute-summary">5-Minute Summary</h2>
+<p>In the <code>poketypes</code> package, we include the module <code>dex</code>, which contains two different types of data structures, so-called DexClass Enums, which contain uniquely enumerated labels for everything from pokemon formes to items to moves and more. The other contained data structure is the PokedexClass BaseModel, which are pydantic BaseModels, meant for holding reference material about a specific corresponding DexClass label. </p>
+<p>For example, one specific DexClass is the <code>DexPokemon</code>, an Enum which maps every distinct pokemon forme (base, cosmetic, temporary, etc.) to a unique integer. So we have things like <code>DexPokemon.POKEMON_MAGIKARP</code>, which is mapped to the integer 129000.
+Then, we have the <code>PokedexPokemon</code> BaseModel, whose purpose would be to store all useful information about each specific corresponding <code>DexPokemon</code> id, such as the types of the pokemon (each stored as a <code>DexType</code>), the learnset of the pokemon (stored as <code>DexMove</code>), etc..</p>
+<p>This means that if you are building logic for interpretting a pokemon battle, rather than relying on string comparisons which can both be slow and inconsistent, you can instead use included functions such as <code>cast2dex</code>, which can take input strings and a relevant DexClass, and return the correct label to use.</p>
+<p>These extra layers of labeling may seem cumbersome to work with at first, but since we provide all of the cleaning functions you could need to transform between them, the trade-off for using just a few extra lines of code is 100% guarunteed label consistency and accuracy, with minimal risk of typos.</p>
+<p>For instance, you might care about checking if an opponent pokemon can potentially have the ability levitate. Then you could directly use <code>DexAbility.ABILITY_LEVITATE</code>, checking if this label exists in the corresponding <code>PokedexPokemon.abilities</code>. Since no string comparisons are happening, there's no risk of accidentally spelling levitate wrong since the type hinting will inform you.</p>
+<p>Lastly, there is the actual pokedex instances, which are accessed by calling <code>dex.gen()</code>. This returns a pydantic object that has a pre-instantiated dictionary for Pokemon, Moves, and Items, which each map from their corresponding DexClass to their corresponding PokedexClass. For example, <code>dex.gen(5).pokemon[DexPokemon.POKEMON_MAGIKARP]</code> will return the <code>PokedexPokemon</code> object for Magikarp, will all the details already filled out, as it was in generation 5. If you leave out the gen number, it will automatically use the latest generation available.</p>
+<h2 id="reference-links">Reference Links</h2>
+<p>For details on all the different kinds of DexClasses, see the reference page <a href="reference/dex-classes/">here</a></p>
+<p>For details on all the different kinds of PokedexClasses, see the reference page <a href="reference/pokedex-classes/">here</a></p>
+<p>For details on all the different cleaning utilities, see the reference page <a href="reference/utilities/">here</a></p>
+<p>For details on the gen function, see the reference page <a href="reference/pokedex-instance/">here</a></p>
 
 
 

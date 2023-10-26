@@ -74,6 +74,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#building-a-replay-log-parser" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -991,6 +996,19 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Building a Log Parser
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -1001,6 +1019,46 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-extracting-the-battle-log" class="md-nav__link">
+    Step 1: Extracting the Battle Log
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1260,6 +1318,37 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-extracting-the-battle-log" class="md-nav__link">
+    Step 1: Extracting the Battle Log
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1277,9 +1366,24 @@
   
 
 
-  <h1>Building a Log Parser</h1>
-
-
+<h1 id="building-a-replay-log-parser">Building a Replay Log Parser</h1>
+<h2 id="introduction">Introduction</h2>
+<p>This tutorial will guide usage of <code>poketypes.showdown</code> to create a simple replay log parser, which can read any
+arbitrary Pokemon Showdown replay file, and turn it into a list of <code>BattleMessage</code> subclass objects, that you could
+then proceed to do some sort of analysis or transformation on.</p>
+<p>Since we'll be processing a Replay log in this example, we will only be using <code>poketypes.showdown.BattleMessage</code>, but
+similar concepts can be applied for processing any message sent by showdown, so long as you make the distinction between
+general messages and message chunks that target a specific battle.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Make sure that you have <code>poketypes</code> installed to your virtual environment, which you can do with:</p>
+<pre><code>pip install poketypes
+</code></pre>
+<p>Additionally, go ahead and download the replay file <a href="https://replay.pokemonshowdown.com/oumonotype-82345404">here</a>.
+If you click the Download button on this page, it should download a .html file called 'OUMonotype-2014-01-29-kdarewolf-onox.html',
+which we will use as an example, but any replay file should work.</p>
+<h2 id="step-1-extracting-the-battle-log">Step 1: Extracting the Battle Log</h2>
+<p>Replay files are stored in html files, which means we need to extract the text log that we want to parse first.</p>
+<p>To do that, since we only need very basic html extraction, we can </p>
 
 
 
