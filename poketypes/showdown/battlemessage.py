@@ -16,7 +16,18 @@ from typing import Dict, List, Literal, Optional, Type, Union
 
 from pydantic import BaseModel, Field
 
-from ..dex import DexAbility, DexGen, DexItem, DexMove, DexPokemon, DexStatus, DexType, DexWeather, cast2dex
+from ..dex import (
+    DexAbility,
+    DexGen,
+    DexItem,
+    DexMove,
+    DexMoveTarget,
+    DexPokemon,
+    DexStatus,
+    DexType,
+    DexWeather,
+    cast2dex,
+)
 
 
 @unique
@@ -156,7 +167,13 @@ class PokeStat(str, Enum):
 
 
 class PokemonIdentifier(BaseModel):
-    """A BaseModel giving details about which Pokemon is being talked about."""
+    """A BaseModel giving details about which Pokemon is being talked about.
+
+    Attributes:
+        IDENTITY: The unique identifier for a pokemon. Looks like `ARCANINE` if the input is `p1: Arcanine`
+        PLAYER: The player this pokemon belongs to
+        SLOT: Optionally, the slot this pokemon is in. Will be None if slot info isn't given in the message
+    """
 
     IDENTITY: str = Field(
         ...,
@@ -808,7 +825,9 @@ class MoveData(BaseModel):
         None, description="The integer amount of times this move can ever be used. None if Trapped"
     )
 
-    TARGET: Optional[str] = Field(None, description="The targetting type of this move. None if Trapped")
+    TARGET: Optional[DexMoveTarget.ValueType] = Field(
+        None, description="The targetting type of this move. None if Trapped"
+    )
     DISABLED: Optional[bool] = Field(None, description="Whether this move is disabled or not. None if Trapped")
 
 
@@ -913,7 +932,7 @@ class BattleMessage_request(BattleMessage):
                         ID=cast2dex(m_data["id"], DexMove),
                         CUR_PP=m_data.get("pp"),
                         MAX_PP=m_data.get("maxpp"),
-                        TARGET=m_data.get("target"),
+                        TARGET=cast2dex(m_data["target"], DexMoveTarget),
                         DISABLED=isinstance(m_data.get("disabled"), str) or m_data.get("disabled"),
                     )
                     moves.append(m)

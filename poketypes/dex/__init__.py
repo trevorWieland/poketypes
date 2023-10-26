@@ -11,7 +11,7 @@ item Absolite as it is in gen6, etc..
 """
 
 
-from .dexdata import cast2dex, clean_forme, clean_name, AnyDex
+from .dexdata import AnyDex, cast2dex, clean_forme, clean_name
 from .dexdata_pb2 import (
     DexAbility,
     DexCondition,

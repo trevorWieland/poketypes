@@ -9,13 +9,14 @@ any pokemon introduced previously will have the same label-number in every gener
 
 import json
 import re
-import unicodedata
 from copy import deepcopy
-from typing import Dict
+from typing import Dict, List, Tuple
 
 import requests
 from mergers import merge
 from statics import CURRENT_GEN, DATA_TYPES
+
+from poketypes.dex.dexdata import clean_name
 
 
 def fetch_and_clean_ps_data(url: str) -> Dict[str, Dict]:
@@ -108,6 +109,45 @@ def fetch_and_clean_ps_data(url: str) -> Dict[str, Dict]:
     return data_dict
 
 
+def create_proto_str(field_name: str, id_names: List[Tuple[str, int]], allow_alias: bool = False) -> str:
+    """Create a protobuf formatted string with Enum info.
+
+    Uses the provided enum name and id_names to create a properly formatted Enum. If allow_alias is True, then the
+    ids in id_names should all be unique, otherwise an error will be raised.
+
+    Args:
+        field_name (str): The name of the field for creating an Enum. For example, field_name="Nature" will create an
+            Enum named "DexNature".
+        id_names (List[Tuple[str, int]]): A list of name, id pairs to be added to the enum.
+        allow_alias (bool, optional): Whether the Enum should allow multiple names to share ids. Defaults to False.
+
+    Returns:
+        str: The properly formatted protobuf string.
+    """
+    # Section comments
+    proto_str = f"/* Represents possible {field_name}s\n\nOptions:<br/>\n"
+
+    for name, id in id_names:
+        proto_str += f"\t>- {id}: {name}\n"
+
+    proto_str += "*/\n"
+
+    # Start Enum Construction
+    proto_str += f"enum Dex{field_name} {{\n"
+    if allow_alias:
+        proto_str += "\toption allow_alias = true;\n"
+    proto_str += f"\t{field_name.upper()}_UNASSIGNED = 0;\n"
+
+    # Add each item to the enum
+    for name, id in id_names:
+        proto_str += f"\t{field_name.upper()}_{name.upper()} = {id};\n"
+
+    # Finalize the enum with a closing bracket
+    proto_str += "}\n\n"
+
+    return proto_str
+
+
 def protogen_natures(nature_data: Dict[str, Dict]) -> str:
     """Generate a protobuf formatted string with Enum info for natures.
 
@@ -120,19 +160,11 @@ def protogen_natures(nature_data: Dict[str, Dict]) -> str:
     Returns:
         str: A multi-line string containing a properly formatted Enum.
     """
-    # Section comments
-    proto_str = "//Contains data for Pokemon Natures\n"
-
-    # Start Enum Construction
-    proto_str += "enum DexNature {\n"
-    proto_str += "\tNATURE_UNASSIGNED = 0;\n"
-
-    # Add each nature to the enum
+    id_names: List[Tuple[str, int]] = []
     for e, key in enumerate(nature_data.keys()):
-        proto_str += f"\tNATURE_{key.upper()} = {e+1};\n"
+        id_names.append((key.upper(), e + 1))
 
-    # Finalize the enum with a closing bracket
-    proto_str += "}\n\n"
+    proto_str = create_proto_str("Nature", id_names)
 
     return proto_str
 
@@ -153,14 +185,11 @@ def protogen_pokedex(pokedex_data: Dict[str, Dict]) -> str:
     Returns:
         str: A multi-line string containing a properly formatted Enum.
     """
-    # Section comments
-    proto_str = "//Contains data for Pokemon\n"
-
     # Sort and identify unique numbers for each pokemon
     # Number definition: {DEX_NUM}{FORM_NUM zfilled to 3 places}
     # Current definitions supports up to 999 versions of charizard before it breaks :]
 
-    pokemon = []
+    id_names: List[Tuple[str, int]] = []
     last_poke_num = None
     c = 0
     for key, value in pokedex_data.items():
@@ -168,50 +197,27 @@ def protogen_pokedex(pokedex_data: Dict[str, Dict]) -> str:
             # We skip fakemon
             continue
 
-        if last_poke_num is None:
-            num = int(str(value["num"]) + "".zfill(3))
-        elif last_poke_num == value["num"]:
+        if last_poke_num == value["num"]:
             c += 1
-            num = int(str(value["num"]) + str(c).zfill(3))
         else:
             c = 0
-            num = int(str(value["num"]) + str(c).zfill(3))
 
-        pokemon.append((key.upper(), num))
+        num = int(str(value["num"]) + str(c).zfill(3))
+
+        id_names.append((key.upper(), num))
         last_poke_num = value["num"]
 
         for cosmetic in value.get("cosmeticFormes", []):
-            clean_name = (
-                unicodedata.normalize(
-                    "NFKD",
-                    cosmetic.upper()
-                    .replace("-", "")
-                    .replace("’", "")
-                    .replace("'", "")
-                    .replace(" ", "")
-                    .replace("*", "")
-                    .replace(":", "")
-                    .replace(".", ""),
-                )
-                .encode("ASCII", "ignore")
-                .decode("ASCII"),
-            )[0]
+            # We first have to clean the string because cosmeticFormes contains uncleaned names, unlike the keys
+            name = clean_name(cosmetic)
 
             c += 1
-            pokemon.append((clean_name, int(str(value["num"]) + str(c).zfill(3))))
+            num = int(str(value["num"]) + str(c).zfill(3))
+            id_names.append((name, num))
 
-    pokemon = sorted(pokemon, key=lambda x: x[1])
+    id_names = sorted(id_names, key=lambda x: x[1])
 
-    # Start Enum Construction
-    proto_str += "enum DexPokemon {\n"
-    proto_str += "\tPOKEMON_UNASSIGNED = 0;\n"
-
-    # Add each nature to the enum
-    for key, num in pokemon:
-        proto_str += f"\tPOKEMON_{key} = {num};\n"
-
-    # Finalize the enum with a closing bracket
-    proto_str += "}\n\n"
+    proto_str = create_proto_str("Pokemon", id_names)
 
     return proto_str
 
@@ -221,7 +227,7 @@ def protogen_moves(move_data: Dict[str, Dict]) -> str:
 
     Built expecting parsed data from moves.ts showdown information.
     Fields used in the arbirtrary structure:
-        - `num`: The id number of the pokemon. Different formes of the same move share this. Required.
+        - `num`: The id number of the move. Different formes of the same move share this. Required.
     The Enum value uses the format {MOVE_NUM}{2-DIGIT FORME NUMBER}, with any moves that share the same id number
     getting assigned their own unique forme number.
 
@@ -235,7 +241,7 @@ def protogen_moves(move_data: Dict[str, Dict]) -> str:
     proto_str = "//Contains data for Pokemon Moves\n"
 
     # Start Enum Construction
-    moves = []
+    id_names: List[Tuple[str, int]] = []
     last_move_num = None
     c = 0
     for key, value in move_data.items():
@@ -243,41 +249,30 @@ def protogen_moves(move_data: Dict[str, Dict]) -> str:
             # We skip fake moves
             continue
 
-        if last_move_num is None:
-            num = int(str(value["num"]) + "".zfill(2))
-        elif last_move_num == value["num"]:
+        if last_move_num == value["num"]:
             c += 1
-            num = int(str(value["num"]) + str(c).zfill(2))
         else:
             c = 0
-            num = int(str(value["num"]) + str(c).zfill(2))
 
-        moves.append((key.upper(), num))
+        num = int(str(value["num"]) + str(c).zfill(2))
+
+        id_names.append((key.upper(), num))
         last_move_num = value["num"]
 
         if "hiddenpower" in key:
             c += 1
             num = int(str(value["num"]) + str(c).zfill(2))
-            moves.append((key.upper() + "60", num))
+            id_names.append((key.upper() + "60", num))
         elif "return" in key:
             c += 1
             num = int(str(value["num"]) + str(c).zfill(2))
-            moves.append((key.upper() + "102", num))
+            id_names.append((key.upper() + "102", num))
 
-    moves.append(("RECHARGE", 1))
+    id_names.append(("RECHARGE", 1))
 
-    moves = sorted(moves, key=lambda x: x[1])
+    id_names = sorted(id_names, key=lambda x: x[1])
 
-    # Start Enum Construction
-    proto_str += "enum DexMove {\n"
-    proto_str += "\tMOVE_UNASSIGNED = 0;\n"
-
-    # Add each nature to the enum
-    for key, num in moves:
-        proto_str += f"\tMOVE_{key} = {num};\n"
-
-    # Finalize the enum with a closing bracket
-    proto_str += "}\n\n"
+    proto_str = create_proto_str("Move", id_names)
 
     return proto_str
 
@@ -294,19 +289,14 @@ def protogen_typechart(typechart_data: (Dict[str, Dict])) -> str:
     Returns:
         str: A multi-line string containing a properly formatted Enum.
     """
-    # Section comments
-    proto_str = "//Contains data for Pokemon Types\n"
+    id_names: List[Tuple[str, int]] = []
 
-    # Start Enum Construction
-    proto_str += "enum DexType {\n"
-    proto_str += "\tTYPE_UNASSIGNED = 0;\n"
-
-    # Add each type to the enum
     for e, key in enumerate(typechart_data.keys()):
-        proto_str += f"\tTYPE_{key.upper()} = {e+1};\n"
+        id_names.append((key.upper(), e + 1))
 
-    # Finalize the enum with a closing bracket
-    proto_str += "}\n\n"
+    id_names = sorted(id_names, key=lambda x: x[1])
+
+    proto_str = create_proto_str("Type", id_names)
 
     return proto_str
 
@@ -324,56 +314,43 @@ def protogen_conditions(condition_data: Dict[str, Dict]) -> str:
     Returns:
         str: A multi-line string containing a properly formatted Enum.
     """
-    # Section comments
-    proto_str = ""
+    # Construct Status Enum
+    status_data = {k: v for k, v in condition_data.items() if v.get("effectType") == "Status"}
 
-    # Start Enum Construction for Statuses
-    proto_str += "//Contains data for Pokemon Statuses\n"
+    status_names: List[Tuple[str, int]] = []
+    status_names.append(("FNT", 1))
 
-    proto_str += "enum DexStatus {\n"
-    proto_str += "\tSTATUS_UNASSIGNED = 0;\n"
+    for e, key in enumerate(status_data.keys()):
+        status_names.append((key.upper(), e + 2))
 
-    proto_str += "\tSTATUS_FNT = 1;\n"
+    status_names = sorted(status_names, key=lambda x: x[1])
 
-    filtered_data = {k: v for k, v in condition_data.items() if v.get("effectType") == "Status"}
+    proto_str = create_proto_str("Status", status_names)
 
-    # Add each type to the enum
-    for e, key in enumerate(filtered_data.keys()):
-        proto_str += f"\tSTATUS_{key.upper()} = {e+2};\n"
+    # Constuct Weather Enum
+    weather_data = {k: v for k, v in condition_data.items() if v.get("effectType") == "Weather"}
 
-    # Finalize the enum with a closing bracket
-    proto_str += "}\n\n"
+    weather_names: List[Tuple[str, int]] = []
+    weather_names.append(("NONE", 1))
 
-    # Start Enum Construction for Weathers
-    proto_str += "//Contains data for Pokemon Weathers\n"
+    for e, key in enumerate(weather_data.keys()):
+        weather_names.append((key.upper(), e + 2))
 
-    proto_str += "enum DexWeather {\n"
-    proto_str += "\tWEATHER_UNASSIGNED = 0;\n"
-    proto_str += "\tWEATHER_NONE = 1;\n"
+    weather_names = sorted(weather_names, key=lambda x: x[1])
 
-    filtered_data = {k: v for k, v in condition_data.items() if v.get("effectType") == "Weather"}
+    proto_str += create_proto_str("Weather", weather_names)
 
-    # Add each type to the enum
-    for e, key in enumerate(filtered_data.keys()):
-        proto_str += f"\tWEATHER_{key.upper()} = {e+2};\n"
+    # Constuct Condition Enum
+    condition_data = {k: v for k, v in condition_data.items() if v.get("effectType") is None}
 
-    # Finalize the enum with a closing bracket
-    proto_str += "}\n\n"
+    condition_names: List[Tuple[str, int]] = []
 
-    # Start Enum Construction for Weathers
-    proto_str += "//Contains data for Pokemon Conditions\n"
+    for e, key in enumerate(condition_data.keys()):
+        condition_names.append((key.upper(), e + 1))
 
-    proto_str += "enum DexCondition {\n"
-    proto_str += "\tCONDITION_UNASSIGNED = 0;\n"
+    condition_names = sorted(condition_names, key=lambda x: x[1])
 
-    filtered_data = {k: v for k, v in condition_data.items() if v.get("effectType") is None}
-
-    # Add each type to the enum
-    for e, key in enumerate(filtered_data.keys()):
-        proto_str += f"\tCONDITION_{key.upper()} = {e+1};\n"
-
-    # Finalize the enum with a closing bracket
-    proto_str += "}\n\n"
+    proto_str += create_proto_str("Condition", condition_names)
 
     return proto_str
 
@@ -391,22 +368,17 @@ def protogen_items(item_data: Dict[str, Dict]) -> str:
     Returns:
         str: A multi-line string containing a properly formatted Enum.
     """
-    # Section comments
-    proto_str = "//Contains data for Pokemon Items\n"
+    # Construct Item Enum
+    id_names: List[Tuple[str, int]] = []
 
-    # Start Enum Construction
-    proto_str += "enum DexItem {\n"
-    proto_str += "\toption allow_alias = true;\n"
-    proto_str += "\tITEM_UNASSIGNED = 0;\n"
-
-    # Add each item to the enum
     for key, value in item_data.items():
         if value["num"] < 1:
             continue
-        proto_str += f"\tITEM_{key.upper()} = {value['num'] + 1};\n"
+        id_names.append((key.upper(), value["num"] + 1))
 
-    # Finalize the enum with a closing bracket
-    proto_str += "}\n\n"
+    id_names = sorted(id_names, key=lambda x: x[1])
+
+    proto_str = create_proto_str("Item", id_names, allow_alias=True)
 
     return proto_str
 
@@ -426,34 +398,34 @@ def protogen_abilities(ability_data: Dict[str, Dict]) -> str:
     Returns:
         str: A multi-line string containing a properly formatted Enum.
     """
-    # Section comments
-    proto_str = "//Contains data for Pokemon Abilities\n"
+    # construct Ability Enum
+    id_names: List[Tuple[str, int]] = []
 
-    # Start Enum Construction
-    proto_str += "enum DexAbility {\n"
-    proto_str += "\tABILITY_UNASSIGNED = 0;\n"
-
-    # Add each item to the enum
+    # Add each item to the list
     for key, value in ability_data.items():
         if value["num"] < 0:
             continue
+
+        num = str(value["num"] + 1)
+
         if key.upper() == "VESSELOFRUIN":
-            proto_str += f"\tABILITY_{key.upper()} = {str(value['num'] + 1) + '00'};\n"
+            id_names.append((key.upper(), int(num + "00")))
         elif key.upper() == "TABLETSOFRUIN":
-            proto_str += f"\tABILITY_{key.upper()} = {str(value['num'] + 1) + '01'};\n"
+            id_names.append((key.upper(), int(num + "01")))
         elif key.upper() == "BEADSOFRUIN":
-            proto_str += f"\tABILITY_{key.upper()} = {str(value['num'] + 1) + '02'};\n"
+            id_names.append((key.upper(), int(num + "02")))
         elif key.upper() == "ASONEGLASTRIER":
-            proto_str += f"\tABILITY_ASONE = {str(value['num'] + 1)};\n"
-            proto_str += f"\tABILITY_ASONEGLASTRIER = {str(value['num'] + 1) + '01'};\n"
-            proto_str += f"\tABILITY_ASONESPECTRIER = {str(value['num'] + 1) + '02'};\n"
+            id_names.append(("ASONE", int(num + "00")))
+            id_names.append(("ASONEGLASTRIER", int(num + "01")))
+            id_names.append(("ASONESPECTRIER", int(num + "02")))
         elif key.upper() == "ASONESPECTRIER":
             continue
         else:
-            proto_str += f"\tABILITY_{key.upper()} = {value['num'] + 1};\n"
+            id_names.append((key.upper(), int(num + "00")))
 
-    # Finalize the enum with a closing bracket
-    proto_str += "}\n\n"
+    id_names = sorted(id_names, key=lambda x: x[1])
+
+    proto_str = create_proto_str("Ability", id_names)
 
     return proto_str
 
@@ -557,6 +529,6 @@ def fetch_latest(verbose: bool = True):
 
 
 if __name__ == "__main__":
-    fetch_latest()
+    # fetch_latest()
 
     protogen()

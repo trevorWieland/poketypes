@@ -8,8 +8,9 @@ A potential expansion of this module in the future would be to expand support fo
 the direct generation mods.
 """
 
-from statics import MAX_ABILITY_IDX_PER_GEN, MAX_MON_IDX_PER_GEN, MAX_MOVE_IDX_PER_GEN
 from typing import Dict, Optional
+
+from statics import MAX_ABILITY_IDX_PER_GEN, MAX_MON_IDX_PER_GEN, MAX_MOVE_IDX_PER_GEN
 
 
 def merge_pokedex(gen: int, this_gen_data: Dict[str, Dict], next_gen_data: Dict[str, Dict]) -> Dict[str, Dict]:
