@@ -6,4 +6,4 @@ Modules exported by this package:
     - `protos`: Contains tools related to protobuf generation.
 """
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"

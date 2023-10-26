@@ -927,12 +927,13 @@ class BattleMessage_request(BattleMessage):
             for ao_data in request.get("active", []):
                 moves = []
                 for m_data in ao_data.get("moves", []):
+                    target = None if m_data.get("target") is None else cast2dex(m_data["target"], DexMoveTarget)
                     m = MoveData(
                         NAME=m_data["move"],
                         ID=cast2dex(m_data["id"], DexMove),
                         CUR_PP=m_data.get("pp"),
                         MAX_PP=m_data.get("maxpp"),
-                        TARGET=cast2dex(m_data["target"], DexMoveTarget),
+                        TARGET=target,
                         DISABLED=isinstance(m_data.get("disabled"), str) or m_data.get("disabled"),
                     )
                     moves.append(m)
