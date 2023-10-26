@@ -9,7 +9,7 @@ repository = "https://github.com/trevorWieland/poketypes"
 documentation = "https://trevorwieland.github.io/poketypes/"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<3.13"
 pydantic = "^2.4.2"
 protobuf = "^4.24.4"
 
@@ -31,6 +31,9 @@ mkdocstrings = {extras = ["python"], version = "^0.23.0"}
 mkdocs-material = "^9.4.6"
 markdown-mdantic = "^2.1.0"
 flake8-pydocstyle = "^0.2.2"
+pandas = "^2.1.1"
+tqdm = "^4.66.1"
+flake8-bugbear = "^23.9.16"
 
 [build-system]
 requires = ["poetry-core"]

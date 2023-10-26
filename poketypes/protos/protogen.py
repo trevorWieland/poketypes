@@ -557,6 +557,6 @@ def fetch_latest(verbose: bool = True):
 
 
 if __name__ == "__main__":
-    fetch_latest()
+    # fetch_latest()
 
     protogen()

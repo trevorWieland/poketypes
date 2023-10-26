@@ -1,6 +1,18 @@
 syntax = "proto3";
 
-//Hard-Coded Enum for all Stats relevant to a pokemon
+/* Represents possible stats
+
+Options:<br/>
+    >- 0: Unassigned
+    >- 1: Attack
+    >- 2: Defence
+    >- 3: Special Attack
+    >- 4: Special Defence
+    >- 5: Speed
+    >- 6: Health
+    >- 7: Evasion
+    >- 8: Accuracy
+*/
 enum DexStat {
     option allow_alias = true;
     STAT_UNASSIGNED = 0;
@@ -22,7 +34,10 @@ enum DexStat {
     STAT_ACC = 8;
 }
 
-//Hard-Coded Enum for all generations
+/* Represents supported Generations
+
+Each integer gen is represented as its integer value.
+*/
 enum DexGen {
     GEN_UNASSIGNED = 0;
     GEN_1 = 1;
@@ -36,7 +51,14 @@ enum DexGen {
     GEN_9 = 9;
 }
 
-//Hard-Coded Move Categories
+/* Represents possible move categories
+
+Options:<br/>
+    >- 0: Unassigned
+    >- 1: Physical
+    >- 2: Special
+    >- 3: Status
+*/
 enum DexMoveCategory {
     MOVECATEGORY_UNASSIGNED = 0;
     MOVECATEGORY_PHYSICAL = 1;
@@ -44,7 +66,26 @@ enum DexMoveCategory {
     MOVECATEGORY_STATUS = 3;
 }
 
-//Hard-Coded Move Categories
+/* Represents possible move targets
+
+Options:<br/>
+    >- 0: Unassigned
+    >- 1: Self
+    >- 2: Adjacent Ally
+    >- 3: Adjacent Ally or Self
+    >- 4: All
+    >- 5: All Adjacent
+    >- 6: All Adjacent Foes
+    >- 7: Allies
+    >- 8: Ally Side
+    >- 9: Ally Team
+    >- 10: Any
+    >- 11: Foe Side
+    >- 12: Normal
+    >- 13: Random Normal
+    >- 14: Scripted
+    >- 15: Adjacent Foe
+*/
 enum DexMoveTarget {
     MOVETARGET_UNASSIGNED = 0;
     MOVETARGET_SELF = 1;
