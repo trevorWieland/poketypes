@@ -4951,7 +4951,7 @@ correct time to send your decision.</p>
             <p>
                 <span class="doc-attribute-annotation">
                   <b>TYPE:</b>
-                    <code>str</code>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.DexMove" href="../../../dex/reference/dex-classes/#poketypes.dex.dexdata_pb2.DexMove">DexMove</a>.<span title="poketypes.dex.DexMove.ValueType">ValueType</span></code>
                 </span>
             </p>
           </td>
@@ -6345,12 +6345,12 @@ correct time to send your decision.</p>
           <td><code>POKEMON</code></td>
           <td class="doc-attribute-details">
             <div class="doc-md-description">
-              <p>The pokemon that had no target available</p>
+              <p>The pokemon that had no target available.</p>
             </div>
             <p>
                 <span class="doc-attribute-annotation">
                   <b>TYPE:</b>
-                    <code><a class="autorefs autorefs-internal" title="poketypes.showdown.battlemessage.PokemonIdentifier" href="#poketypes.showdown.battlemessage.PokemonIdentifier">PokemonIdentifier</a></code>
+                    <code><span title="typing.Optional">Optional</span>[<a class="autorefs autorefs-internal" title="poketypes.showdown.battlemessage.PokemonIdentifier" href="#poketypes.showdown.battlemessage.PokemonIdentifier">PokemonIdentifier</a>]</code>
                 </span>
             </p>
           </td>
@@ -6368,6 +6368,7 @@ correct time to send your decision.</p>
   <summary>Message Format(s)</summary>
   <ul>
 <li>|-notarget|POKEMON</li>
+<li>|-notarget</li>
 </ul>
 </details>
 <details class="example" open>
@@ -9211,7 +9212,7 @@ correct time to send your decision.</p>
             <p>
                 <span class="doc-attribute-annotation">
                   <b>TYPE:</b>
-                    <code>str</code>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.DexItem" href="../../../dex/reference/dex-classes/#poketypes.dex.dexdata_pb2.DexItem">DexItem</a>.<span title="poketypes.dex.DexItem.ValueType">ValueType</span></code>
                 </span>
             </p>
           </td>
@@ -9323,7 +9324,7 @@ correct time to send your decision.</p>
             <p>
                 <span class="doc-attribute-annotation">
                   <b>TYPE:</b>
-                    <code>str</code>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.DexItem" href="../../../dex/reference/dex-classes/#poketypes.dex.dexdata_pb2.DexItem">DexItem</a>.<span title="poketypes.dex.DexItem.ValueType">ValueType</span></code>
                 </span>
             </p>
           </td>
@@ -9710,10 +9711,6 @@ correct time to send your decision.</p>
   
       <p>Message communicating that a pokemon has mega evolved.</p>
 
-<details class="warning" open>
-  <summary>Warning</summary>
-  <p>Not implemented yet.</p>
-</details>
 
 
   <table>
@@ -9738,6 +9735,34 @@ correct time to send your decision.</p>
             </p>
           </td>
         </tr>
+        <tr>
+          <td><code>BASE_SPECIES</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The base species of the pokemon that is mega evolving</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.DexPokemon" href="../../../dex/reference/dex-classes/#poketypes.dex.dexdata_pb2.DexPokemon">DexPokemon</a>.<span title="poketypes.dex.DexPokemon.ValueType">ValueType</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>MEGA_STONE</code></td>
+          <td class="doc-attribute-details">
+            <div class="doc-md-description">
+              <p>The mega stone that is being used</p>
+            </div>
+            <p>
+                <span class="doc-attribute-annotation">
+                  <b>TYPE:</b>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.DexItem" href="../../../dex/reference/dex-classes/#poketypes.dex.dexdata_pb2.DexItem">DexItem</a>.<span title="poketypes.dex.DexItem.ValueType">ValueType</span></code>
+                </span>
+            </p>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -9750,13 +9775,13 @@ correct time to send your decision.</p>
 <details class="info" open>
   <summary>Message Format(s):</summary>
   <ul>
-<li>|-mega|POKEMON|MEGASTONE</li>
+<li>|-mega|POKEMON|BASE_SPECIES|MEGASTONE</li>
 </ul>
 </details>
 <details class="example" open>
   <summary>Input Example(s)</summary>
   <ul>
-<li>TODO</li>
+<li>|-mega|p1a: Absol|Absol|Absolite</li>
 </ul>
 </details>
 
@@ -9830,7 +9855,7 @@ correct time to send your decision.</p>
             <p>
                 <span class="doc-attribute-annotation">
                   <b>TYPE:</b>
-                    <code>str</code>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.DexItem" href="../../../dex/reference/dex-classes/#poketypes.dex.dexdata_pb2.DexItem">DexItem</a>.<span title="poketypes.dex.DexItem.ValueType">ValueType</span></code>
                 </span>
             </p>
           </td>
@@ -10646,7 +10671,7 @@ correct time to send your decision.</p>
             <p>
                 <span class="doc-attribute-annotation">
                   <b>TYPE:</b>
-                    <code>str</code>
+                    <code><a class="autorefs autorefs-internal" title="poketypes.dex.DexMove" href="../../../dex/reference/dex-classes/#poketypes.dex.dexdata_pb2.DexMove">DexMove</a>.<span title="poketypes.dex.DexMove.ValueType">ValueType</span></code>
                 </span>
             </p>
           </td>
