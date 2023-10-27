@@ -1261,7 +1261,7 @@ class BattleMessage_move(BattleMessage):
     # TODO: Add an animation target field based on the [still]/[spread] information.
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon using the move")
-    MOVE: str = Field(..., description="The name of the move used")
+    MOVE: DexMove.ValueType = Field(..., description="The name of the move used")
 
     TARGET: Optional[PokemonIdentifier] = Field(
         ...,
@@ -1277,7 +1277,7 @@ class BattleMessage_move(BattleMessage):
         bm_split = battle_message.split("|")
 
         user = PokemonIdentifier.from_string(bm_split[2])
-        move = bm_split[3]
+        move = cast2dex(bm_split[3], DexMove)
 
         target = bm_split[4]
 
@@ -1936,28 +1936,34 @@ class BattleMessage_notarget(BattleMessage):
     """Message communicating that no target was available at move-use time.
 
     Attributes:
-        POKEMON: The pokemon that had no target available
+        POKEMON: The pokemon that had no target available.
 
     Note: Use Case(s)
         - Communicating that a pokemon had no target available.
 
     Info: Message Format(s)
         - |-notarget|POKEMON
+        - |-notarget
 
     Example: Input Example(s)
         - TODO
     """
 
-    POKEMON: PokemonIdentifier = Field(..., description="The pokemon that has no target")
+    POKEMON: Optional[PokemonIdentifier] = Field(..., description="The pokemon that has no target")
 
     def from_message(battle_message: str) -> "BattleMessage_notarget":
         """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
+        if len(bm_split) == 2:
+            poke = None
+        else:
+            poke = PokemonIdentifier.from_string(bm_split[2])
+
         return BattleMessage_notarget(
             BMTYPE=BMType.notarget,
             BATTLE_MESSAGE=battle_message,
-            POKEMON=PokemonIdentifier.from_string(bm_split[2]),
+            POKEMON=poke,
         )
 
 
@@ -3362,7 +3368,7 @@ class BattleMessage_item(BattleMessage):
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon whose item is revealed")
 
-    ITEM: str = Field(..., description="The item being revealed")
+    ITEM: DexItem.ValueType = Field(..., description="The item being revealed")
 
     EFFECT: Optional[Effect] = Field(
         None, description="The effect that revealed the item, if applicable. Not used when auto-revealed (air balloon)"
@@ -3373,7 +3379,7 @@ class BattleMessage_item(BattleMessage):
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
-        item = bm_split[3]
+        item = cast2dex(bm_split[3], DexItem)
 
         if len(bm_split) > 4:
             # This means there is at least a [from] clause and possibly also a [of] clause
@@ -3418,7 +3424,7 @@ class BattleMessage_enditem(BattleMessage):
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon whose item is destroyed")
 
-    ITEM: str = Field(..., description="The item being destroyed")
+    ITEM: DexItem.ValueType = Field(..., description="The item being destroyed")
 
     EFFECT: Optional[Effect] = Field(
         None,
@@ -3430,7 +3436,7 @@ class BattleMessage_enditem(BattleMessage):
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
-        item = bm_split[3]
+        item = cast2dex(bm_split[3], DexItem)
 
         # We do some quick filtering on the bm_split to get rid of any single detail things like [silent] or [eat]
         bm_split = [bm for bm in bm_split if len(bm.strip()) > 0 and bm.strip()[0] != "[" and bm.strip()[-1] != "]"]
@@ -3625,31 +3631,39 @@ class BattleMessage_transform(BattleMessage):
 class BattleMessage_mega(BattleMessage):
     """Message communicating that a pokemon has mega evolved.
 
-    Warning:
-        Not implemented yet.
-
     Attributes:
         POKEMON: The pokemon that mega evolved
+        BASE_SPECIES: The base species of the pokemon that is mega evolving
+        MEGA_STONE: The mega stone that is being used
 
     Note: Use Case(s):
         - Communicating that a pokemon has mega evolved.
 
     Info: Message Format(s):
-        - |-mega|POKEMON|MEGASTONE
+        - |-mega|POKEMON|BASE_SPECIES|MEGASTONE
 
     Example: Input Example(s)
-        - TODO
+        - |-mega|p1a: Absol|Absol|Absolite
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The main pokemon identifier relevant")
+    BASE_SPECIES: DexPokemon.ValueType = Field(..., description="The base species of the pokemon that is mega evolving")
+    MEGA_STONE: DexItem.ValueType = Field(..., description="The mega stone that is being used")
 
     def from_message(battle_message: str) -> "BattleMessage_mega":
         """Create a specific BattleMessage object from a raw message."""
-        raise NotImplementedError
+        bm_split = battle_message.split("|")
+
+        poke = PokemonIdentifier.from_string(bm_split[2])
+        base_species = cast2dex(bm_split[3], DexPokemon)
+        mega_stone = cast2dex(bm_split[4], DexItem)
 
         return BattleMessage_mega(
             BMTYPE=BMType.mega,
             BATTLE_MESSAGE=battle_message,
+            POKEMON=poke,
+            BASE_SPECIES=base_species,
+            MEGA_STONE=mega_stone,
         )
 
 
@@ -3671,14 +3685,14 @@ class BattleMessage_primal(BattleMessage):
     """
 
     POKEMON: PokemonIdentifier = Field(..., description="The Pokemon going primal")
-    ITEM: str = Field(..., description="The held item that is being used")
+    ITEM: DexItem.ValueType = Field(..., description="The held item that is being used")
 
     def from_message(battle_message: str) -> "BattleMessage_primal":
         """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
-        item = bm_split[3]
+        item = cast2dex(bm_split[3], DexItem)
 
         return BattleMessage_primal(BMTYPE=BMType.primal, BATTLE_MESSAGE=battle_message, POKEMON=poke, ITEM=item)
 
@@ -3992,14 +4006,14 @@ class BattleMessage_prepare(BattleMessage):
 
     POKEMON: PokemonIdentifier = Field(..., description="The pokemon preparing the move")
 
-    MOVE: str = Field(..., description="The move being prepared")
+    MOVE: DexMove.ValueType = Field(..., description="The move being prepared")
 
     def from_message(battle_message: str) -> "BattleMessage_prepare":
         """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
         poke = PokemonIdentifier.from_string(bm_split[2])
-        move = bm_split[3]
+        move = cast2dex(bm_split[3], DexMove)
 
         return BattleMessage_prepare(BMTYPE=BMType.prepare, BATTLE_MESSAGE=battle_message, POKEMON=poke, MOVE=move)
 
