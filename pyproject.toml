@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "poketypes"
-version = "0.2.4"
+version = "0.2.6"
 description = "Automated classes with full typehinting support for pokemon, abilities, items, and so much more"
 authors = ["Trevor Wieland <trevor_wieland@mac.com>"]
 license = "MIT"
