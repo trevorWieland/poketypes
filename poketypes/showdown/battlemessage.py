@@ -27,6 +27,7 @@ from ..dex import (
     DexType,
     DexWeather,
     cast2dex,
+    clean_name,
 )
 
 
@@ -830,6 +831,16 @@ class MoveData(BaseModel):
     )
     DISABLED: Optional[bool] = Field(None, description="Whether this move is disabled or not. None if Trapped")
 
+    CAN_ZMOVE: bool = Field(False, description="Whether this move can be zmoved")
+    ZMOVE: Optional[DexMove.ValueType] = Field(None, description="The move that this move can be zmoved into")
+    ZMOVE_TARGET: Optional[DexMoveTarget.ValueType] = Field(None, description="The targetting type of this zmove")
+
+    CAN_DYNAMAX: bool = Field(False, description="Whether this move can be used while dynamaxed")
+    DYNAMAX_MOVE: Optional[DexMove.ValueType] = Field(
+        None, description="The move that this move will be when dynamaxed"
+    )
+    DYNAMAX_TARGET: Optional[DexMoveTarget.ValueType] = Field(None, description="The targetting type of this dynamax")
+
 
 class ActiveOption(BaseModel):
     """A helper class to contain details about all moves available for an active pokemon in a request.
@@ -837,7 +848,7 @@ class ActiveOption(BaseModel):
     Attributes:
         MOVES: A list of available moves for this slot
         CAN_MEGA: Whether the pokemon can mega evolve
-        CAN_ZMOVE: Whether the pokemon can zmove
+        CAN_ZMOVE: Whether the pokemon can zmove with at least one move
         CAN_DYNA: Whether the pokemon can dynamax
         CAN_TERA: Whether the pokemon can teratype
         TRAPPED: Whether the user is trapped
@@ -846,7 +857,7 @@ class ActiveOption(BaseModel):
     MOVES: List[MoveData] = Field(..., description="A list of available moves for this slot")
 
     CAN_MEGA: bool = Field(False, description="Whether the pokemon can mega evolve")
-    CAN_ZMOVE: bool = Field(False, description="Whether the pokemon can zmove")
+    CAN_ZMOVE: bool = Field(False, description="Whether the pokemon can zmove with at least one move")
     CAN_DYNA: bool = Field(False, description="Whether the pokemon can dynamax")
     CAN_TERA: bool = Field(None, description="Whether the pokemon can teratype")
 
@@ -926,8 +937,37 @@ class BattleMessage_request(BattleMessage):
 
             for ao_data in request.get("active", []):
                 moves = []
-                for m_data in ao_data.get("moves", []):
+                for e, m_data in enumerate(ao_data.get("moves", [])):
+                    # Extract target information for the standard variant of the move
                     target = None if m_data.get("target") is None else cast2dex(m_data["target"], DexMoveTarget)
+
+                    # Extract zmove information if applicable
+                    zmove_data = m_data.get("canZMove", [None for _ in range(4)])[e]
+                    if zmove_data is not None:
+                        zmove = zmove_data["move"]
+                        if clean_name(zmove) == f"Z{clean_name(m_data['id'])}":
+                            zmove = cast2dex(m_data["id"], DexMove)
+                        else:
+                            zmove = cast2dex(zmove, DexMove)
+                        zmove_target = cast2dex(zmove_data["target"], DexMoveTarget)
+                    else:
+                        zmove = None
+                        zmove_target = None
+
+                    # Extract dynamax information if applicable
+                    can_dyna = m_data.get("canDynamax", False)
+                    if can_dyna:
+                        max_move_info = m_data.get("maxMoves", {}).get("maxMoves", [None for _ in range(4)])[e]
+                        if max_move_info is not None:
+                            dyna_move = cast2dex(max_move_info["move"], DexMove)
+                            dyna_target = cast2dex(max_move_info["target"], DexMoveTarget)
+                        else:
+                            dyna_move = None
+                            dyna_target = None
+                    else:
+                        dyna_move = None
+                        dyna_target = None
+
                     m = MoveData(
                         NAME=m_data["move"],
                         ID=cast2dex(m_data["id"], DexMove),
@@ -935,6 +975,12 @@ class BattleMessage_request(BattleMessage):
                         MAX_PP=m_data.get("maxpp"),
                         TARGET=target,
                         DISABLED=isinstance(m_data.get("disabled"), str) or m_data.get("disabled"),
+                        CAN_ZMOVE=zmove is not None,
+                        ZMOVE=zmove,
+                        ZMOVE_TARGET=zmove_target,
+                        CAN_DYNAMAX=can_dyna,
+                        DYNAMAX_MOVE=dyna_move,
+                        DYNAMAX_TARGET=dyna_target,
                     )
                     moves.append(m)
 
@@ -944,7 +990,7 @@ class BattleMessage_request(BattleMessage):
                     CAN_ZMOVE=len(ao_data.get("canZMove", [])) > 0,
                     CAN_DYNA=ao_data.get("canDynamax", False),
                     CAN_TERA=ao_data.get("canTerastallize", "") != "",
-                    TRAPPED=ao_data.get("trapped", False),
+                    TRAPPED=ao_data.get("trapped", ao_data.get("maybeTrapped", False)),
                 )
                 active_options.append(ao)
         else:
