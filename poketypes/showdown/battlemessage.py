@@ -4320,8 +4320,12 @@ class BattleMessage_fieldactivate(BattleMessage):
         """Create a specific BattleMessage object from a raw message."""
         bm_split = battle_message.split("|")
 
-        eff_type = bm_split[2].split(" ")[0][:-1]
-        eff_name = " ".join(bm_split[2].split(" ")[1:])
+        if ":" in bm_split[2]:
+            eff_type = bm_split[2].split(" ")[0][:-1]
+            eff_name = " ".join(bm_split[2].split(" ")[1:])
+        else:
+            eff_type = "ability"
+            eff_name = bm_split[2]
 
         eff = Effect(EFFECT_NAME=eff_name, EFFECT_TYPE=eff_type)
 
